@@ -10,9 +10,9 @@ const posts = await getCollection('blog', ({ data }) => !data.draft);
 const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog' }] : [...primaryNav];
 ---
 
-<header class="border-b border-line bg-surface">
-  <div class="mx-auto flex min-h-11 w-full max-w-5xl flex-nowrap items-center gap-x-2 px-4 sm:gap-x-3">
-    <a class="inline-flex min-h-11 shrink-0 items-center gap-2 font-semibold text-ink" href="/">
+<header class="border-b border-line bg-surface" data-site-header>
+  <div class="mx-auto flex min-h-11 w-full max-w-5xl items-center gap-x-2 px-4 sm:gap-x-3">
+    <a class="inline-flex min-h-11 min-w-0 shrink items-center gap-2 font-semibold text-ink" href="/">
       <Picture
         src={mark}
         formats={['avif', 'webp']}
@@ -25,9 +25,9 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
         fetchpriority="high"
         class="size-8 shrink-0"
       />
-      {SITE_NAME}
+      <span class="truncate">{SITE_NAME}</span>
     </a>
-    <nav class="flex min-w-0 flex-1 flex-nowrap" aria-label="Primary">
+    <nav class="ml-auto hidden min-w-0 flex-1 flex-nowrap justify-end md:flex" aria-label="Primary">
       {
         links.map((link) => (
           <a
@@ -40,31 +40,116 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
         ))
       }
     </nav>
-    <button
-      class="theme-toggle ml-auto size-11 shrink-0 items-center justify-center rounded-md text-ink"
-      type="button"
-      data-theme-toggle
-      aria-pressed="false"
-      aria-label="Toggle color theme"
-    >
-      <svg class="icon-sun size-5" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"></circle>
-        <path
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
-        ></path>
-      </svg>
-      <svg class="icon-moon size-5" viewBox="0 0 24 24" aria-hidden="true">
-        <path
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linejoin="round"
-          d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"></path>
-      </svg>
-    </button>
+    <div class="ml-auto flex shrink-0 items-center md:ml-0">
+      <button
+        class="inline-flex size-11 items-center justify-center rounded-md text-ink md:hidden"
+        type="button"
+        data-nav-toggle
+        aria-expanded="false"
+        aria-controls="primary-nav-mobile"
+        aria-label="Open menu"
+      >
+        <svg class="icon-menu size-5" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+        <svg class="icon-close size-5" viewBox="0 0 24 24" aria-hidden="true" hidden>
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
+      <button
+        class="theme-toggle size-11 shrink-0 items-center justify-center rounded-md text-ink"
+        type="button"
+        data-theme-toggle
+        aria-pressed="false"
+        aria-label="Toggle color theme"
+      >
+        <svg class="icon-sun size-5" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"></circle>
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+          ></path>
+        </svg>
+        <svg class="icon-moon size-5" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linejoin="round"
+            d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"></path>
+        </svg>
+      </button>
+    </div>
   </div>
+  <nav
+    id="primary-nav-mobile"
+    class="border-t border-line md:hidden"
+    aria-label="Primary"
+    data-nav-panel
+    hidden
+  >
+    <div class="mx-auto grid max-w-5xl px-4 py-2">
+      {
+        links.map((link) => (
+          <a
+            class="flex min-h-11 items-center text-ink"
+            href={link.href}
+            aria-current={pathname === link.href ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
 </header>
+
+<script>
+  const header = document.querySelector('[data-site-header]');
+  const toggle = header?.querySelector('[data-nav-toggle]');
+  const panel = header?.querySelector('[data-nav-panel]');
+  const menuIcon = toggle?.querySelector('.icon-menu');
+  const closeIcon = toggle?.querySelector('.icon-close');
+
+  if (header instanceof HTMLElement && toggle instanceof HTMLButtonElement && panel instanceof HTMLElement) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      panel.hidden = !open;
+      if (menuIcon instanceof SVGElement) menuIcon.toggleAttribute('hidden', open);
+      if (closeIcon instanceof SVGElement) closeIcon.toggleAttribute('hidden', !open);
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    panel.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest('a')) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setOpen(false);
+    });
+
+    const desktop = window.matchMedia('(min-width: 768px)');
+    const onBreakpoint = () => {
+      if (desktop.matches) setOpen(false);
+    };
+    desktop.addEventListener('change', onBreakpoint);
+  }
+</script>

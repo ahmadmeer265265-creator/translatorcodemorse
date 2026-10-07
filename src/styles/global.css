@@ -22,7 +22,8 @@
   --on-accent: #0e1218;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Desktop only: follow OS dark preference before JS sets data-theme. Mobile defaults to light. */
+@media (prefers-color-scheme: dark) and (min-width: 768px) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --canvas: #0e1218;
@@ -113,7 +114,7 @@ html.js .theme-toggle {
   display: block;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (min-width: 768px) {
   :root:not([data-theme="light"]) .theme-toggle .icon-sun {
     display: none;
   }
