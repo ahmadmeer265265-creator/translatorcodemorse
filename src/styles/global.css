@@ -1,0 +1,247 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --canvas: #f4f6f8;
+  --surface: #ffffff;
+  --ink: #12141a;
+  --muted: #3d4654;
+  --line: #d5dbe3;
+  --accent: #0b4db8;
+  --on-accent: #ffffff;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0e1218;
+  --surface: #161b24;
+  --ink: #f3f6fa;
+  --muted: #c6d0db;
+  --line: #2c3542;
+  --accent: #b7d0ff;
+  --on-accent: #0e1218;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --canvas: #0e1218;
+    --surface: #161b24;
+    --ink: #f3f6fa;
+    --muted: #c6d0db;
+    --line: #2c3542;
+    --accent: #b7d0ff;
+    --on-accent: #0e1218;
+  }
+}
+
+@theme inline {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+}
+
+@layer base {
+  html {
+    background: var(--canvas);
+    color: var(--ink);
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 20;
+  transform: translateY(-150%);
+  min-height: 2.75rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.375rem;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* Keep the control in layout before and after the head script adds .js so the header does not shift. */
+.theme-toggle {
+  display: inline-flex;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+html.js .theme-toggle {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.theme-toggle .icon-moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-moon {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .icon-sun {
+    display: none;
+  }
+
+  :root:not([data-theme="light"]) .theme-toggle .icon-moon {
+    display: block;
+  }
+}
+
+nav a[aria-current="page"] {
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+
+[data-translator] button[data-state='copied'] {
+  border-color: var(--accent);
+}
+
+[data-translator] button[data-share][data-state='copied'] {
+  border-color: var(--on-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.morse-chart table {
+  table-layout: fixed;
+}
+
+.morse-chart th:first-child,
+.morse-chart td:first-child {
+  width: 5.5rem;
+}
+
+.cv {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 520px;
+}
+
+.cv-use {
+  contain-intrinsic-size: auto none auto 550px;
+}
+
+.cv-audio {
+  contain-intrinsic-size: auto none auto 416px;
+}
+
+.cv-chart {
+  contain-intrinsic-size: auto none auto 2067px;
+}
+
+.cv-works {
+  contain-intrinsic-size: auto none auto 1030px;
+}
+
+.cv-phrases {
+  contain-intrinsic-size: auto none auto 668px;
+}
+
+.cv-faq {
+  contain-intrinsic-size: auto none auto 1783px;
+}
+
+@media print {
+  header,
+  footer,
+  .skip-link {
+    display: none !important;
+  }
+
+  :root,
+  :root[data-theme='dark'] {
+    color-scheme: light;
+    --canvas: #ffffff;
+    --surface: #ffffff;
+    --ink: #000000;
+    --muted: #111111;
+    --line: #222222;
+    --accent: #000000;
+    --on-accent: #ffffff;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  main {
+    max-width: none;
+    padding: 0;
+  }
+
+  .cv {
+    content-visibility: visible;
+    contain-intrinsic-size: none;
+  }
+
+  .morse-chart {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
+    gap: 1rem;
+    break-inside: avoid;
+  }
+
+  .morse-chart table {
+    width: 100%;
+    font-size: 10pt;
+    line-height: 1.25;
+  }
+
+  .morse-chart th,
+  .morse-chart td {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    color: #000000;
+  }
+
+  a {
+    color: #000000;
+    text-decoration: none;
+  }
+
+  @page {
+    margin: 1.2cm;
+  }
+}

@@ -1,0 +1,122 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import MorseChart from '../components/MorseChart.astro';
+import RelatedPages from '../components/RelatedPages.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
+
+const title = 'Morse Code Numbers: 0 to 9 Chart and How to Remember Them';
+const description =
+  'Look up Morse code for digits 0 through 9, the five-symbol pattern behind every number, and how a number is spaced inside a written message.';
+const pageUrl = absoluteUrl('/morse-code-numbers/');
+const crumbs = [
+  { name: 'Home', url: absoluteUrl('/') },
+  { name: 'Morse Code Numbers', url: pageUrl },
+];
+const faqs = [
+  {
+    question: 'How many symbols does each Morse number use?',
+    answer: 'Every digit from 0 to 9 is five symbols long. No Morse number is shorter or longer than that.',
+  },
+  {
+    question: 'What is the pattern from 1 to 5 and from 6 to 0?',
+    answer:
+      'From 1 to 5, dots come first and dashes fill the rest. Five is five dots. From 6 to 0, dashes come first and dots fill the rest. Zero is five dashes.',
+  },
+  {
+    question: 'How is a number written in a message?',
+    answer:
+      'Each digit is its own character. Leave one space between digits, the same space you leave between letters. Use a slash between words, not between the digits of one number.',
+  },
+  {
+    question: 'Is zero five dashes or five dots?',
+    answer: 'Zero is five dashes, ----- . Five is five dots, ..... .',
+  },
+] as const;
+
+const jsonLd = supportingJsonLd({
+  name: 'Morse Code Numbers',
+  description,
+  url: pageUrl,
+  crumbs,
+  faqs,
+  dateModified: lastUpdatedIso('/morse-code-numbers/'),
+});
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
+  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Morse Code Numbers' }]} />
+    <header class="grid gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight">Morse Code Numbers</h1>
+      <p>
+        Morse numbers are the ten digits, 0 through 9. Each one is a pattern of dots and dashes, and every pattern is the same length. That fixed length is what makes the set easy to remember once you see how the marks move from one digit to the next. The codes below are the ones this translator uses.
+      </p>
+    </header>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Numbers 0 to 9</h2>
+      <p>
+        Digits follow Recommendation ITU-R M.1677-1, the same recommendation the letter chart follows. Nothing on this page is an extra code. A number you type into the translator is encoded with this table, and a number you type as dots and dashes is decoded with it too.
+      </p>
+      <MorseChart groups={['digit']} />
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">The five-symbol pattern</h2>
+      <p>
+        Count the marks in any row. There are always five. One is a dot and four dashes. Two is two dots and three dashes. The dots stay in front and the dashes fill whatever is left, until five, which is five dots and no dashes.
+      </p>
+      <p>
+        Six starts the return trip. It is one dash and four dots. Seven is two dashes and three dots. The dashes stay in front this time, and the dots fill the rest. Nine is four dashes and one dot. Zero is five dashes. Five and zero are the two easy ends: all dots, then all dashes.
+      </p>
+      <p>
+        Take the pattern for 1 to 5 and swap every dot for a dash and every dash for a dot, and you get 6 to 0: 1 <span class="font-mono">.----</span> becomes <span class="font-mono">-....</span> (6), 2 becomes 7, 3 becomes 8, 4 becomes 9, and 5 (all dots) becomes 0 (all dashes). So if you know 1 to 5 you already know 6 to 0.
+      </p>
+      <p>
+        Timing does not change for digits. A dot is one unit, a dash is three, and the gap inside the digit is one unit. Because a digit is five marks, it takes longer to send than a short letter such as E or T. The gap after the digit is still the normal gap between characters, three units, unless the digit ends a word.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Numbers inside a message</h2>
+      <p>
+        Treat each digit as a character. In the written Morse this site uses, characters in one word are separated by a single space. The number 10 is the digit 1, a space, then the digit 0: <span class="font-mono">.---- -----</span>. There is no slash inside the number. A slash would start a new word.
+      </p>
+      <p>
+        A longer number works the same way. 2026 is four digits in one word, with a space between each pattern. If a sentence has a number and then a word, the slash goes between the number and the word, just as it goes between any two words. HELLO 73 is the letters of HELLO, then <span class="font-mono"> / </span>, then the two digits.
+      </p>
+      <p>
+        The same five-mark rule helps when you are reading code you did not write. A group of five marks is a digit. A shorter group is a letter or a punctuation mark. You still need the spaces. Without them, five dots could be the digit 5 or a run of E letters, and the translator will not guess which one you meant.
+      </p>
+      <p>
+        <a class="text-accent underline underline-offset-4" href="/#text=0123456789">See 0 to 9 in the Morse code translator</a>.
+        The link fills the text panel with the ten digits so you can read or play the full set.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Questions</h2>
+      <div class="grid gap-4">
+        {
+          faqs.map((item) => (
+            <details class="rounded-xl border border-line bg-surface px-3 py-2" open>
+              <summary class="flex min-h-11 cursor-pointer items-center font-semibold">{item.question}</summary>
+              <p class="pb-2 text-muted">{item.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+    <RelatedPages
+      links={[
+        { href: '/morse-code-alphabet/', label: 'Morse code alphabet chart' },
+        { href: '/sos-in-morse-code/', label: 'How SOS is sent in Morse code' },
+        { href: '/', label: 'Translate text to Morse code' },
+      ]}
+    />
+  </article>
+</BaseLayout>

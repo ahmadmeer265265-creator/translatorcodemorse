@@ -1,0 +1,86 @@
+---
+import { MORSE_ALPHABET, type MorseGroup } from '../lib/morse';
+
+interface Props {
+  groups?: MorseGroup[];
+}
+
+const { groups = ['letter', 'digit', 'mark'] } = Astro.props;
+const letters = groups.includes('letter') ? MORSE_ALPHABET.filter((entry) => entry.group === 'letter') : [];
+const digits = groups.includes('digit') ? MORSE_ALPHABET.filter((entry) => entry.group === 'digit') : [];
+const marks = groups.includes('mark') ? MORSE_ALPHABET.filter((entry) => entry.group === 'mark') : [];
+---
+
+<div class:list={['morse-chart grid gap-6', letters.length > 0 && 'lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)]']}>
+  {
+    letters.length > 0 && (
+      <table class="w-full border-collapse text-sm">
+        <caption class="mb-2 text-left font-semibold text-ink">Letters</caption>
+        <thead>
+          <tr class="border-b border-line text-left text-muted">
+            <th class="py-1 pr-3 font-medium" scope="col">Character</th>
+            <th class="py-1 font-medium" scope="col">Morse code</th>
+          </tr>
+        </thead>
+        <tbody>
+          {letters.map((entry) => (
+            <tr class="border-b border-line">
+              <th class="py-1 pr-3 text-left font-semibold" scope="row">
+                {entry.char}
+              </th>
+              <td class="py-1 font-mono tracking-wide">{entry.code}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+  {
+    (digits.length > 0 || marks.length > 0) && (
+      <div class="grid content-start gap-6">
+        {digits.length > 0 && (
+          <table class="w-full border-collapse text-sm">
+            <caption class="mb-2 text-left font-semibold text-ink">Numbers</caption>
+            <thead>
+              <tr class="border-b border-line text-left text-muted">
+                <th class="py-1 pr-3 font-medium" scope="col">Character</th>
+                <th class="py-1 font-medium" scope="col">Morse code</th>
+              </tr>
+            </thead>
+            <tbody>
+              {digits.map((entry) => (
+                <tr class="border-b border-line">
+                  <th class="py-1 pr-3 text-left font-semibold" scope="row">
+                    {entry.char}
+                  </th>
+                  <td class="py-1 font-mono tracking-wide">{entry.code}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {marks.length > 0 && (
+          <table class="w-full border-collapse text-sm">
+            <caption class="mb-2 text-left font-semibold text-ink">Punctuation</caption>
+            <thead>
+              <tr class="border-b border-line text-left text-muted">
+                <th class="py-1 pr-3 font-medium" scope="col">Character</th>
+                <th class="py-1 font-medium" scope="col">Morse code</th>
+              </tr>
+            </thead>
+            <tbody>
+              {marks.map((entry) => (
+                <tr class="border-b border-line">
+                  <th class="py-1 pr-3 text-left font-semibold" scope="row">
+                    {entry.char}
+                  </th>
+                  <td class="py-1 font-mono tracking-wide">{entry.code}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    )
+  }
+</div>

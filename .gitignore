@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.astro/
+.lighthouse/
+.DS_Store
+.env
+.env.*
+Thumbs.db
+Desktop.ini
+*.log
+*.tsbuildinfo
+.vercel/
+.netlify/
+.wf/
+.idea/
+.vscode/*
+!.vscode/extensions.json

@@ -1,0 +1,22 @@
+---
+interface Props {
+  links: { href: string; label: string }[];
+}
+
+const { links } = Astro.props;
+---
+
+<section class="grid gap-3">
+  <h2 class="text-2xl font-semibold tracking-tight">Related pages</h2>
+  <ul class="grid gap-1">
+    {
+      links.map((link) => (
+        <li>
+          <a class="inline-flex min-h-11 items-center text-accent underline underline-offset-4" href={link.href}>
+            {link.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>

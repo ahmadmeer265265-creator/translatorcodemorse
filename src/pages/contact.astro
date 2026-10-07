@@ -1,0 +1,62 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl, CONTACT_EMAIL } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
+
+const title = 'Contact';
+const description =
+  'Email chart corrections, bug reports, and suggestions for this free Morse code translator. Use the address on this page; there is no contact form.';
+const pageUrl = absoluteUrl('/contact/');
+const crumbs = [
+  { name: 'Home', url: absoluteUrl('/') },
+  { name: 'Contact', url: pageUrl },
+];
+const jsonLd = supportingJsonLd({
+  name: 'Contact',
+  description,
+  url: pageUrl,
+  crumbs,
+  dateModified: lastUpdatedIso('/contact/'),
+});
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Contact' }]} />
+    <header class="grid gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight">Contact</h1>
+      <p>
+        Write when you find a chart error, a bug in the translator, or a clear suggestion that would help other visitors. There is no form on this page and no chat widget. Use email.
+      </p>
+    </header>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Email</h2>
+      <p>
+        <a class="text-accent underline underline-offset-4" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+      </p>
+      <p>
+        In the message, say which page you were on, what you typed or clicked, and what you expected to see. For a chart correction, name the character and the code you think is wrong. For sound or download issues, include the browser and device if you know them. Short, specific notes are easier to act on than long general feedback.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">What this address is for</h2>
+      <p>
+        Use it for the site itself: alphabet and number charts, the SOS page, translation mistakes, playback or WAV problems, accessibility barriers, and privacy questions about how the site works. It is not an emergency line, a radio club desk, or a place to request custom software.
+      </p>
+      <p>
+        Replies depend on time available. If you reported a clear error in a public chart, a correction on the page is the usual response when the report checks out.
+      </p>
+      <p>
+        Please do not send passwords, private keys, or sensitive personal records. The translator does not need an account, and support does not need those details to fix a chart or a button. If your message is about a share link, paste the public page address only, or describe the text without including private content you would not post elsewhere.
+      </p>
+      <p>
+        Feature ideas are welcome when they fit a free, browser-based translator. A short note that points to a real gap in the current pages is more useful than a long wishlist.
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+

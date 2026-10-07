@@ -1,0 +1,375 @@
+---
+const fieldClass =
+  'mt-1 h-20 w-full resize-none rounded-xl border border-line bg-canvas px-3 py-2 text-base text-ink';
+const buttonClass =
+  'inline-flex min-h-11 items-center justify-center rounded-full border-2 px-3 text-sm font-medium';
+const quietButton = `${buttonClass} border-line bg-canvas text-ink`;
+const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`;
+---
+
+<section class="translator rounded-2xl border border-line bg-surface p-3 shadow-[0_16px_40px_-28px_rgba(18,20,26,0.7)] sm:p-4" data-translator data-copy-error="Couldn't copy automatically. Select the text and press Ctrl+C (or Cmd+C).">
+  <div class="grid gap-3">
+    <div>
+      <label class="text-sm font-semibold" for="translator-text">Text</label>
+      <textarea
+        id="translator-text"
+        class={fieldClass}
+        rows="3"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        placeholder="Type letters, numbers, or punctuation"></textarea>
+    </div>
+    <div>
+      <label class="text-sm font-semibold" for="translator-morse">Morse code</label>
+      <textarea
+        id="translator-morse"
+        class={`${fieldClass} font-mono tracking-wide`}
+        rows="3"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        placeholder="Type dots, dashes, and spaces"></textarea>
+    </div>
+  </div>
+  <div class="mt-3 flex flex-wrap gap-2">
+    <button class={`${quietButton} data-[state=copied]:border-accent`} type="button" data-copy="translator-text" data-label="Copy text" data-flash="Copied" aria-label="Copy text">
+      <span class="inline-grid">
+        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Copied</span>
+        <span class="invisible col-start-1 row-start-1" aria-hidden="true">Copy text</span>
+        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span data-t>Copy text</span></span>
+      </span>
+    </button>
+    <button class={`${quietButton} data-[state=copied]:border-accent`} type="button" data-copy="translator-morse" data-label="Copy Morse code" data-flash="Copied" aria-label="Copy Morse code">
+      <span class="inline-grid">
+        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Copied</span>
+        <span class="invisible col-start-1 row-start-1" aria-hidden="true">Copy Morse code</span>
+        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span data-t>Copy Morse code</span></span>
+      </span>
+    </button>
+    <button class={quietButton} type="button" data-clear data-announce="Cleared">Clear</button>
+    <button class={quietButton} type="button" data-sample="SOS" data-announce="Loaded sample: SOS">SOS</button>
+    <button class={quietButton} type="button" data-sample="Hello world" data-announce="Loaded sample: Hello world">Hello world</button>
+    <button class={`${shareButton} data-[state=copied]:border-on-accent`} type="button" data-share data-label="Copy share link" data-flash="Link copied" aria-label="Copy share link">
+      <span class="inline-grid">
+        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Link copied</span>
+        <span class="invisible col-start-1 row-start-1" aria-hidden="true">Copy share link</span>
+        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span data-t>Copy share link</span></span>
+      </span>
+    </button>
+  </div>
+  <p id="translator-status" class="mt-2 min-h-6 text-sm text-muted" aria-live="polite">
+    <span id="translator-announce" class="sr-only"></span>
+    <span id="translator-notice"></span>
+  </p>
+  <div class="mt-3 grid gap-3 border-t border-line pt-3">
+    <p class="text-sm font-semibold">Audio</p>
+    <div class="flex flex-wrap gap-2">
+      <button id="translator-play" class={shareButton} type="button" data-play disabled aria-pressed="false">Play</button>
+      <button id="translator-wav" class={quietButton} type="button" data-wav disabled aria-label="Download WAV" data-label="Download WAV" data-busy="Preparing...">
+        <span class="inline-grid">
+          <span class="invisible col-start-1 row-start-1" aria-hidden="true">Download WAV</span>
+          <span class="invisible col-start-1 row-start-1" aria-hidden="true">Preparing...</span>
+          <span class="col-start-1 row-start-1" data-face>Download WAV</span>
+        </span>
+      </button>
+    </div>
+    <p id="translator-audio-status" class="min-h-6 text-sm text-muted" aria-live="polite"></p>
+    <div class="grid gap-3 sm:grid-cols-2">
+      <label class="grid min-h-11 content-center gap-1 text-sm" for="translator-wpm">
+        <span class="flex items-baseline justify-between gap-3 font-medium">
+          <span>Speed (WPM)</span>
+          <output id="translator-wpm-value" for="translator-wpm">20</output>
+        </span>
+        <input id="translator-wpm" class="h-11 w-full" type="range" min="5" max="40" value="20" disabled />
+      </label>
+      <label class="grid min-h-11 content-center gap-1 text-sm" for="translator-farnsworth">
+        <span class="flex items-baseline justify-between gap-3 font-medium">
+          <span>Farnsworth (overall speed)</span>
+          <output id="translator-farnsworth-value" for="translator-farnsworth">Off</output>
+        </span>
+        <input id="translator-farnsworth" class="h-11 w-full" type="range" min="5" max="40" value="20" disabled />
+      </label>
+      <label class="grid min-h-11 content-center gap-1 text-sm" for="translator-tone">
+        <span class="flex items-baseline justify-between gap-3 font-medium">
+          <span>Tone (Hz)</span>
+          <output id="translator-tone-value" for="translator-tone">600</output>
+        </span>
+        <input id="translator-tone" class="h-11 w-full" type="range" min="400" max="900" value="600" disabled />
+      </label>
+      <label class="grid min-h-11 content-center gap-1 text-sm" for="translator-volume">
+        <span class="flex items-baseline justify-between gap-3 font-medium">
+          <span>Volume</span>
+          <output id="translator-volume-value" for="translator-volume">70</output>
+        </span>
+        <input id="translator-volume" class="h-11 w-full" type="range" min="0" max="100" value="70" disabled />
+      </label>
+    </div>
+    <p class="min-h-6 text-sm text-muted">No sound on iPhone? Turn off silent mode.</p>
+  </div>
+  <noscript>
+    <p class="text-sm text-muted">JavaScript is off, so the panels and audio controls will not run. The chart below still works.</p>
+  </noscript>
+</section>
+
+<script>
+  import { copyWithFallback } from '../lib/copy-feedback';
+  import { changeFarnsworth, changeSpeed, farnsworthLabel } from '../lib/farnsworth';
+  import { decode, encode } from '../lib/morse';
+
+  const root = document.querySelector('[data-translator]');
+  const text = document.querySelector('#translator-text');
+  const morse = document.querySelector('#translator-morse');
+  const notice = document.querySelector('#translator-notice');
+  const announce = document.querySelector('#translator-announce');
+
+  if (
+    root instanceof HTMLElement &&
+    text instanceof HTMLTextAreaElement &&
+    morse instanceof HTMLTextAreaElement &&
+    notice instanceof HTMLElement &&
+    announce instanceof HTMLElement
+  ) {
+    let lock = false;
+    let preparingWav = false;
+
+    const showNotice = (message: string) => {
+      notice.textContent = message;
+    };
+
+    const showAnnounce = (message: string) => {
+      announce.textContent = message;
+    };
+
+    const fromText = () => {
+      if (lock) return;
+      lock = true;
+      const result = encode(text.value);
+      morse.value = result.output;
+      if (result.unsupported.length > 0) {
+        const shown = [...new Set(result.unsupported)].join(' ');
+        showNotice(`Skipped ${result.unsupported.length} unsupported characters: ${shown}`);
+      } else {
+        showNotice('');
+      }
+      lock = false;
+    };
+
+    const fromMorse = () => {
+      if (lock) return;
+      lock = true;
+      const result = decode(morse.value);
+      text.value = result.output;
+      showNotice(result.unknown > 0 ? `${result.unknown} unrecognized Morse groups shown as ?` : '');
+      lock = false;
+    };
+
+    const legacyCopy = (value: string) => {
+      const area = document.createElement('textarea');
+      area.value = value;
+      area.style.cssText = 'position:fixed;left:-9999px';
+      document.body.append(area);
+      area.select();
+      const ok = document.execCommand('copy');
+      area.remove();
+      return ok;
+    };
+
+    const flashCopy = (button: HTMLButtonElement & { copyTimer?: number }) => {
+      const label = button.dataset.flash!;
+      if (button.copyTimer) window.clearTimeout(button.copyTimer);
+      const face = button.querySelector('[data-t]')!;
+      const icon = button.querySelector('[data-i]')!;
+      const original = button.dataset.label!;
+      face.textContent = label;
+      icon.classList.remove('hidden');
+      button.dataset.state = 'copied';
+      showAnnounce(label);
+      button.copyTimer = window.setTimeout(() => {
+        face.textContent = original;
+        icon.classList.add('hidden');
+        delete button.dataset.state;
+        if (announce.textContent === label) showAnnounce('');
+      }, 1500);
+    };
+
+    const copyValue = async (button: HTMLButtonElement, value: string, fieldId: string) => {
+      const writeText = navigator.clipboard?.writeText?.bind(navigator.clipboard);
+      if ((await copyWithFallback(value, writeText, legacyCopy)) === 'copied') {
+        flashCopy(button);
+        return;
+      }
+      showNotice(root.dataset.copyError!);
+      const field = document.getElementById(fieldId) as HTMLTextAreaElement;
+      field.focus();
+      field.select();
+    };
+
+    text.addEventListener('input', () => {
+      haltAudio();
+      fromText();
+      refreshAudio();
+    });
+    morse.addEventListener('input', () => {
+      haltAudio();
+      fromMorse();
+      refreshAudio();
+    });
+
+    const playButton = document.querySelector('#translator-play');
+    const wavButton = document.querySelector('#translator-wav');
+    const wpm = document.querySelector('#translator-wpm');
+    const farnsworth = document.querySelector('#translator-farnsworth');
+    const tone = document.querySelector('#translator-tone');
+    const volume = document.querySelector('#translator-volume');
+    const wpmValue = document.querySelector('#translator-wpm-value');
+    const farnsworthValue = document.querySelector('#translator-farnsworth-value');
+    const toneValue = document.querySelector('#translator-tone-value');
+    const volumeValue = document.querySelector('#translator-volume-value');
+    let loading: Promise<typeof import('../lib/morse-player')> | null = null;
+    let audioToken = 0;
+    let audioCtx: AudioContext | null = null;
+    let speedNow = wpm instanceof HTMLInputElement ? Number(wpm.value) : 20;
+    let spacingNow = farnsworth instanceof HTMLInputElement ? Number(farnsworth.value) : 20;
+
+    const loadPlayer = () => {
+      loading ??= import('../lib/morse-player');
+      return loading;
+    };
+    const prime = () => {
+      void loadPlayer();
+    };
+    const showSliders = () => {
+      if (!(wpm instanceof HTMLInputElement) || !(farnsworth instanceof HTMLInputElement)) return;
+      if (!(tone instanceof HTMLInputElement) || !(volume instanceof HTMLInputElement)) return;
+      wpm.disabled = false;
+      farnsworth.disabled = false;
+      tone.disabled = false;
+      volume.disabled = false;
+      wpm.value = String(speedNow);
+      farnsworth.value = String(spacingNow);
+      if (wpmValue) wpmValue.textContent = String(speedNow);
+      if (farnsworthValue) farnsworthValue.textContent = farnsworthLabel(speedNow, spacingNow);
+      if (toneValue) toneValue.textContent = tone.value;
+      if (volumeValue) volumeValue.textContent = volume.value;
+    };
+    const refreshAudio = () => {
+      const canPlay = /[.-]/.test(morse.value);
+      if (playButton instanceof HTMLButtonElement) playButton.disabled = !canPlay;
+      if (wavButton instanceof HTMLButtonElement && !preparingWav) wavButton.disabled = !canPlay;
+    };
+    const haltAudio = () => {
+      audioToken += 1;
+      void loading?.then((mod) => mod.stopPlayback());
+    };
+    const openAudio = () => {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext ?? (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (!Ctx) return null;
+        audioCtx = new Ctx();
+      }
+      void audioCtx.resume();
+      return audioCtx;
+    };
+    for (const button of [playButton, wavButton]) {
+      if (!(button instanceof HTMLButtonElement)) continue;
+      button.addEventListener('pointerenter', prime);
+      button.addEventListener('focus', prime);
+    }
+    playButton?.addEventListener('click', () => {
+      const ctx = openAudio();
+      const token = ++audioToken;
+      void loadPlayer().then((mod) => {
+        if (token !== audioToken) return;
+        mod.togglePlayback(ctx);
+      });
+    });
+    wavButton?.addEventListener('click', () => {
+      if (!(wavButton instanceof HTMLButtonElement) || preparingWav) return;
+      const face = wavButton.querySelector('[data-face]');
+      preparingWav = true;
+      wavButton.disabled = true;
+      if (face) face.textContent = wavButton.dataset.busy!;
+      void loadPlayer().then((mod) => {
+        mod.downloadCurrent();
+        preparingWav = false;
+        if (face) face.textContent = wavButton.dataset.label!;
+        refreshAudio();
+      });
+    });
+    wpm?.addEventListener('input', () => {
+      if (!(wpm instanceof HTMLInputElement)) return;
+      haltAudio();
+      const next = changeSpeed({ speed: speedNow, farnsworth: spacingNow }, Number(wpm.value));
+      speedNow = next.speed;
+      spacingNow = next.farnsworth;
+      showSliders();
+    });
+    farnsworth?.addEventListener('input', () => {
+      if (!(farnsworth instanceof HTMLInputElement)) return;
+      haltAudio();
+      const next = changeFarnsworth({ speed: speedNow, farnsworth: spacingNow }, Number(farnsworth.value));
+      spacingNow = next.farnsworth;
+      showSliders();
+    });
+    for (const input of [tone, volume]) {
+      input?.addEventListener('input', () => {
+        haltAudio();
+        showSliders();
+      });
+    }
+    showSliders();
+    refreshAudio();
+
+    root.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      const control = target.closest('button');
+      if (!(control instanceof HTMLButtonElement)) return;
+
+      const copyId = control.dataset.copy;
+      if (copyId) {
+        const field = document.getElementById(copyId);
+        if (field instanceof HTMLTextAreaElement) void copyValue(control, field.value, copyId);
+        return;
+      }
+      if ('clear' in control.dataset) {
+        haltAudio();
+        text.value = '';
+        morse.value = '';
+        showAnnounce('');
+        showNotice(control.dataset.announce!);
+        refreshAudio();
+        text.focus();
+        return;
+      }
+      const sample = control.dataset.sample;
+      if (sample) {
+        haltAudio();
+        text.value = sample;
+        fromText();
+        showAnnounce(control.dataset.announce!);
+        refreshAudio();
+        text.focus();
+        return;
+      }
+      if ('share' in control.dataset) {
+        const url = new URL(location.href);
+        url.search = '';
+        url.hash = text.value ? `text=${encodeURIComponent(text.value)}` : '';
+        void copyValue(control, url.href, 'translator-text');
+      }
+    });
+
+    const hash = location.hash;
+    if (hash.startsWith('#text=')) {
+      try {
+        text.value = decodeURIComponent(hash.slice('#text='.length));
+        fromText();
+        refreshAudio();
+      } catch {
+        showNotice('');
+      }
+    }
+  }
+</script>

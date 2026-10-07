@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import { primaryNav } from '../config/nav';
+import { SITE_NAME } from '../config/site';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const links = [
+  ...primaryNav,
+  ...(posts.length > 0 ? [{ href: '/blog/', label: 'Blog' }] : []),
+  { href: '/about/', label: 'About' },
+  { href: '/privacy/', label: 'Privacy' },
+  { href: '/contact/', label: 'Contact' },
+];
+---
+
+<footer class="border-t border-line bg-surface">
+  <div class="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-6 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-sm text-muted">
+      <span class="font-semibold text-ink">{SITE_NAME}</span> turns text into Morse code in your browser. Nothing you type is uploaded.
+    </p>
+    <nav class="flex flex-wrap" aria-label="Footer">
+      {
+        links.map((link) => (
+          <a class="inline-flex min-h-11 items-center px-3 text-sm text-ink" href={link.href}>
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</footer>

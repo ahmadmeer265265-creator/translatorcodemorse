@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../../config/site';
+
+const title = 'Blog';
+const description =
+  'Articles about Morse code, practice, and the translator. New posts will be listed on this page.';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const published = posts.length > 0;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  robots={published ? 'index, follow' : 'noindex, follow'}
+  canonical={published}
+  jsonLd={
+    published
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: title,
+          url: absoluteUrl(Astro.url.pathname),
+          description,
+        }
+      : undefined
+  }
+>
+  <h1 class="text-3xl font-semibold tracking-tight">Blog</h1>
+  <p class="mt-4 max-w-2xl text-lg text-muted">
+    Guides and notes will be published here.
+  </p>
+  {
+    posts.length === 0 ? (
+      <p class="mt-6">No posts yet.</p>
+    ) : (
+      <ul class="mt-6 grid gap-4">
+        {posts.map((post) => (
+          <li>
+            <p class="font-semibold">{post.data.title}</p>
+            <p class="text-muted">{post.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>

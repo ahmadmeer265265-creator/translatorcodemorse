@@ -1,0 +1,128 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import RelatedPages from '../components/RelatedPages.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
+
+const title = 'SOS in Morse Code: ... --- ... Meaning and How to Send It';
+const description =
+  'SOS in Morse code is three dots, three dashes, and three dots, sent as one signal. Learn the full pattern and what to do in a real emergency.';
+const pageUrl = absoluteUrl('/sos-in-morse-code/');
+const crumbs = [
+  { name: 'Home', url: absoluteUrl('/') },
+  { name: 'SOS in Morse Code', url: pageUrl },
+];
+const faqs = [
+  {
+    question: 'How is SOS written in Morse code?',
+    answer:
+      'The written pattern is ... --- ... . On this site there is a space between the groups and no slash, because the translator encodes the word SOS.',
+  },
+  {
+    question: 'Is SOS an abbreviation for Save Our Souls?',
+    answer:
+      'No. Save Our Souls is a popular backronym, not the origin of the signal. SOS is a prosign: a single distress signal, not three initials.',
+  },
+  {
+    question: 'When was the distress signal adopted?',
+    answer:
+      'It was adopted by the 1906 International Radiotelegraph Convention in Berlin and took effect in 1908.',
+  },
+  {
+    question: 'What should I do in a real emergency?',
+    answer:
+      'Contact your local emergency services. This page explains the signal for learning. It does not contact rescuers for you.',
+  },
+] as const;
+
+const jsonLd = supportingJsonLd({
+  name: 'SOS in Morse Code',
+  description,
+  url: pageUrl,
+  crumbs,
+  faqs,
+  dateModified: lastUpdatedIso('/sos-in-morse-code/'),
+});
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
+  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'SOS in Morse Code' }]} />
+    <header class="grid gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight">SOS in Morse Code</h1>
+      <p>
+        SOS is the distress signal in Morse code. The pattern is three dots, three dashes, and three dots: <span class="font-mono">... --- ...</span>. It is sent as one signal, in a single run. It is not three words, and it is not three separate transmissions.
+      </p>
+    </header>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">The sequence</h2>
+      <p>
+        Write the groups from left to right. Three dots, then three dashes, then three dots again. On this site the translator encodes the text SOS as one word, so the written Morse has a space between the groups and no slash. A slash would mean a new word. SOS is not S, then a word gap, then O, then a word gap, then S.
+      </p>
+      <p>
+        The translator plays SOS with the normal gaps between letters so the three groups are easy to read and hear. A sent distress call runs the three groups together without those letter gaps.
+      </p>
+      <p>
+        The distress signal itself is a prosign. A prosign is sent as one unbroken run, not as three separate letters with a stop between them. You do not finish S, wait as though the message had ended, and then start O. The three groups follow one another as a single signal. The spaces in the written form <span class="font-mono">... --- ...</span> let a reader see those groups. They are not three messages.
+      </p>
+      <p>
+        A dot is one unit long and a dash is three units. Inside a group, the gap between marks is one unit. People learn the rhythm as three short, three long, three short, rather than as a sentence to spell. If you only remember one pattern from the alphabet, this is the one used to call for help.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">What the signal means</h2>
+      <p>
+        SOS is not an abbreviation. “Save Our Souls” and “Save Our Ship” are popular backronyms. They were fitted to the letters later. They are not the origin of the signal. The letters were chosen because the pattern is unmistakable: three short marks, three long marks, three short marks, with no extra word break in the middle.
+      </p>
+      <p>
+        The distress signal was adopted by the 1906 International Radiotelegraph Convention in Berlin and took effect in 1908. That is the decision that made this pattern the international call for help in radiotelegraphy.
+      </p>
+      <p>
+        Hearing or reading the pattern means the sender is in distress and needs help. It is not a greeting, a test word, or a signature. Practice it so you can recognize it. Do not send it as a joke or as a way to try the translator’s sound on the air.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">How people signal it</h2>
+      <p>
+        Any way of making a short mark and a long mark can carry the pattern. A short sound is a dot and a long sound, about three times as long, is a dash. A whistle, a horn, or a tapped coin on a pipe can do that. The same idea works with light: a short flash, then a long flash. It also works by knocking, with a short knock and a longer knock. The listener needs the rhythm of three short, three long, and three short, sent as one run.
+      </p>
+      <p>
+        Repeat the run if you can, with a pause between repeats so a listener can tell where one signal ends. Stay with the same short and long lengths. Mixing in other letters makes the call harder to recognize.
+      </p>
+      <p>
+        In a real emergency, contact your local emergency services. Use the phone, radio, or other help that is actually available where you are. This page explains the signal for learning. It does not send a rescue call, and playing it in the translator does not alert anyone.
+      </p>
+      <p>
+        <a class="text-accent underline underline-offset-4" href="/#text=SOS">Play SOS in the Morse code translator</a>.
+        The link opens the translator with SOS filled in, so you can read the pattern or listen to it.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Questions</h2>
+      <div class="grid gap-4">
+        {
+          faqs.map((item) => (
+            <details class="rounded-xl border border-line bg-surface px-3 py-2" open>
+              <summary class="flex min-h-11 cursor-pointer items-center font-semibold">{item.question}</summary>
+              <p class="pb-2 text-muted">{item.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+    <RelatedPages
+      links={[
+        { href: '/morse-code-alphabet/', label: 'Morse code alphabet chart' },
+        { href: '/morse-code-numbers/', label: 'Morse code numbers from 0 to 9' },
+        { href: '/', label: 'Translate text to Morse code' },
+      ]}
+    />
+  </article>
+</BaseLayout>

@@ -1,0 +1,134 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import MorseChart from '../components/MorseChart.astro';
+import RelatedPages from '../components/RelatedPages.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
+
+const title = 'Morse Code Alphabet Chart: Letters, Numbers & Punctuation';
+const description =
+  'Read the International Morse chart for A to Z, 0 to 9, and punctuation, plus the unit timing rules this translator uses for dots and dashes.';
+const pageUrl = absoluteUrl('/morse-code-alphabet/');
+const crumbs = [
+  { name: 'Home', url: absoluteUrl('/') },
+  { name: 'Morse Code Alphabet', url: pageUrl },
+];
+const faqs = [
+  {
+    question: 'Does this chart match the translator?',
+    answer:
+      'Yes. The letters, numbers, and punctuation in the table are the codes the translator encodes and decodes.',
+  },
+  {
+    question: 'How long is a dash compared with a dot?',
+    answer:
+      'A dash lasts three units and a dot lasts one unit. The gap inside a character is one unit, the gap between characters is three units, and the gap between words is seven units.',
+  },
+  {
+    question: 'Which codes are not in the ITU recommendation?',
+    answer:
+      'The exclamation mark, semicolon, underscore, and dollar sign are not assigned codes in Recommendation ITU-R M.1677-1. The ampersand on this chart uses the Wait signal.',
+  },
+  {
+    question: 'How do I practice the alphabet by sound?',
+    answer:
+      'Press Play in the translator. Keep Speed steady, set Farnsworth below Speed while a letter is new, and listen without looking at the chart.',
+  },
+] as const;
+
+const jsonLd = supportingJsonLd({
+  name: 'Morse Code Alphabet',
+  description,
+  url: pageUrl,
+  crumbs,
+  faqs,
+  dateModified: lastUpdatedIso('/morse-code-alphabet/'),
+});
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
+  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Morse Code Alphabet' }]} />
+    <header class="grid gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight">Morse Code Alphabet</h1>
+      <p>
+        The Morse code alphabet is the set of patterns this site uses for letters, numbers, and punctuation. Each pattern is a short run of dots and dashes. A dot is the short mark. A dash is the long mark. The chart on this page is the same mapping the translator uses, so a letter you look up here is the letter you will hear if you play that text.
+      </p>
+    </header>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Letters, numbers, and punctuation</h2>
+      <p>
+        Letters A to Z and digits 0 to 9 follow Recommendation ITU-R M.1677-1. The punctuation marks named in that recommendation are included as well. Four signs are not given codes there. They are the exclamation mark, the semicolon, the underscore, and the dollar sign. They are listed because most written Morse charts use these patterns: exclamation mark <span class="font-mono">-.-.--</span>, semicolon <span class="font-mono">-.-.-.</span>, underscore <span class="font-mono">..--.-</span>, and dollar sign <span class="font-mono">...-..-</span>. The ampersand uses <span class="font-mono">.-...</span>, which the recommendation lists as the Wait signal rather than as a punctuation mark.
+      </p>
+      <MorseChart />
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">How to read dots and dashes</h2>
+      <p>
+        Read a pattern from left to right. A dot or a dash is one mark. Marks that belong to the same character are written with no space between them. When you write a word, a single space separates one character from the next. A slash, with a space on each side, separates words.
+      </p>
+      <p>
+        The letter A is a dot and then a dash, written <span class="font-mono">.-</span>. The letter B is a dash and then three dots, written <span class="font-mono">-...</span>. The word AB is <span class="font-mono">.- -...</span>. The space in the middle is the gap between letters. It is not part of A or B. Remove it and the marks run together into a different character, or into no character at all.
+      </p>
+      <p>
+        The translator follows that written form. One space in the Morse panel means the next group is a new letter. A slash, or a vertical bar, or three spaces in a row, starts a new word. Lowercase text is read as capitals. A line break in the text stays a line break in the Morse code.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Timing in units</h2>
+      <p>
+        The chart shows shape, not time. Sound needs both. Timing is counted in units. A dot is one unit. A dash is three units. The gap between two marks inside one character is one unit. The gap between two characters is three units. The gap between two words is seven units.
+      </p>
+      <p>
+        Speed is words per minute. The standard word is PARIS, which is 50 units, including the word space after it. At 20 words per minute, one unit is 60 milliseconds. A dot then lasts 60 milliseconds and a dash lasts 180 milliseconds. The translator uses that scale when you press Play. Speed can be set from 5 to 40 words per minute.
+      </p>
+      <p>
+        Farnsworth spacing keeps the dots and dashes at the Speed you chose and lengthens only the gaps between letters and between words. Set Farnsworth below Speed to turn it on. When the two controls match, the Farnsworth readout says Off and the gaps stay the standard length.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Learn the alphabet by sound</h2>
+      <p>
+        A chart is the right tool when you need to look a letter up. It is a weak way to learn to hear Morse. Counting dots on a page is slower than the sound, and the count falls apart once the speed rises. Learn the rhythm of each character instead of a picture of marks.
+      </p>
+      <p>
+        Keep the character speed steady and let the gaps stay longer while a letter is new. That is what Farnsworth spacing is for. Choose a Speed you want the marks to have, then move Farnsworth below it. The dots and dashes stay quick. The silence between letters grows, so you can name the character before the next one starts. Bring Farnsworth back up only after the rhythm is familiar.
+      </p>
+      <p>
+        Practice a few letters at a time. Many sound-based plans start with two characters and add another only after those two are easy to recognize by ear. Play them in the translator, look away from this chart, and write down what you hear. A letter you can recite from the table but cannot pick out of a short run is not learned yet.
+      </p>
+      <p>
+        <a class="text-accent underline underline-offset-4" href="/#text=ABC">Hear ABC in the Morse code translator</a>.
+        The link opens the translator with ABC already in the text panel.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Questions</h2>
+      <div class="grid gap-4">
+        {
+          faqs.map((item) => (
+            <details class="rounded-xl border border-line bg-surface px-3 py-2" open>
+              <summary class="flex min-h-11 cursor-pointer items-center font-semibold">{item.question}</summary>
+              <p class="pb-2 text-muted">{item.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+    <RelatedPages
+      links={[
+        { href: '/morse-code-numbers/', label: 'Morse code numbers from 0 to 9' },
+        { href: '/sos-in-morse-code/', label: 'How SOS is sent in Morse code' },
+        { href: '/', label: 'Translate text to Morse code' },
+      ]}
+    />
+  </article>
+</BaseLayout>

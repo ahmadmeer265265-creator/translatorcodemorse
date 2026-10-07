@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'Page not found';
+const description = 'The page you requested does not exist.';
+---
+
+<BaseLayout title={title} description={description} robots="noindex, follow" canonical={false}>
+  <h1 class="text-3xl font-semibold tracking-tight">Page not found</h1>
+  <p class="mt-4 max-w-2xl text-lg text-muted">That address does not match a page on this site.</p>
+  <p class="mt-4">
+    <a class="inline-flex min-h-11 items-center text-accent underline underline-offset-4" href="/">
+      Back to home
+    </a>
+  </p>
+</BaseLayout>

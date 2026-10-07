@@ -1,0 +1,74 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedFor, lastUpdatedIso } from '../config/pages';
+import { absoluteUrl, CONTACT_EMAIL } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
+
+const title = 'Privacy';
+const description =
+  'Privacy notes for this Morse code translator: your text stays in the browser, no cookies or analytics today, and how share links and hosting logs work.';
+const pageUrl = absoluteUrl('/privacy/');
+const lastUpdated = lastUpdatedFor('/privacy/')!;
+const crumbs = [
+  { name: 'Home', url: absoluteUrl('/') },
+  { name: 'Privacy', url: pageUrl },
+];
+const jsonLd = supportingJsonLd({
+  name: 'Privacy',
+  description,
+  url: pageUrl,
+  crumbs,
+  dateModified: lastUpdatedIso('/privacy/'),
+});
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Privacy' }]} />
+    <header class="grid gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight">Privacy</h1>
+      <p class="text-sm text-muted">Last updated: {lastUpdated}</p>
+      <p>
+        This page explains, in plain English, what happens to information when you use the Morse code translator on this site. It is not a contract and it does not name specific privacy laws.
+      </p>
+    </header>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Text you type</h2>
+      <p>
+        The translator runs in your browser. The text and Morse code you enter stay on your device for that work. This site does not upload that text to translate it, play it, or build a WAV file.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Cookies, ads, and analytics</h2>
+      <p>
+        Today the site sets no cookies of its own for tracking. It does not load analytics scripts, advertising networks, or other third-party trackers. A theme preference may be stored in your browser’s local storage so the light or dark choice can stick between visits. That value stays on your device.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Hosting logs</h2>
+      <p>
+        The site is hosted on Cloudflare. Like most hosts, Cloudflare may keep standard server logs for requests to the site, such as the address of the page requested, the time, and technical details about the connection. Those logs are part of running the host, not part of the translator reading your message.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Share links</h2>
+      <p>
+        Copy share link builds an address with your text after the <span class="font-mono">#</span> symbol. Browsers do not send the hash to the server when they load the page. Anyone you give that link to can see the text in the address, so treat it like anything else you would paste into a message.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Questions</h2>
+      <p>
+        If you have a question about this page, email
+        <a class="text-accent underline underline-offset-4" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+        If any of the practices above change, this page will be updated and the last-updated date will change.
+      </p>
+    </section>
+  </article>
+</BaseLayout>
