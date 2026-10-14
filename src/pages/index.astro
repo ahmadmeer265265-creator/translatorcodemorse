@@ -1,9 +1,8 @@
 ---
-import MorseChart from '../components/MorseChart.astro';
+import HomeArticle from '../components/HomeArticle.astro';
 import Translator from '../components/Translator.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { homeFaqs } from '../data/faq';
-import { encode } from '../lib/morse';
 import { lastUpdatedIso } from '../config/pages';
 import { absoluteUrl, SITE_NAME } from '../config/site';
 
@@ -12,11 +11,6 @@ const description =
   'Translate text to Morse code or Morse code to text in your browser, then play the sound or download a WAV file. Nothing you type is uploaded.';
 const pageUrl = absoluteUrl('/');
 const dateModified = lastUpdatedIso('/');
-
-const phrases = ['SOS', 'HELLO', 'HELP', 'YES', 'NO', 'THANK YOU', 'GOOD MORNING'].map((text) => ({
-  text,
-  morse: encode(text).output,
-}));
 
 const jsonLd = [
   {
@@ -73,117 +67,5 @@ const jsonLd = [
     <Translator />
   </div>
 
-  <div class="mt-12 grid max-w-3xl gap-10 text-[1.0625rem] leading-7">
-    <section class="cv cv-use grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">How to use the Morse code translator</h2>
-      <p>
-        The two panels are linked. What you type in one is written in the other form straight away. You do not pick a direction first, and there is no button to press before a result appears.
-      </p>
-      <ol class="grid list-decimal gap-2 pl-5">
-        <li>Click the Text box and type a message, or paste one. Lowercase letters are read as capitals. A line break in your text stays a line break in the Morse code.</li>
-        <li>Read the Morse code box. Inside a word, each letter is separated by a single space. A space in your sentence becomes <span class="font-mono"> / </span> between the words.</li>
-        <li>To go the other way, click the Morse code box. Use a dot or a dash for each mark, a space between letters, and <span class="font-mono">/</span> or <span class="font-mono">|</span> between words. Three spaces in a row also start a new word.</li>
-        <li>Use Copy text or Copy Morse code to put that panel on the clipboard. Clear empties both panels. SOS and Hello world drop a short example into the Text box so you can see the pattern.</li>
-        <li>Copy share link copies this page address with your text after <span class="font-mono">#text=</span>. Opening that link fills the Text box again. The part after the hash is not a separate address, so it is not another page for search engines to collect.</li>
-      </ol>
-      <p>
-        If a character has no Morse pattern, it is left out and named on the status line under the buttons. If a group of dots and dashes is not in the chart, that group becomes a question mark and the status line says how many groups were unrecognized.
-      </p>
-    </section>
-
-    <section class="cv cv-audio grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Play and download Morse code audio</h2>
-      <p>
-        The Audio row plays the Morse code panel. Play starts the sound, and the same button becomes Stop. Stop cuts the tone off at once. When the message ends, the button returns to Play and the status line says Finished.
-      </p>
-      <p>
-        Speed is words per minute. The standard word is PARIS, which is 50 timing units, including the space that follows it. At 20 words per minute a dot lasts 60 milliseconds. The range is 5 to 40.
-      </p>
-      <p>
-        Farnsworth changes only the gaps between letters and between words. The dots and dashes stay at the Speed setting. When the Farnsworth slider matches Speed, the readout says Off and the gaps stay standard. A lower Farnsworth value stretches those gaps so a learner can hear each letter.
-      </p>
-      <p>
-        Tone sets the pitch from 400 to 900 hertz. Volume sets how loud the tone is. Download WAV saves the same timing as a file named morse-code.wav. Messages longer than five minutes are not saved, and the status line shows the length instead.
-      </p>
-    </section>
-
-    <section class="cv cv-chart grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Morse code chart</h2>
-      <p>
-        This is the character set the translator uses. Letters and digits follow Recommendation ITU-R M.1677-1, and so do the punctuation marks named in that recommendation. The exclamation mark, semicolon, underscore, and dollar sign are not given codes there. They are included because most written Morse charts use these patterns: exclamation mark <span class="font-mono">-.-.--</span>, semicolon <span class="font-mono">-.-.-.</span>, underscore <span class="font-mono">..--.-</span>, and dollar sign <span class="font-mono">...-..-</span>. The ampersand uses <span class="font-mono">.-...</span>, which the recommendation lists as the Wait signal rather than as a punctuation mark.
-      </p>
-      <MorseChart />
-      <p>
-        A longer reference for the same alphabet is on the
-        <a class="text-accent underline underline-offset-4" href="/morse-code-alphabet/">Morse code alphabet</a>
-        page, including the timing rules and the marks that are not in the ITU recommendation. The codes in the table above are the ones this translator encodes and decodes.
-      </p>
-    </section>
-
-    <section class="cv cv-works grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">How Morse code works</h2>
-      <p>
-        Every character is a short pattern of two kinds of mark. The short mark is a dot. The long mark is a dash. In the recommendation, a dash is three times as long as a dot. The gap inside a character, between one mark and the next, is as long as one dot. The gap between two characters is as long as three dots. The gap between two words is as long as seven dots.
-      </p>
-      <p>
-        Those lengths are about timing, not about how many spaces you type. A page of text cannot hold a silent pause, so this translator writes the same structure with characters you can copy. One space means “the next pattern is a new letter.” The slash between spaces means “the next pattern starts a new word.” A line break in the text stays a line break in the Morse code, so a list or a short note keeps its shape.
-      </p>
-      <p>
-        Take the letter A. Its pattern is dot, then dash, written <span class="font-mono">.-</span>. The letter B is a dash followed by three dots, written <span class="font-mono">-...</span>. Put them in one word, AB, and the code is <span class="font-mono">.- -...</span>. The space in the middle is the letter gap. It is not part of either pattern. If you remove that space, the marks run together and become a different character, or no character at all.
-      </p>
-      <p>
-        Words work the same way, one step larger. SOS is three letters and no word gap, so it is written <span class="font-mono">... --- ...</span>. HELLO WORLD is two words. The code for HELLO, then <span class="font-mono"> / </span>, then the code for WORLD. The slash is only a written stand-in for the longer gap. It is not a Morse character unless you typed a slash in the text. A typed slash is its own pattern, <span class="font-mono">-..-.</span>, and it sits inside the word like any other mark.
-      </p>
-      <p>
-        Digits are <a class="text-accent underline underline-offset-4" href="/morse-code-numbers/">five marks long</a>. Zero is five dashes. One is a dot followed by four dashes. Five is five dots. Six begins the return toward zero with a dash and then four dots. Because every digit has the same length, a number is easy to separate from a word of mixed letters once you know to count five marks.
-      </p>
-      <p>
-        Punctuation is less regular. A full stop is <span class="font-mono">.-.-.-</span>. A comma is <span class="font-mono">--..--</span>. A question mark is <span class="font-mono">..--..</span>. These patterns are longer than most letters, which is why a missing space changes the reading so quickly. The translator does not guess where a space should have been. It reads the groups you actually typed.
-      </p>
-      <p>
-        The same rule explains unknown groups. Eight dots in a row is the traditional sign that the sender made an error, but it is not one of the characters in the chart. This page shows it as a question mark and counts it, instead of inventing a letter. If you meant H and then E, type <span class="font-mono">.... .</span> with the space.
-      </p>
-      <p>
-        You can also type a few lookalike marks in the Morse panel. A middle dot or a bullet is read as a dot. An en dash, an em dash, or a minus sign is read as a dash. That only changes the Morse panel. In the Text panel, a dash character is the hyphen, whose own code is <span class="font-mono">-....-</span>.
-      </p>
-    </section>
-
-    <section class="cv cv-phrases grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Common Morse code phrases</h2>
-      <p>
-        These are ordinary words, encoded with the same rules as the tool. SOS has no slash because it is a single group of three letters. The others are split only where the English has a space.
-      </p>
-      <ul class="grid gap-2">
-        {
-          phrases.map((phrase) => (
-            <li class="grid gap-0.5 border-b border-line pb-2">
-              <span class="font-semibold">{phrase.text}</span>
-              <span class="font-mono text-sm tracking-wide text-muted">{phrase.morse}</span>
-            </li>
-          ))
-        }
-      </ul>
-      <p>
-        <a class="text-accent underline underline-offset-4" href="/sos-in-morse-code/">SOS in Morse code</a> is the distress signal agreed for Morse. It is not three separate words, and it is not written with slashes between S, O, and S. HELLO, HELP, YES, and NO are short enough to compare letter by letter with the chart. THANK YOU and GOOD MORNING show the word slash in a normal sentence.
-      </p>
-    </section>
-
-    <section class="cv cv-faq grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Questions about this translator</h2>
-      <div class="grid gap-4">
-        {
-          homeFaqs.map((item) => (
-            <details class="rounded-xl border border-line bg-surface px-3 py-2" open>
-              <summary class="flex min-h-11 cursor-pointer items-center font-semibold">{item.question}</summary>
-              {'answerHtml' in item && item.answerHtml ? (
-                <p class="pb-2 text-muted" set:html={item.answerHtml} />
-              ) : (
-                <p class="pb-2 text-muted">{item.answer}</p>
-              )}
-            </details>
-          ))
-        }
-      </div>
-    </section>
-  </div>
+  <HomeArticle />
 </BaseLayout>

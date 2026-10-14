@@ -1,0 +1,87 @@
+---
+import '../styles/timing-block.css';
+---
+
+<div class="mt-box">
+  <h3>How Morse Code Timing Works</h3>
+  <p>
+    Morse code has no letters or sounds of its own. It is built from short and long signals, and everything is measured
+    against one unit of time: the length of a dot.
+  </p>
+
+  <div class="mt-table-wrap">
+    <table class="mt-table">
+      <thead>
+        <tr>
+          <th scope="col">Part</th>
+          <th scope="col">Length</th>
+          <th scope="col">Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mt-r1">
+          <td data-label="Part"><span class="mt-chip">Dot</span></td>
+          <td data-label="Length"><span class="mt-part">1 unit</span></td>
+          <td data-label="Example"><span class="mt-code">.</span></td>
+        </tr>
+        <tr class="mt-r2">
+          <td data-label="Part"><span class="mt-chip">Dash</span></td>
+          <td data-label="Length"><span class="mt-part">3 units</span></td>
+          <td data-label="Example"><span class="mt-code">-</span></td>
+        </tr>
+        <tr class="mt-r3">
+          <td data-label="Part"><span class="mt-chip">Gap inside a letter</span></td>
+          <td data-label="Length"><span class="mt-part">1 unit</span></td>
+          <td data-label="Example">Between the dot and dash in A (<span class="mt-code">.-</span>)</td>
+        </tr>
+        <tr class="mt-r4">
+          <td data-label="Part"><span class="mt-chip">Gap between letters</span></td>
+          <td data-label="Length"><span class="mt-part">3 units</span></td>
+          <td data-label="Example">Between A and B</td>
+        </tr>
+        <tr class="mt-r5">
+          <td data-label="Part"><span class="mt-chip">Gap between words</span></td>
+          <td data-label="Length"><span class="mt-part">7 units</span></td>
+          <td data-label="Example">Between HELLO and WORLD</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Using this table, the letter <strong>A</strong> (<span class="mt-code">.-</span>) takes 5 units: one for the dot, one
+    for the gap, and three for the dash.
+  </p>
+
+  <h3>How speed is measured</h3>
+  <p>
+    Morse speed is counted in <strong>words per minute (WPM)</strong>. Because words have different lengths, operators
+    use one test word, <strong>PARIS</strong>. It takes exactly 50 units to send, including the pause after it. To find
+    how long one dot lasts, divide 1,200 by your speed.
+  </p>
+
+  <div class="mt-cards">
+    <div class="mt-card a">
+      <div class="big">10 WPM</div>
+      <div class="sub">Dot = 120 ms · Dash = 360 ms</div>
+    </div>
+    <div class="mt-card b">
+      <div class="big">20 WPM</div>
+      <div class="sub">Dot = 60 ms · Dash = 180 ms</div>
+    </div>
+  </div>
+
+  <p>Beginners usually start slow and speed up as their ear improves.</p>
+
+  <h3>International and American Morse</h3>
+  <p>
+    The code used today is <strong>International Morse code</strong>, the standard set by the ITU (ITU-R M.1677). An
+    older version, <strong>American Morse code</strong>, was used on U.S. telegraph lines and has some different letters
+    and spacing.
+  </p>
+
+  <div class="mt-note">
+    <strong>Quick tip:</strong> You do not need to calculate any of this by hand. Press play in the translator and listen
+    to the rhythm instead.
+  </div>
+</div>

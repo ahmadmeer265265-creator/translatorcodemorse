@@ -1,0 +1,739 @@
+---
+/**
+ * Editable homepage article (below the translator).
+ * Untouched original: docs/article-source.txt
+ */
+import AmericanMorseBlock from './AmericanMorseBlock.astro';
+import TimingBlock from './TimingBlock.astro';
+import { homeFaqs } from '../data/faq';
+
+const link = 'text-accent underline underline-offset-4';
+const h2 = 'text-2xl font-semibold tracking-tight';
+const h3 = 'text-xl font-semibold tracking-tight';
+const tableClass = 'w-full border-collapse text-left text-base';
+const thClass = 'border-b border-line bg-surface px-3 py-2 font-semibold';
+const tdClass = 'border-b border-line px-3 py-2 align-top';
+const codeClass = 'font-mono tracking-wide';
+---
+
+<div class="mt-12 grid max-w-3xl gap-10 text-[1.0625rem] leading-7">
+  <section class="cv grid gap-3">
+    <h2 class={h2}>A Brief Origin of Morse Code</h2>
+    <p>
+      In the 1830s, Samuel Morse and his colleague Alfred Vail took initiative about Morse code for electric telegraph
+      and developed a proper system of dots and dashes in 1837 and finally revealed it publicly in 1838. In 1844, Samuel
+      Morse sent the famous message “What hath God wrought?” from Washington, D.C. to Baltimore, over a new telegraph
+      line. Without computer technology, people used to send and receive these codes by hand in the form of letters and
+      numbers.
+    </p>
+    <p>
+      Morse code crossed the Atlantic Ocean in 1866 and <a class={link} href="/sos-in-morse-code/">SOS</a> was adopted as
+      the international distress signal in 1906. Fun fact: SOS does not stand for any words. It was chosen because{' '}
+      <code class={codeClass}>... --- ...</code> is simple and easy to recognize. Morse code was used in emergency
+      situations when there was no internet available. It was widely used for telegram and radio signals.
+    </p>
+    <p>
+      Nowadays, you can still find Morse code in ham radio, in aviation beacons, and in tools that help people to
+      communicate who have some disabilities. The dots and dashes of Morse code are also used for troubleshooting micro
+      electronic systems having just one LED or button. You can spot Morse code in escape room puzzles, movies,
+      bracelets and necklaces, and even tattoos.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>About Morse Code Translator</h2>
+    <p>
+      A Morse Code Translator is an online tool that converts simple text into Morse code — dots and dashes. In Morse
+      code, short beeps are known as dots (“dits”) and long beeps are called dashes (“dahs”). You can also convert Morse
+      code back into simple English text, which means a message can be coded and decoded with a few easy steps with a
+      Morse code translator.
+    </p>
+    <p>
+      In Morse code, there is a unique sequence of dots and dashes for every letter, number and punctuation. Characters
+      within a word are separated by a single space while two words are separated by a slash (/). So HELLO is{' '}
+      <code class={codeClass}>.... . .-.. .-.. ---</code>, and HELLO WORLD is{' '}
+      <code class={codeClass}>.... . .-.. .-.. --- / .-- --- .-. .-.. -..</code>
+    </p>
+    <p>
+      Our Morse code translator works both ways, converting plain text into Morse code and translating Morse code back
+      into simple text. This tool can play Morse code out loud with the correct timing. A dash is three times longer than
+      a dot, and there are proper pauses between letters and words, so you can easily learn to recognize Morse by
+      listening. It all works inside your browser locally, so nothing leaves your device.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>How to Use Our Morse Code Translator</h2>
+    <p>It takes only a few seconds. Here is how to convert text to Morse code and Morse code to text.</p>
+    <ol class="grid list-decimal gap-3 pl-5">
+      <li>
+        <p class="font-semibold">Choose your direction.</p>
+        <p>
+          Choose Text to Morse to convert words into dots and dashes, or Morse to Text to decode a message back into
+          English.
+        </p>
+      </li>
+      <li>
+        <p class="font-semibold">Type your message.</p>
+        <p>
+          Type your message, or paste your Morse code. Always use a space between letters and a slash (/) between words.
+        </p>
+      </li>
+      <li>
+        <p class="font-semibold">Read the result.</p>
+        <p>
+          Your translation shows up instantly. For example, HELLO WORLD becomes:{' '}
+          <code class={codeClass}>.... . .-.. .-.. --- / .-- --- .-. .-.. -..</code>
+        </p>
+      </li>
+      <li>
+        <p class="font-semibold">Play the sound.</p>
+        <p>
+          Press play to hear your message as short and long beeps. It’s the best way to get used to the rhythm of Morse
+          code.
+        </p>
+      </li>
+      <li>
+        <p class="font-semibold">Copy or swap.</p>
+        <p>
+          With one click you can copy the result, or swap the input and output to translate it back the other way.
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>How to Learn Morse Code Step by Step</h2>
+    <p>
+      There is no need to memorize a chart to learn Morse code. The best way is to learn it as sound and rhythm, not as a
+      picture of dots and dashes.
+    </p>
+    <h3 class={h3}>Step 1: Understand the timing</h3>
+    <p>Morse code is built on one simple unit, the length of a dot.</p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>A dash is 3 units long.</li>
+      <li>The gap between parts of a letter is 1 unit.</li>
+      <li>The gap between letters is 3 units.</li>
+      <li>The gap between words is 7 units.</li>
+    </ul>
+    <p>Once you learn and memorize this, every message makes sense.</p>
+    <h3 class={h3}>Step 2: Start with two letters</h3>
+    <p>
+      Begin with E (<code class={codeClass}>.</code>) and T (<code class={codeClass}>-</code>). These two are the shortest
+      letters in Morse code, so they explain to you the difference between short and long without any confusion.
+    </p>
+    <h3 class={h3}>Step 3: Add letters slowly</h3>
+    <p>Instead of learning the whole alphabet at once, always add a few new letters at a time.</p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>A (<code class={codeClass}>.-</code>) and N (<code class={codeClass}>-.</code>) are mirror images of each other.</li>
+      <li>I (<code class={codeClass}>..</code>) and M (<code class={codeClass}>--</code>) are easy to hear and remember.</li>
+    </ul>
+    <p>When you start recognizing old letters without thinking, then you can add new letters.</p>
+    <h3 class={h3}>Step 4: Learn by listening</h3>
+    <p>
+      Before looking at the dots and dashes of each letter in Morse code, always listen to each and every letter by using
+      the play button. There is a method called the Koch method; many beginners use this to train their ears to recognize
+      whole letters instead of counting beeps. Practicing 10 minutes a day is better than one long session a week.
+    </p>
+    <h3 class={h3}>Step 5: Practice with short words</h3>
+    <p>Once you know a few letters, try simple words:</p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>HI is <code class={codeClass}>.... ..</code></li>
+      <li>NO is <code class={codeClass}>-. ---</code></li>
+      <li>YES is <code class={codeClass}>-.-- . ...</code></li>
+      <li>SOS is <code class={codeClass}>... --- ...</code></li>
+    </ul>
+    <h3 class={h3}>Step 6: Decode by ear</h3>
+    <p>
+      Type a short word, press play without looking at the result, and write down what you hear. Then check your answer
+      with the translator. Over time, move on to longer words and full sentences.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>How to Encode and Decode Morse Code</h2>
+    <p>You can translate Morse code by hand, even without a tool. It works in two simple steps.</p>
+    <h3 class={h3}>Encode: turn words into Morse</h3>
+    <p>Pick a short word, like HELLO.</p>
+    <p>Write the Morse code for each letter:</p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>H = <code class={codeClass}>....</code></li>
+      <li>E = <code class={codeClass}>.</code></li>
+      <li>L = <code class={codeClass}>.-..</code></li>
+      <li>L = <code class={codeClass}>.-..</code></li>
+      <li>O = <code class={codeClass}>---</code></li>
+    </ul>
+    <p>
+      Put one space between letters: <code class={codeClass}>.... . .-.. .-.. ---</code>
+    </p>
+    <p>If your message has more than one word, put a slash (/) between the words.</p>
+    <h3 class={h3}>Decode: turn Morse back into words</h3>
+    <p>Split the message at each space. Every chunk is one letter.</p>
+    <p>Match each chunk to its letter.</p>
+    <p>Read the letters in order. A slash means a new word begins.</p>
+    <p>
+      For example, <code class={codeClass}>.... ..</code> splits into <code class={codeClass}>....</code> (H) and{' '}
+      <code class={codeClass}>..</code> (I), so the message says HI.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Why Spacing Matters in Morse Code</h2>
+    <p>Morse code is easy to misread without spaces. Look at these two examples below:</p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li><code class={codeClass}>.- -.</code> is AN (the letters A and N).</li>
+      <li><code class={codeClass}>.- / -.</code> is A N (two separate words).</li>
+    </ul>
+    <p>When the gaps are changed, even the same dots and dashes meaning get different:</p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li><code class={codeClass}>.-</code> is the letter A.</li>
+      <li><code class={codeClass}>. -</code> (with a space) are the two letters E and T.</li>
+    </ul>
+    <p>
+      That is why every letter needs a space after it, and every word needs a slash. Not every tool uses the same word
+      separator, so some use a slash (/), a vertical bar (|), or extra spaces. The main rule is to pick one style and use
+      it the same way throughout your message.
+    </p>
+    <p>Here are a few more examples of letters to practice:</p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Letter</th>
+            <th class={thClass} scope="col">Morse code</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            [
+              ['D', '-..'],
+              ['G', '--.'],
+              ['H', '....'],
+              ['K', '-.-'],
+              ['R', '.-.'],
+              ['U', '..-'],
+            ].map(([letter, code]) => (
+              <tr>
+                <td class={tdClass}>{letter}</td>
+                <td class={tdClass}><code class={codeClass}>{code}</code></td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Avoid symbols that have no Morse code. Morse code covers letters, numbers, and common punctuation, but not emojis
+      or rare symbols. If your message includes them, the translator may show a # in their place. Replace them with plain
+      letters or words before you translate.
+    </p>
+    <h3 class={h3}>Try it with a flashlight</h3>
+    <p>A flashlight or your phone’s torch is enough to practice.</p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>Short flash = dot</li>
+      <li>Long flash (about three times longer) = dash</li>
+      <li>Short pause between letters, longer pause between words</li>
+    </ul>
+    <p>
+      Start with SOS (<code class={codeClass}>... --- ...</code>): three short flashes, three long flashes, three short
+      flashes. Practice with a friend who is learning too, and never point the light at people’s eyes or at traffic.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Common Morse Code Messages</h2>
+    <p>Try typing, tapping, or flashing these:</p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Message</th>
+            <th class={thClass} scope="col">Morse code</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            [
+              ['OK', '--- -.-'],
+              ['LOVE', '.-.. --- ...- .'],
+              ['HELP ME', '.... . .-.. .--. / -- .'],
+              ['THANKS', '- .... .- -. -.- ...'],
+              ['THANK YOU', '- .... .- -. -.- / -.-- --- ..-'],
+              ['I LOVE YOU', '.. / .-.. --- ...- . / -.-- --- ..-'],
+              ['SOS', '... --- ...'],
+              ['GOOD MORNING', '--. --- --- -.. / -- --- .-. -. .. -. --.'],
+            ].map(([message, code]) => (
+              <tr>
+                <td class={tdClass}>{message}</td>
+                <td class={tdClass}><code class={codeClass}>{code}</code></td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <h3 class={h3}>Try These Examples in the Translator</h3>
+    <ol class="grid list-decimal gap-3 pl-5">
+      <li>
+        Encode a phrase. Choose Text to Morse and type GOOD MORNING. You should get:{' '}
+        <code class={codeClass}>--. --- --- -.. / -- --- .-. -. .. -. --.</code>
+      </li>
+      <li>
+        Decode a word. Switch to Morse to Text and paste this:{' '}
+        <code class={codeClass}>-- --- .-. ... .</code> It decodes to MORSE.
+      </li>
+      <li>
+        Break it on purpose. Remove one space from the Morse above and see how the result changes. This shows why every
+        letter needs its own gap.
+      </li>
+    </ol>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Morse Code Timing Explained: Dots, Dashes & Gaps</h2>
+    <TimingBlock />
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>What Does Morse Code Sound Like?</h2>
+    <p>Each letter has its own rhythm, a bit like a tiny tune.</p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Letter</th>
+            <th class={thClass} scope="col">How it sounds</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            [
+              ['E', 'dit'],
+              ['T', 'dah'],
+              ['A', 'di-dah'],
+              ['N', 'dah-dit'],
+              ['S', 'di-di-dit'],
+              ['O', 'dah-dah-dah'],
+            ].map(([letter, sound]) => (
+              <tr>
+                <td class={tdClass}>{letter}</td>
+                <td class={tdClass}>{sound}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Put them together and you get SOS: di-di-dit, dah-dah-dah, di-di-dit. It has a short-long-short pattern that is easy
+      to remember.
+    </p>
+    <p>Here is HELLO as sound:</p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>H: di-di-di-dit</li>
+      <li>E: dit</li>
+      <li>L: di-dah-di-dit</li>
+      <li>L: di-dah-di-dit</li>
+      <li>O: dah-dah-dah</li>
+    </ul>
+    <p>Just type HELLO in the translator, press play and follow along out loud.</p>
+    <p>
+      Fun fact: Just by timing and rhythm, experienced operators can easily recognize who is sending a message. This is
+      called a sender’s “fist”.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Our Morse Code Translator Features</h2>
+    <p>
+      In our Morse code translator, you can use all features like audio playback, sharing, learning etc. in one place.
+      Here is the list below:
+    </p>
+    <h3 class={h3}>Text to Morse Code</h3>
+    <p>
+      Type your message into the top box and you’ll see the results in the form of dots ( . ) and dashes ( - ). If the
+      result appears in the form of “ # “, it means your character can’t be translated. It offers all letters ( A - Z ),
+      numbers ( 0 - 9 ) and punctuation marks.
+    </p>
+    <h3 class={h3}>Morse Code to Text</h3>
+    <p>
+      When decoding a message, type or paste every dot as ( . ) and dash as ( - ) into the top box. Always put one space
+      between letters and put a slash ( / ) between words. You’ll see the result in the form of plain text in the output
+      box instantly. It works for Morse that came from a flashing light, a series of beeps, or a note on paper. If you
+      find “ # “ in the result box, it means your character can’t be translated; you can spot and fix the mistake easily.
+    </p>
+    <h3 class={h3}>Hear It, See It or Feel It</h3>
+    <p>
+      Press Play to hear your message as beeps, with short beeps for dots and longer ones for dashes. You can use the
+      Pause, Stop, and Repeat button to control it. You can also choose how you want to receive the code:
+    </p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>Sound: a clear beep for each dot and dash</li>
+      <li>Light: a flashing light that matches the rhythm, like real signal training</li>
+      <li>Vibration: your phone buzzes in short and long pulses</li>
+    </ul>
+    <h3 class={h3}>Highlight Feature</h3>
+    <p>
+      Press Play and watch each letter light up in both the Text and Morse code boxes as it sounds. It is a simple way to
+      connect what you hear with what you see.
+    </p>
+    <h3 class={h3}>Customize the Sound</h3>
+    <p>You can customize the settings below to make playback fit your level:</p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>
+        Presets: If you are not sure when picking a speed, pick a preset and then fine-tune it with the options below.
+      </li>
+      <li>Sound type: choose a telegraph click or a CW radio tone</li>
+      <li>Pitch (Hz): set the tone to whatever is comfortable for your ears</li>
+      <li>Volume: make volume louder or softer</li>
+      <li>Speed (WPM): At first, play slowly as a beginner or fast when you are ready</li>
+      <li>
+        Farnsworth speed: keeps each letter at a normal speed but adds longer pauses between letters; in this way you
+        learn to recognize the sound of a letter instead of counting dots
+      </li>
+      <li>Autoplay: Turn Autoplay button on; it will automatically play your message when it is translated.</li>
+      <li>Word separator: You can show or hide the slash between words</li>
+    </ul>
+    <h3 class={h3}>Copy and Share in One Click</h3>
+    <p>
+      There is also a copy button, so you can grab the text or the Morse code immediately. The share button allows you to
+      send your translation straight to people.
+    </p>
+    <h3 class={h3}>Send a Morse Puzzle</h3>
+    <p>
+      Convert your message into a link and send it to someone as a little puzzle to solve. It is a fun way to challenge
+      friends, and it works well for games, parties, and classrooms.
+    </p>
+    <h3 class={h3}>Look Up a Letter</h3>
+    <p>If you want to check a letter or a number while translating, just open Reference.</p>
+    <h3 class={h3}>Try a Random Message</h3>
+    <p>
+      When you are not sure what to type? Press the Random or Example button to load a sample message. It is a quick and
+      easy way to practice reading Morse, test your speed, or see how the tool works.
+    </p>
+    <h3 class={h3}>Clear</h3>
+    <p>To start a new translation, tap the clear option and both of your boxes will be clear.</p>
+    <h3 class={h3}>Download as Audio</h3>
+    <p>
+      You can also save your Morse code as a WAV audio file by clicking on the Download WAV button to keep for later or
+      share anywhere.
+    </p>
+    <h3 class={h3}>Export TXT</h3>
+    <p>If you want to save your Morse code as a text file, then tap on the Export TXT option.</p>
+    <h3 class={h3}>Live Counters</h3>
+    <p>
+      Below each box, you can see how many characters you typed and how many signals it makes, updated as you type. This
+      helps you check message length and see how many dots and dashes a sentence needs.
+    </p>
+    <h3 class={h3}>Simple, Free, and Unlimited</h3>
+    <p>
+      The design is clean, simple and easy to follow, so you always know what to do next. There is no sign-up, no
+      subscription, and no limit on how much you can translate.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>When to Use This Morse Code Translator</h2>
+    <ul class="grid list-disc gap-3 pl-5">
+      <li>
+        <span class="font-semibold">Learning Morse by Hearing.</span> Just type a short word, tap play and listen to the
+        rhythm. Start slow and build up by using the speed and Farnsworth settings.
+      </li>
+      <li>
+        <span class="font-semibold">Practice Ham radio.</span> Enter common phrases, set the playback speed to the level
+        you want to train at, and listen before you go on the air.
+      </li>
+      <li>
+        <span class="font-semibold">School projects and science fairs.</span> Translate a message, copy the dots and
+        dashes into your report, or save the sound by clicking on Download WAV for your presentation.
+      </li>
+      <li>
+        <span class="font-semibold">Names and meaningful words for jewelry or tattoos.</span> Make a name, date, or short
+        phrase into dots and dashes for a bracelet or ring. Before finalizing, translate it back to text and play the
+        audio to confirm every letter is right.
+      </li>
+      <li>
+        <span class="font-semibold">Puzzles, games and escape rooms.</span> Decode a clue you found, or write your own
+        and send it to a friend as a puzzle link.
+      </li>
+      <li>
+        <span class="font-semibold"
+          >Learning the <a class={link} href="/sos-in-morse-code/">SOS</a> signal.</span
+        >{' '}
+        Practice the pattern <code class={codeClass}>... --- ...</code> with sound and light so you can recognize it. In
+        a real emergency, contact emergency services first, since Morse is not a replacement for calling for help.
+      </li>
+    </ul>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Stop Memorizing, Start Spotting Patterns</h2>
+    <p>
+      You do not need to learn 26 random symbols. Most Morse code letters follow a particular pattern, and once you learn
+      and see them, the code gets much easier.
+    </p>
+    <h3 class={h3}>Start with the shortest letters</h3>
+    <p>
+      E is one dot (<code class={codeClass}>.</code>). T is one dash (<code class={codeClass}>-</code>).
+    </p>
+    <p>
+      E is the most common letter in English, so it has the shortest code. The code’s early designer, Alfred Vail, is said
+      to have counted letters in a printer’s type cases to decide this.
+    </p>
+    <p>Learn these two first, because they teach you the difference between short and long.</p>
+    <h3 class={h3}>Use your ears, not just your eyes</h3>
+    <p>Try to say the sounds out loud: a dot is “dit” and a dash is “dah”.</p>
+    <p>
+      Dot-heavy letters like S (<code class={codeClass}>...</code>) and H (<code class={codeClass}>....</code>) sound like
+      a fast tapping. Hear one and the other becomes easy.
+    </p>
+    <p>
+      Experienced instructors suggest learning by sound, because counting dots and dashes in your head slows you down
+      later.
+    </p>
+    <h3 class={h3}>Learn letters in opposite pairs</h3>
+    <p>
+      Many letters are exact opposites (dots become dashes and dashes become dots). Try to learn them together; this way
+      you can save your time:
+    </p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>E <code class={codeClass}>.</code> and T <code class={codeClass}>-</code></li>
+      <li>I <code class={codeClass}>..</code> and M <code class={codeClass}>--</code></li>
+      <li>A <code class={codeClass}>.-</code> and N <code class={codeClass}>-.</code></li>
+      <li>S <code class={codeClass}>...</code> and O <code class={codeClass}>---</code></li>
+      <li>U <code class={codeClass}>..-</code> and G <code class={codeClass}>--.</code></li>
+      <li>R <code class={codeClass}>.-.</code> and K <code class={codeClass}>-.-</code></li>
+      <li>W <code class={codeClass}>.--</code> and D <code class={codeClass}>-..</code></li>
+    </ul>
+    <h3 class={h3}>Learn numbers with one simple rule</h3>
+    <p>
+      Every <a class={link} href="/morse-code-numbers/">number</a> is exactly five signals long.
+    </p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>
+        1 to 5: start with as many dots as the number, then fill the rest with dashes. 1 is{' '}
+        <code class={codeClass}>.----</code>, 3 is <code class={codeClass}>...--</code>, and 5 is{' '}
+        <code class={codeClass}>.....</code>
+      </li>
+      <li>
+        6 to 9: start with (number minus 5) dashes, then fill the rest with dots. 6 is{' '}
+        <code class={codeClass}>-....</code>, 8 is <code class={codeClass}>---..</code>
+      </li>
+      <li>0 is five dashes: <code class={codeClass}>-----</code></li>
+    </ul>
+    <h3 class={h3}>Try the decision tree (visual learners)</h3>
+    <p>
+      Imagine a tree in your mind where a dot takes you left and a dash takes you right. Each step adds one signal, and
+      every letter sits at its own spot.
+    </p>
+    <p>Some learners find this easier to remember than a plain chart.</p>
+    <h3 class={h3}>Learn slowly and keep it short</h3>
+    <p>Try to add only two or three new letters at a time.</p>
+    <p>
+      Many learners use the Koch method (full-speed letters, added one at a time) or Farnsworth spacing (fast letters with
+      longer pauses between them). Both aim to build sound recognition instead of counting.
+    </p>
+    <h3 class={h3}>Don’t Skip Punctuation</h3>
+    <p>A message with no punctuation feels unfinished. The three you will use most are:</p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>Period: <code class={codeClass}>.-.-.-</code></li>
+      <li>Comma: <code class={codeClass}>--..--</code></li>
+      <li>Question mark: <code class={codeClass}>..--..</code></li>
+    </ul>
+    <p>
+      Punctuation codes are longer (six signals each), but they follow simple, repeating patterns that are easy to hear
+      once you practice. Also useful: send eight dots (<code class={codeClass}>........</code>) to mean “I made a mistake,
+      ignore that.”
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Improve Your Morse Code Skills</h2>
+    <p>Once you learn the basics, a few habits can help you get better and faster.</p>
+    <ul class="grid list-disc gap-3 pl-5">
+      <li>
+        <span class="font-semibold">Get it right before you get fast.</span> Start with slow spacing between letters, but
+        keep each letter at a normal pace. This way you learn the real sound of every letter, and speed comes naturally.
+      </li>
+      <li>
+        <span class="font-semibold">Practice and work on your weak spots.</span> Always keep a short list of the letters
+        or numbers you often get wrong, and practice those first instead of repeating every letter equally.
+      </li>
+      <li>
+        <span class="font-semibold">Try a memory trick, but don’t rely on it.</span> A short phrase or picture can help
+        with a tricky letter in the first few days. Some instructors suggest moving on to sound as soon as you can,
+        because the trick adds one extra step between hearing and understanding.
+      </li>
+      <li>
+        <span class="font-semibold">Move on to common short codes.</span> After words, learn the short signals radio
+        operators use, such as CQ (a call to any station), QTH (my location), and 73 (best regards).
+      </li>
+      <li>
+        <span class="font-semibold">Make it a game.</span> You can send a Morse puzzle to a friend, decode a random
+        message, or race to beat your own time.
+      </li>
+      <li>
+        <span class="font-semibold">Learn with others.</span> Ham radio clubs and online learning groups give you
+        feedback, practice partners, and a reason to keep going. Most clubs also run Morse contests, where operators try
+        to make contacts.
+      </li>
+    </ul>
+    <p>
+      Tap along as you listen. With your finger, drum the rhythm on your desk; if you want a dot tap short and if you want
+      a dash press longer. Moving your hand helps the timing stick in your memory.
+    </p>
+    <p>
+      Try this today: Type any message into the translator, press play and write down what you hear before you look at the
+      result.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Why Morse Code Is Still Around</h2>
+    <p>
+      Morse code has lasted more than 180 years because it asks for very little. Just tap on a table; you don’t need a
+      screen or keyboard to use it. A flashlight, beep or a tap on the table is enough for you, only if the other person
+      knows the code.
+    </p>
+    <p>
+      The origin of Morse code started with telegraph wires, then moved to radio, and in today’s modern era, you can still
+      find it in ham radio, aviation beacons and mobile keyboards that help disabled people. With time tools changed, but
+      the idea of Morse code remains the same: anyone can learn these simple signals that are sent with careful timing.
+      Radio operators call Morse code “CW,” which means continuous wave.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Where You Will Still Meet Morse Code Today</h2>
+    <p>
+      You can still find Morse code in many places today. Ham radio operators still send Morse as CW, because a simple
+      on-off tone can get through weak or noisy signals where a voice may not. Morse code is also used in many aviation
+      navigation beacons by repeating their name in Morse for confirmation of a pilot’s right station. Without radio, SOS
+      can be sent with a flashlight, a mirror or a tap on metal.
+    </p>
+    <p>
+      People also type with short and long taps by using their mobile, Google’s Gboard keyboard which has Morse input
+      mode. Morse code is also used in escape rooms and puzzle games. For beginners it is an easy way to convert messages
+      into signals and timings.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Tap Input Mode: Send Morse Code with a Tap</h2>
+    <p>
+      If you want to write Morse code manually, you can switch to the tap input mode. There are three input methods:
+      mouse click, tapping a touch screen or the spacebar on a keyboard.
+    </p>
+    <ul class="grid list-disc gap-1 pl-5">
+      <li>Under 200ms tap will register a dot.</li>
+      <li>Above 200ms tap will create a dash.</li>
+      <li>The letter is auto-decoded after 800ms and appears on the screen.</li>
+      <li>Tapping above 2000ms automatically inserts a word space.</li>
+      <li>You can also manually click the spacebar button to insert the word break.</li>
+    </ul>
+    <p>
+      Your results are shown visually on screen in the form of dots and dashes in real time. (For example,{' '}
+      <code class={codeClass}>-.-</code> appears as you tap it, then turns into K), and every decoded letter is added to
+      the output area below the tap pad.
+    </p>
+    <p>Tap mode is made for learning by doing. You feel the Morse timing instead of just reading about it.</p>
+    <p>After a few practice rounds, the 200 ms limit starts to feel natural.</p>
+    <p>
+      If you already know Morse code then you can key in your message with taps, so there is no need to switch to a text
+      keyboard.
+    </p>
+    <p>The rhythm is close to sending on a straight key, so it is good practice for your timing.</p>
+    <p>On mobile, you get a small vibration with every tap.</p>
+    <p>Each decoded letter is added to the output box below the tap pad.</p>
+    <p>
+      From there, you can play your message as sound, flash it as light, or download it as a WAV file.
+    </p>
+    <p>Copy, share, and download work the same way as in the other modes.</p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Common Mistakes When Translating Morse Code</h2>
+    <p>If your result looks wrong, the problem could be in the input. Check these five things first:</p>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>
+        <span class="font-semibold">Missing spaces between letters:</span> Each letter needs its own space, or the decoder
+        reads several letters as one.
+      </li>
+      <li>
+        <span class="font-semibold">Missing word separators:</span> Always use a slash (/) between words, or they will run
+        together.
+      </li>
+      <li>
+        <span class="font-semibold">Swapped, missing, or extra dots and dashes:</span> One wrong symbol turns a letter into
+        a different one. For example, S is <code class={codeClass}>...</code>, but drop one dot and it becomes I (
+        <code class={codeClass}>..</code>).
+      </li>
+      <li>
+        <span class="font-semibold">Mixed Morse standards:</span> International Morse and American Morse are different. Old
+        telegraph messages may use the older one.
+      </li>
+      <li>
+        <span class="font-semibold">Unsupported characters:</span> There is no Morse code for emojis and rare symbols, so
+        you can replace them with plain letters.
+      </li>
+    </ul>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Tips to Get More Out of the Translator</h2>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>
+        During learning, set your speed to 5 (WPM); when you become familiar with letters then increase to 15–20 by just
+        dragging the Speed slider.
+      </li>
+      <li>
+        For an authentic CW radio, go to the setting and change Waveform to Square and tone (Hz) to 700.
+      </li>
+      <li>
+        If you want to hide input text and just want to read Morse code, just go to the setting and use the Hide Text
+        option.
+      </li>
+      <li>
+        If you want Morse to text, just type dots and dashes in your Morse code section. In this way you don’t need to
+        switch modes.
+      </li>
+      <li>If you want the experience of light just turn on Flash.</li>
+    </ul>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Why Choose Our Morse Code Translator</h2>
+    <p>
+      This translator works both ways, turns your message into sound, light, or vibration, and updates as you type. It is
+      free, needs no sign-up, and runs in your browser, so your messages stay on your device. It works for beginners
+      learning their first letters and for anyone who wants a quick, reliable translation.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Difference Between International Morse & American Morse</h2>
+    <AmericanMorseBlock />
+  </section>
+
+  <section class="cv cv-faq grid gap-3">
+    <h2 class={h2}>Frequently Asked Questions</h2>
+    <div class="grid gap-4">
+      {
+        homeFaqs.map((item) => (
+          <div class="grid gap-2">
+            <h3 class={h3}>{item.question}</h3>
+            {'answerHtml' in item && item.answerHtml ? (
+              <p class="text-muted" set:html={item.answerHtml} />
+            ) : item.question === 'How can I say HELLO in the Morse code?' ? (
+              <p class="text-muted">
+                <code class={codeClass}>{item.answer}</code>
+              </p>
+            ) : (
+              <p class="text-muted">{item.answer}</p>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</div>

@@ -14,10 +14,14 @@ export default defineConfig({
   trailingSlash: 'always',
   prefetch: false,
   compressHTML: true,
+  markdown: {
+    smartypants: false,
+  },
   build: {
     format: 'directory',
     inlineStylesheets: 'always',
   },
+
   integrations: [
     mdx(),
     sitemap({
