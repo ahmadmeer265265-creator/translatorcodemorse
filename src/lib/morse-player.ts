@@ -275,8 +275,9 @@ export function createPlayback(
   hooks.status(settings.repeat ? 'Playing (repeat on)' : 'Playing');
   startVibration(0);
   schedule();
-  if (typeof requestAnimationFrame === 'function') raf = requestAnimationFrame(updateVisuals);
-  else updateVisuals();
+  // Paint flash/highlight immediately — do not wait a frame. Short dits at
+  // typical WPM can end before the first rAF, which made the lamp look dead.
+  updateVisuals();
 
   return {
     pause() {
@@ -305,8 +306,7 @@ export function createPlayback(
         hooks.status(settings.repeat ? 'Playing (repeat on)' : 'Playing');
         startVibration(pausedElapsed * 1000);
         schedule();
-        if (typeof requestAnimationFrame === 'function') raf = requestAnimationFrame(updateVisuals);
-        else updateVisuals();
+        updateVisuals();
       });
     },
     stop(announce = true) {

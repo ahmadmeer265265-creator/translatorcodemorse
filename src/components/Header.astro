@@ -125,12 +125,24 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
   const closeIcon = toggle?.querySelector('.icon-close');
 
   if (header instanceof HTMLElement && toggle instanceof HTMLButtonElement && panel instanceof HTMLElement) {
+    const panelFocusable = () =>
+      [...panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')].filter(
+        (el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true',
+      );
+
     const setOpen = (open: boolean) => {
+      const wasOpen = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       panel.hidden = !open;
       if (menuIcon instanceof SVGElement) menuIcon.toggleAttribute('hidden', open);
       if (closeIcon instanceof SVGElement) closeIcon.toggleAttribute('hidden', !open);
+      if (open) {
+        const first = panelFocusable()[0];
+        first?.focus();
+      } else if (wasOpen) {
+        toggle.focus();
+      }
     };
 
     toggle.addEventListener('click', () => {
@@ -142,8 +154,23 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
       if (target instanceof Element && target.closest('a')) setOpen(false);
     });
 
+    panel.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab' || panel.hidden) return;
+      const items = panelFocusable();
+      if (items.length === 0) return;
+      const first = items[0]!;
+      const last = items[items.length - 1]!;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false);
     });
 
     const desktop = window.matchMedia('(min-width: 768px)');

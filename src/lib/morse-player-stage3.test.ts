@@ -131,3 +131,84 @@ describe('repeat gap constant', () => {
     expect(repeatGapMs(20)).toBe(420);
   });
 });
+
+describe('flash lamp timeline', () => {
+  it('turns the lamp on synchronously before any animation frame', () => {
+    vi.useFakeTimers();
+    // rAF never fires — a frame-only implementation would leave the lamp dark.
+    vi.stubGlobal('requestAnimationFrame', () => 0);
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+
+    const flashes: boolean[] = [];
+    const handle = createPlayback(
+      fakeCtx(),
+      buildEnrichedTimeline('.', { wpm: 20 }),
+      { ...settings, flash: true },
+      {
+        status: () => {},
+        setState: () => {},
+        onGroup: () => {},
+        onFlash: (on) => flashes.push(on),
+        vibrate: () => {},
+      },
+    );
+
+    expect(flashes).toEqual([true]);
+    handle.stop(false);
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  it('toggles the lamp across tone and gap segments on the mock timeline', () => {
+    vi.useFakeTimers();
+    vi.stubGlobal(
+      'requestAnimationFrame',
+      (cb: FrameRequestCallback) => setTimeout(() => cb(0), 16) as unknown as number,
+    );
+    vi.stubGlobal('cancelAnimationFrame', (id: number) => clearTimeout(id));
+
+    const flashes: boolean[] = [];
+    const ctx = fakeCtx();
+    // "A" = .-  → dit, inter-element gap, dash (at 20 WPM: 60 / 60 / 180 ms)
+    const handle = createPlayback(ctx, buildEnrichedTimeline('.-', { wpm: 20 }), { ...settings, flash: true }, {
+      status: () => {},
+      setState: () => {},
+      onGroup: () => {},
+      onFlash: (on) => flashes.push(on),
+      vibrate: () => {},
+    });
+
+    expect(flashes.at(-1)).toBe(true);
+
+    ctx.advance(0.07);
+    vi.advanceTimersByTime(16);
+    expect(flashes.at(-1)).toBe(false);
+
+    ctx.advance(0.06);
+    vi.advanceTimersByTime(16);
+    expect(flashes.at(-1)).toBe(true);
+
+    handle.stop(false);
+    expect(flashes.at(-1)).toBe(false);
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  it('does not drive the lamp from the timeline when flash is off', () => {
+    vi.useFakeTimers();
+    const flashes: boolean[] = [];
+    const ctx = fakeCtx();
+    const handle = createPlayback(ctx, buildEnrichedTimeline('.', { wpm: 20 }), { ...settings, flash: false }, {
+      status: () => {},
+      setState: () => {},
+      onGroup: () => {},
+      onFlash: (on) => flashes.push(on),
+      vibrate: () => {},
+    });
+    ctx.advance(0.03);
+    vi.advanceTimersByTime(50);
+    expect(flashes).toEqual([]);
+    handle.stop(false);
+    vi.useRealTimers();
+  });
+});

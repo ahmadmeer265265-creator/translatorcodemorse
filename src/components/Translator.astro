@@ -597,7 +597,10 @@ const referenceEntries = MORSE_ALPHABET;
       morse.classList.remove('is-highlighting');
       if (textMirror instanceof HTMLElement) textMirror.textContent = '';
       if (morseMirror instanceof HTMLElement) morseMirror.textContent = '';
-      if (lamp instanceof HTMLElement) lamp.dataset.lit = 'false';
+      if (lamp instanceof HTMLElement) {
+        lamp.dataset.lit = 'false';
+        lamp.style.backgroundColor = '#2a2f38';
+      }
     };
 
     const syncMirrorsScroll = () => {
@@ -813,7 +816,10 @@ const referenceEntries = MORSE_ALPHABET;
         refreshTransport();
       },
       onFlash(on: boolean) {
-        if (lamp instanceof HTMLElement) lamp.dataset.lit = on ? 'true' : 'false';
+        if (!(lamp instanceof HTMLElement)) return;
+        lamp.dataset.lit = on ? 'true' : 'false';
+        // Inline color so the lamp stays visible even if scoped CSS fails to match.
+        lamp.style.backgroundColor = on ? '#f5c542' : '#2a2f38';
       },
     };
 
