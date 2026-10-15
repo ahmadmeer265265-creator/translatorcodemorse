@@ -30,9 +30,10 @@ describe('armTone', () => {
     const ctx = {
       createOscillator: () => osc,
       createGain: () => gain,
+      createBiquadFilter: () => ({ type: 'lowpass', frequency: { value: 0 }, connect() {} }),
     } as unknown as AudioContext;
     const destination = {} as AudioNode;
-    armTone(ctx, destination, 2, 0.06, 600, 0.7);
+    armTone(ctx, destination, 2, 0.06, 600, 0.7, 'sine');
     expect(osc.frequency.value).toBe(600);
     expect(calls).toEqual([
       'set 0 @ 2',

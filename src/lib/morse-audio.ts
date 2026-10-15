@@ -8,13 +8,19 @@ export type TimelineOptions = {
   farnsworthWpm?: number;
 };
 
+export type SoundType = 'cw' | 'telegraph';
+export type Waveform = 'sine' | 'square';
+
 export type WavOptions = {
   frequency: number;
   volume: number;
   sampleRate?: number;
+  soundType?: SoundType;
+  waveform?: Waveform;
 };
 
 export const WAV_LIMIT_MS = 300_000;
+export const CW_RAMP_SEC = 0.005;
 
 const MARK = /^[.-]+$/;
 
@@ -52,18 +58,28 @@ export function timelineDuration(timeline: readonly Segment[]): number {
   return timeline.reduce((sum, segment) => sum + segment.ms, 0);
 }
 
+export function effectivePeak(volume: number, soundType: SoundType, waveform: Waveform): number {
+  const base = clamp(volume, 0, 1);
+  if (soundType === 'cw' && waveform === 'square') return base * 0.5;
+  return base;
+}
+
 export function encodeWav(timeline: readonly Segment[], options: WavOptions): Uint8Array {
   const sampleRate = options.sampleRate ?? 44100;
   const volume = clamp(options.volume, 0, 1);
   const frequency = options.frequency;
+  const soundType = options.soundType ?? 'cw';
+  const waveform = options.waveform ?? 'sine';
+  const peak = effectivePeak(volume, soundType, waveform);
+
   let cursor = 0;
   const ranges = timeline.map((segment) => {
     const start = Math.round((cursor / 1000) * sampleRate);
     cursor += segment.ms;
     const end = Math.round((cursor / 1000) * sampleRate);
-    return { on: segment.on, start, end };
+    return { on: segment.on, start, end, ms: segment.ms };
   });
-  const total = ranges.length > 0 ? ranges[ranges.length - 1].end : 0;
+  const total = ranges.length > 0 ? ranges[ranges.length - 1]!.end : 0;
   const dataBytes = total * 2;
   const buffer = new ArrayBuffer(44 + dataBytes);
   const view = new DataView(buffer);
@@ -81,25 +97,90 @@ export function encodeWav(timeline: readonly Segment[], options: WavOptions): Ui
   writeString(view, 36, 'data');
   view.setUint32(40, dataBytes, true);
 
-  const attack = Math.round(0.005 * sampleRate);
+  if (soundType === 'telegraph') {
+    renderTelegraph(view, ranges, sampleRate, peak);
+  } else {
+    renderCw(view, ranges, sampleRate, frequency, peak, waveform);
+  }
+  return new Uint8Array(buffer);
+}
+
+function renderCw(
+  view: DataView,
+  ranges: { on: boolean; start: number; end: number }[],
+  sampleRate: number,
+  frequency: number,
+  peak: number,
+  waveform: Waveform,
+): void {
+  const attack = Math.round(CW_RAMP_SEC * sampleRate);
   const release = attack;
   let phase = 0;
   const step = (2 * Math.PI * frequency) / sampleRate;
+  let lp = 0;
+  const lpAlpha = waveform === 'square' ? 0.2 : 1;
   for (const range of ranges) {
     const count = range.end - range.start;
     for (let i = 0; i < count; i += 1) {
       let sample = 0;
       if (range.on && count > 1) {
         const env = envelope(i, count, attack, release);
-        sample = Math.sin(phase) * env * volume * 32767;
+        const raw = waveform === 'square' ? (Math.sin(phase) >= 0 ? 1 : -1) : Math.sin(phase);
+        lp = lp + lpAlpha * (raw - lp);
+        sample = lp * env * peak * 32767;
         phase += step;
       }
       const clamped = Math.max(-32768, Math.min(32767, Math.round(sample)));
       view.setInt16(44 + (range.start + i) * 2, clamped, true);
     }
-    if (!range.on) phase = 0;
+    if (!range.on) {
+      phase = 0;
+      lp = 0;
+    }
   }
-  return new Uint8Array(buffer);
+}
+
+function renderTelegraph(
+  view: DataView,
+  ranges: { on: boolean; start: number; end: number; ms: number }[],
+  sampleRate: number,
+  peak: number,
+): void {
+  // Zero-fill first
+  for (let i = 0; i < view.byteLength - 44; i += 2) {
+    view.setInt16(44 + i, 0, true);
+  }
+  let seed = 1;
+  const noise = () => {
+    seed = (seed * 16807) % 2147483647;
+    return (seed / 2147483647) * 2 - 1;
+  };
+
+  for (const range of ranges) {
+    if (!range.on) continue;
+    const downSamples = Math.round(0.008 * sampleRate);
+    const upSamples = Math.round(0.006 * sampleRate);
+    writeNoiseBurst(view, range.start, downSamples, peak * 1.0, 0.35, noise);
+    const upStart = Math.max(range.start, range.end - upSamples);
+    writeNoiseBurst(view, upStart, Math.min(upSamples, range.end - upStart), peak * 0.55, 0.55, noise);
+  }
+}
+
+function writeNoiseBurst(
+  view: DataView,
+  start: number,
+  count: number,
+  peak: number,
+  lpAlpha: number,
+  noise: () => number,
+): void {
+  let lp = 0;
+  for (let i = 0; i < count; i += 1) {
+    const env = envelope(i, count, Math.max(1, Math.floor(count * 0.2)), Math.max(1, Math.floor(count * 0.4)));
+    lp = lp + lpAlpha * (noise() - lp);
+    const sample = Math.max(-32768, Math.min(32767, Math.round(lp * env * peak * 32767)));
+    view.setInt16(44 + (start + i) * 2, sample, true);
+  }
 }
 
 function appendCharacter(timeline: Segment[], code: string, unit: number): void {

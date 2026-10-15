@@ -124,3 +124,33 @@ describe('unsupported notice', () => {
     expect(unsupportedNotice(2)).toBe('2 characters could not be translated and appear as #.');
   });
 });
+
+describe('autoplay helpers', () => {
+  it('rejects empty and hash-only Morse', async () => {
+    const { canAutoplayMorse, createAutoplayController, AUTOPLAY_DELAY_MS } = await import('./translator-core');
+    expect(canAutoplayMorse('')).toBe(false);
+    expect(canAutoplayMorse('#')).toBe(false);
+    expect(canAutoplayMorse('...')).toBe(true);
+    const runs: number[] = [];
+    const timers = new Map<number, { fn: () => void; due: number }>();
+    let now = 0;
+    let id = 1;
+    const c = createAutoplayController(
+      AUTOPLAY_DELAY_MS,
+      (fn, ms) => {
+        const n = id++;
+        timers.set(n, { fn, due: now + ms });
+        return n;
+      },
+      (n) => {
+        timers.delete(n);
+      },
+    );
+    c.schedule(() => runs.push(1));
+    now = 100;
+    c.schedule(() => runs.push(2));
+    now = 100 + AUTOPLAY_DELAY_MS;
+    for (const t of timers.values()) if (t.due <= now) t.fn();
+    expect(runs).toEqual([2]);
+  });
+});

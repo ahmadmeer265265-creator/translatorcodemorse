@@ -2,7 +2,9 @@
 import { MORSE_ALPHABET } from '../lib/morse';
 
 const fieldClass =
-  'mt-1 h-20 w-full resize-none rounded-xl border border-line bg-canvas px-3 py-2 text-base text-ink';
+  'relative z-10 mt-1 h-20 w-full resize-none rounded-xl border border-line bg-transparent px-3 py-2 text-base text-ink caret-ink';
+const mirrorClass =
+  'pointer-events-none absolute inset-0 z-0 mt-1 overflow-hidden whitespace-pre-wrap break-words rounded-xl border border-transparent bg-canvas px-3 py-2 text-base text-ink [&_mark]:rounded-sm [&_mark]:bg-[#f5d76e] [&_mark]:text-[#12141a] dark:[&_mark]:bg-[#c9a227] dark:[&_mark]:text-[#12141a]';
 const buttonClass =
   'inline-flex min-h-11 items-center justify-center rounded-full border-2 px-3 text-sm font-medium';
 const quietButton = `${buttonClass} border-line bg-canvas text-ink`;
@@ -13,6 +15,8 @@ const counterClass = 'mt-1 min-h-5 text-sm text-muted';
 const detailsClass = 'rounded-xl border border-line bg-canvas';
 const summaryClass =
   'flex min-h-11 cursor-pointer list-none items-center px-3 text-sm font-semibold text-ink marker:content-none [&::-webkit-details-marker]:hidden';
+const fieldSelect =
+  'min-h-11 w-full rounded-xl border border-line bg-surface px-3 text-sm text-ink';
 
 const referenceEntries = MORSE_ALPHABET;
 ---
@@ -46,6 +50,7 @@ const referenceEntries = MORSE_ALPHABET;
         <label class="text-sm font-semibold" for="translator-text">Text</label>
       </div>
       <div class="relative" data-text-shell>
+        <div class={`${mirrorClass}`} aria-hidden="true" data-text-mirror></div>
         <textarea
           id="translator-text"
           class={fieldClass}
@@ -55,7 +60,7 @@ const referenceEntries = MORSE_ALPHABET;
           autocapitalize="off"
           placeholder="Type letters, numbers, or punctuation"></textarea>
         <div
-          class="absolute inset-0 mt-1 hidden items-center justify-center rounded-xl border border-line bg-canvas px-3 text-sm text-muted"
+          class="absolute inset-0 z-20 mt-1 hidden items-center justify-center rounded-xl border border-line bg-canvas px-3 text-sm text-muted"
           data-text-mask
           hidden
         >
@@ -67,14 +72,17 @@ const referenceEntries = MORSE_ALPHABET;
     </div>
     <div data-panel="morse">
       <label class="text-sm font-semibold" for="translator-morse">Morse code</label>
-      <textarea
-        id="translator-morse"
-        class={`${fieldClass} font-mono tracking-wide`}
-        rows="3"
-        spellcheck="false"
-        autocomplete="off"
-        autocapitalize="off"
-        placeholder="Type dots, dashes, and spaces"></textarea>
+      <div class="relative" data-morse-shell>
+        <div class={`${mirrorClass} font-mono tracking-wide`} aria-hidden="true" data-morse-mirror></div>
+        <textarea
+          id="translator-morse"
+          class={`${fieldClass} font-mono tracking-wide`}
+          rows="3"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          placeholder="Type dots, dashes, and spaces"></textarea>
+      </div>
       <p class={counterClass} data-morse-count aria-hidden="true">0 signals</p>
     </div>
   </div>
@@ -266,7 +274,7 @@ const referenceEntries = MORSE_ALPHABET;
 
   <details class={`${detailsClass} mt-2`}>
     <summary class={summaryClass}>Settings</summary>
-    <div class="grid gap-2 border-t border-line px-3 py-3 text-sm">
+    <div class="grid gap-3 border-t border-line px-3 py-3 text-sm">
       <label class="flex min-h-11 items-center gap-2">
         <input class="size-4" type="checkbox" checked data-slash />
         <span>Show slash between words</span>
@@ -275,6 +283,74 @@ const referenceEntries = MORSE_ALPHABET;
         <input class="size-4" type="checkbox" data-hide-text />
         <span>Hide text</span>
       </label>
+      <label class="flex min-h-11 items-center gap-2">
+        <input class="size-4" type="checkbox" data-autoplay />
+        <span>Autoplay</span>
+      </label>
+      <div class="grid gap-1">
+        <label class="flex min-h-11 items-center gap-2">
+          <input class="size-4" type="checkbox" data-flash-opt />
+          <span>Flash</span>
+        </label>
+        <p class="text-xs text-muted" data-flash-warning>
+          Flashing light. Not suitable for people who are sensitive to flashing lights.
+        </p>
+        <p class="hidden text-xs text-muted" data-flash-reduced>
+          Flash is off because your system asks to reduce motion.
+        </p>
+      </div>
+      <div class="grid gap-1">
+        <label class="flex min-h-11 items-center gap-2">
+          <input class="size-4" type="checkbox" data-vibration />
+          <span>Vibration</span>
+        </label>
+        <p class="hidden text-xs text-muted" data-vibration-note>
+          Not supported on this device (iPhone and most desktop browsers do not support it).
+        </p>
+      </div>
+      <div class="grid gap-2 border-t border-line pt-3" data-audio-settings>
+        <p class="font-semibold">Audio</p>
+        <label class="grid gap-1" for="translator-preset">
+          <span class="font-medium">Preset</span>
+          <select id="translator-preset" class={fieldSelect} data-preset>
+            <option value="custom">Custom</option>
+            <option value="slow">Slow</option>
+            <option value="beginner">Beginner</option>
+            <option value="practice">Practice</option>
+            <option value="standard" selected>Standard</option>
+            <option value="fast">Fast</option>
+          </select>
+        </label>
+        <label class="grid gap-1" for="translator-sound-type">
+          <span class="font-medium">Sound type</span>
+          <select id="translator-sound-type" class={fieldSelect} data-sound-type>
+            <option value="cw" selected>CW tone</option>
+            <option value="telegraph">Telegraph click</option>
+          </select>
+        </label>
+        <label class="grid gap-1" for="translator-waveform">
+          <span class="font-medium">Waveform</span>
+          <select id="translator-waveform" class={fieldSelect} data-waveform>
+            <option value="sine" selected>Sine</option>
+            <option value="square">Square</option>
+          </select>
+        </label>
+        <p class="hidden text-xs text-muted" data-waveform-note>Waveform applies to CW tone only.</p>
+        <label class="grid min-h-11 content-center gap-1" for="translator-tone">
+          <span class="flex items-baseline justify-between gap-3 font-medium">
+            <span>Tone (Hz)</span>
+            <output id="translator-tone-value" for="translator-tone">600</output>
+          </span>
+          <input id="translator-tone" class="h-11 w-full" type="range" min="400" max="900" value="600" disabled />
+        </label>
+        <label class="grid min-h-11 content-center gap-1" for="translator-volume">
+          <span class="flex items-baseline justify-between gap-3 font-medium">
+            <span>Volume</span>
+            <output id="translator-volume-value" for="translator-volume">70</output>
+          </span>
+          <input id="translator-volume" class="h-11 w-full" type="range" min="0" max="100" value="70" disabled />
+        </label>
+      </div>
     </div>
   </details>
 
@@ -301,10 +377,20 @@ const referenceEntries = MORSE_ALPHABET;
 
   <div class="mt-3 grid gap-3 border-t border-line pt-3">
     <p class="text-sm font-semibold">Audio</p>
-    <div class="flex flex-wrap gap-2">
-      <button id="translator-play" class={shareButton} type="button" data-play disabled aria-pressed="false"
-        >Play</button
+    <div class="flex flex-wrap items-start gap-2">
+      <button id="translator-play" class={shareButton} type="button" data-play disabled>Play</button>
+      <button id="translator-pause" class={quietButton} type="button" data-pause disabled>Pause</button>
+      <button id="translator-stop" class={quietButton} type="button" data-stop disabled>Stop</button>
+      <button
+        id="translator-repeat"
+        class={quietButton}
+        type="button"
+        data-repeat
+        aria-pressed="false"
+        aria-label="Repeat"
       >
+        Repeat
+      </button>
       <button
         id="translator-wav"
         class={quietButton}
@@ -321,6 +407,14 @@ const referenceEntries = MORSE_ALPHABET;
           <span class="col-start-1 row-start-1" data-face>Download WAV</span>
         </span>
       </button>
+      <div
+        class="size-24 shrink-0 rounded-full border border-line bg-[#2a2f38] shadow-inner"
+        style="background: #2a2f38"
+        aria-hidden="true"
+        data-lamp
+        data-lit="false"
+      >
+      </div>
     </div>
     <p id="translator-audio-status" class="min-h-6 text-sm text-muted" aria-live="polite"></p>
     <div class="grid gap-3 sm:grid-cols-2">
@@ -338,20 +432,6 @@ const referenceEntries = MORSE_ALPHABET;
         </span>
         <input id="translator-farnsworth" class="h-11 w-full" type="range" min="5" max="40" value="20" disabled />
       </label>
-      <label class="grid min-h-11 content-center gap-1 text-sm" for="translator-tone">
-        <span class="flex items-baseline justify-between gap-3 font-medium">
-          <span>Tone (Hz)</span>
-          <output id="translator-tone-value" for="translator-tone">600</output>
-        </span>
-        <input id="translator-tone" class="h-11 w-full" type="range" min="400" max="900" value="600" disabled />
-      </label>
-      <label class="grid min-h-11 content-center gap-1 text-sm" for="translator-volume">
-        <span class="flex items-baseline justify-between gap-3 font-medium">
-          <span>Volume</span>
-          <output id="translator-volume-value" for="translator-volume">70</output>
-        </span>
-        <input id="translator-volume" class="h-11 w-full" type="range" min="0" max="100" value="70" disabled />
-      </label>
     </div>
     <p class="min-h-6 text-sm text-muted">No sound on iPhone? Turn off silent mode.</p>
   </div>
@@ -362,17 +442,40 @@ const referenceEntries = MORSE_ALPHABET;
   </noscript>
 </section>
 
+<style>
+  [data-translator] [data-text-mirror] mark,
+  [data-translator] [data-morse-mirror] mark {
+    background: #f5d76e;
+    color: #12141a;
+  }
+  :root[data-theme='dark'] [data-translator] [data-text-mirror] mark,
+  :root[data-theme='dark'] [data-translator] [data-morse-mirror] mark {
+    background: #c9a227;
+    color: #12141a;
+  }
+  [data-translator] [data-lamp][data-lit='true'] {
+    background: #f5c542 !important;
+    box-shadow: inset 0 0 0 1px #d4a017;
+  }
+  [data-translator] textarea.is-highlighting {
+    color: transparent;
+  }
+</style>
+
 <script>
   import { copyWithFallback } from '../lib/copy-feedback';
+  import { applyPreset, matchPreset, type PresetId } from '../lib/audio-presets';
   import { changeFarnsworth, changeSpeed, farnsworthLabel } from '../lib/farnsworth';
   import { decode, encode } from '../lib/morse';
   import {
     buildPuzzleUrl,
     buildShareUrl,
+    canAutoplayMorse,
     characterCountLabel,
     convertWordSeparators,
     countCharacters,
     countSignals,
+    createAutoplayController,
     modeAnnouncement,
     parseTranslatorHash,
     pickRandomExample,
@@ -421,6 +524,21 @@ const referenceEntries = MORSE_ALPHABET;
     let mode: TranslatorMode = 'text-to-morse';
     let lastExample: string | null = null;
     let actionsLoading: Promise<typeof import('../lib/translator-actions')> | null = null;
+    let allowAutoplay = false;
+    const textMirror = root.querySelector('[data-text-mirror]');
+    const morseMirror = root.querySelector('[data-morse-mirror]');
+    const autoplayInput = root.querySelector('[data-autoplay]');
+    const flashInput = root.querySelector('[data-flash-opt]');
+    const vibrationInput = root.querySelector('[data-vibration]');
+    const presetSelect = root.querySelector('[data-preset]');
+    const soundTypeSelect = root.querySelector('[data-sound-type]');
+    const waveformSelect = root.querySelector('[data-waveform]');
+    const waveformNote = root.querySelector('[data-waveform-note]');
+    const lamp = root.querySelector('[data-lamp]');
+    const pauseButton = root.querySelector('#translator-pause');
+    const stopButton = root.querySelector('#translator-stop');
+    const repeatButton = root.querySelector('#translator-repeat');
+    const autoplay = createAutoplayController();
 
     const showNotice = (message: string) => {
       notice.textContent = message;
@@ -464,6 +582,19 @@ const referenceEntries = MORSE_ALPHABET;
       }
     };
 
+    const clearHighlight = () => {
+      text.classList.remove('is-highlighting');
+      morse.classList.remove('is-highlighting');
+      if (textMirror instanceof HTMLElement) textMirror.textContent = '';
+      if (morseMirror instanceof HTMLElement) morseMirror.textContent = '';
+      if (lamp instanceof HTMLElement) lamp.dataset.lit = 'false';
+    };
+
+    const syncMirrorsScroll = () => {
+      if (textMirror instanceof HTMLElement) textMirror.scrollTop = text.scrollTop;
+      if (morseMirror instanceof HTMLElement) morseMirror.scrollTop = morse.scrollTop;
+    };
+
     const fromText = () => {
       if (lock) return;
       lock = true;
@@ -474,6 +605,7 @@ const referenceEntries = MORSE_ALPHABET;
       lock = false;
       refreshCounters();
       refreshSecondary();
+      clearHighlight();
     };
 
     const fromMorse = () => {
@@ -486,6 +618,25 @@ const referenceEntries = MORSE_ALPHABET;
       lock = false;
       refreshCounters();
       refreshSecondary();
+      clearHighlight();
+    };
+
+    const queueAutoplay = () => {
+      if (!(autoplayInput instanceof HTMLInputElement) || !autoplayInput.checked || !allowAutoplay) return;
+      if (!canAutoplayMorse(morse.value)) return;
+      autoplay.schedule(() => {
+        const ctx = openAudio();
+        if (!ctx) {
+          const status = document.getElementById('translator-audio-status');
+          if (status) status.textContent = 'Press Play to start';
+          return;
+        }
+        void loadPlayer().then((mod) => {
+          mod.bindPlayerUi(playerUi);
+          mod.startPlayback(ctx);
+          refreshTransport();
+        });
+      });
     };
 
     const applyMode = (next: TranslatorMode, announceChange: boolean) => {
@@ -549,16 +700,154 @@ const referenceEntries = MORSE_ALPHABET;
       return actionsLoading;
     };
 
+    const playButton = document.querySelector('#translator-play');
+    const wavButton = document.querySelector('#translator-wav');
+    const wpm = document.querySelector('#translator-wpm');
+    const farnsworth = document.querySelector('#translator-farnsworth');
+    const tone = document.querySelector('#translator-tone');
+    const volume = document.querySelector('#translator-volume');
+    const wpmValue = document.querySelector('#translator-wpm-value');
+    const farnsworthValue = document.querySelector('#translator-farnsworth-value');
+    const toneValue = document.querySelector('#translator-tone-value');
+    const volumeValue = document.querySelector('#translator-volume-value');
+    let loading: Promise<typeof import('../lib/morse-player')> | null = null;
+    let audioToken = 0;
+    let audioCtx: AudioContext | null = null;
+    let speedNow = wpm instanceof HTMLInputElement ? Number(wpm.value) : 20;
+    let spacingNow = farnsworth instanceof HTMLInputElement ? Number(farnsworth.value) : 20;
+    let playbackState: 'idle' | 'playing' | 'paused' | 'finished' = 'idle';
+
+    const loadPlayer = () => {
+      loading ??= import('../lib/morse-player');
+      return loading;
+    };
+    const prime = () => {
+      void loadPlayer();
+    };
+    const openAudio = () => {
+      if (!audioCtx) {
+        const Ctx =
+          window.AudioContext ??
+          (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (!Ctx) return null;
+        audioCtx = new Ctx();
+      }
+      void audioCtx.resume();
+      return audioCtx;
+    };
+
+    const refreshTransport = () => {
+      const canPlay = /[.-]/.test(morse.value);
+      const active = playbackState === 'playing' || playbackState === 'paused';
+      if (playButton instanceof HTMLButtonElement) playButton.disabled = !canPlay || active;
+      if (pauseButton instanceof HTMLButtonElement) {
+        pauseButton.disabled = !active;
+        pauseButton.textContent = playbackState === 'paused' ? 'Resume' : 'Pause';
+      }
+      if (stopButton instanceof HTMLButtonElement) stopButton.disabled = !active;
+      if (wavButton instanceof HTMLButtonElement && !preparingWav) wavButton.disabled = !canPlay;
+    };
+
+    const playerUi = {
+      text,
+      morse,
+      textMirror: textMirror instanceof HTMLElement ? textMirror : null,
+      morseMirror: morseMirror instanceof HTMLElement ? morseMirror : null,
+      lamp: lamp instanceof HTMLElement ? lamp : null,
+      setState(state: typeof playbackState) {
+        playbackState = state;
+        if (state === 'idle' || state === 'finished') clearHighlight();
+        refreshTransport();
+      },
+      onFlash(on: boolean) {
+        if (lamp instanceof HTMLElement) lamp.dataset.lit = on ? 'true' : 'false';
+      },
+    };
+
+    const updatePresetSelect = () => {
+      if (!(presetSelect instanceof HTMLSelectElement)) return;
+      presetSelect.value = matchPreset({ speed: speedNow, farnsworth: spacingNow });
+    };
+
+    const showSliders = () => {
+      if (!(wpm instanceof HTMLInputElement) || !(farnsworth instanceof HTMLInputElement)) return;
+      if (!(tone instanceof HTMLInputElement) || !(volume instanceof HTMLInputElement)) return;
+      wpm.disabled = false;
+      farnsworth.disabled = false;
+      tone.disabled = false;
+      volume.disabled = false;
+      wpm.value = String(speedNow);
+      farnsworth.value = String(spacingNow);
+      if (wpmValue) wpmValue.textContent = String(speedNow);
+      if (farnsworthValue) farnsworthValue.textContent = farnsworthLabel(speedNow, spacingNow);
+      if (toneValue) toneValue.textContent = tone.value;
+      if (volumeValue) volumeValue.textContent = volume.value;
+      updatePresetSelect();
+    };
+
+    const refreshAudio = () => {
+      refreshTransport();
+    };
+
+    const haltAudio = () => {
+      audioToken += 1;
+      autoplay.cancel();
+      void loading?.then((mod) => mod.stopPlayback(false));
+      playbackState = 'idle';
+      clearHighlight();
+      refreshTransport();
+    };
+
+    const syncWaveformEnabled = () => {
+      const telegraph = soundTypeSelect instanceof HTMLSelectElement && soundTypeSelect.value === 'telegraph';
+      if (waveformSelect instanceof HTMLSelectElement) waveformSelect.disabled = telegraph;
+      if (waveformNote instanceof HTMLElement) waveformNote.classList.toggle('hidden', !telegraph);
+    };
+
+    const setupMotionAndVibrate = () => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const applyReduce = () => {
+        if (!(flashInput instanceof HTMLInputElement)) return;
+        if (reduce.matches) {
+          flashInput.checked = false;
+          flashInput.disabled = true;
+          root.querySelector('[data-flash-warning]')?.classList.add('hidden');
+          root.querySelector('[data-flash-reduced]')?.classList.remove('hidden');
+        } else {
+          flashInput.disabled = false;
+          root.querySelector('[data-flash-warning]')?.classList.remove('hidden');
+          root.querySelector('[data-flash-reduced]')?.classList.add('hidden');
+        }
+      };
+      applyReduce();
+      reduce.addEventListener('change', applyReduce);
+
+      const supported = typeof navigator.vibrate === 'function';
+      if (vibrationInput instanceof HTMLInputElement) {
+        if (!supported) {
+          vibrationInput.checked = false;
+          vibrationInput.disabled = true;
+          root.querySelector('[data-vibration-note]')?.classList.remove('hidden');
+        }
+      }
+    };
+
     text.addEventListener('input', () => {
       haltAudio();
+      allowAutoplay = true;
       fromText();
       refreshAudio();
+      queueAutoplay();
     });
     morse.addEventListener('input', () => {
       haltAudio();
+      allowAutoplay = true;
       fromMorse();
       refreshAudio();
+      queueAutoplay();
     });
+    text.addEventListener('scroll', syncMirrorsScroll);
+    morse.addEventListener('scroll', syncMirrorsScroll);
 
     root.querySelectorAll<HTMLInputElement>('input[data-mode]').forEach((input) => {
       input.addEventListener('change', () => {
@@ -587,76 +876,45 @@ const referenceEntries = MORSE_ALPHABET;
       applyHide(false);
     });
 
-    const playButton = document.querySelector('#translator-play');
-    const wavButton = document.querySelector('#translator-wav');
-    const wpm = document.querySelector('#translator-wpm');
-    const farnsworth = document.querySelector('#translator-farnsworth');
-    const tone = document.querySelector('#translator-tone');
-    const volume = document.querySelector('#translator-volume');
-    const wpmValue = document.querySelector('#translator-wpm-value');
-    const farnsworthValue = document.querySelector('#translator-farnsworth-value');
-    const toneValue = document.querySelector('#translator-tone-value');
-    const volumeValue = document.querySelector('#translator-volume-value');
-    let loading: Promise<typeof import('../lib/morse-player')> | null = null;
-    let audioToken = 0;
-    let audioCtx: AudioContext | null = null;
-    let speedNow = wpm instanceof HTMLInputElement ? Number(wpm.value) : 20;
-    let spacingNow = farnsworth instanceof HTMLInputElement ? Number(farnsworth.value) : 20;
-
-    const loadPlayer = () => {
-      loading ??= import('../lib/morse-player');
-      return loading;
-    };
-    const prime = () => {
-      void loadPlayer();
-    };
-    const showSliders = () => {
-      if (!(wpm instanceof HTMLInputElement) || !(farnsworth instanceof HTMLInputElement)) return;
-      if (!(tone instanceof HTMLInputElement) || !(volume instanceof HTMLInputElement)) return;
-      wpm.disabled = false;
-      farnsworth.disabled = false;
-      tone.disabled = false;
-      volume.disabled = false;
-      wpm.value = String(speedNow);
-      farnsworth.value = String(spacingNow);
-      if (wpmValue) wpmValue.textContent = String(speedNow);
-      if (farnsworthValue) farnsworthValue.textContent = farnsworthLabel(speedNow, spacingNow);
-      if (toneValue) toneValue.textContent = tone.value;
-      if (volumeValue) volumeValue.textContent = volume.value;
-    };
-    const refreshAudio = () => {
-      const canPlay = /[.-]/.test(morse.value);
-      if (playButton instanceof HTMLButtonElement) playButton.disabled = !canPlay;
-      if (wavButton instanceof HTMLButtonElement && !preparingWav) wavButton.disabled = !canPlay;
-    };
-    const haltAudio = () => {
-      audioToken += 1;
-      void loading?.then((mod) => mod.stopPlayback());
-    };
-    const openAudio = () => {
-      if (!audioCtx) {
-        const Ctx =
-          window.AudioContext ??
-          (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-        if (!Ctx) return null;
-        audioCtx = new Ctx();
-      }
-      void audioCtx.resume();
-      return audioCtx;
-    };
-    for (const button of [playButton, wavButton]) {
+    for (const button of [playButton, wavButton, pauseButton, stopButton, repeatButton]) {
       if (!(button instanceof HTMLButtonElement)) continue;
       button.addEventListener('pointerenter', prime);
       button.addEventListener('focus', prime);
     }
+
     playButton?.addEventListener('click', () => {
+      allowAutoplay = false;
+      autoplay.cancel();
       const ctx = openAudio();
       const token = ++audioToken;
       void loadPlayer().then((mod) => {
         if (token !== audioToken) return;
-        mod.togglePlayback(ctx);
+        mod.bindPlayerUi(playerUi);
+        mod.startPlayback(ctx);
+        refreshTransport();
       });
     });
+    pauseButton?.addEventListener('click', () => {
+      void loadPlayer().then((mod) => {
+        if (playbackState === 'paused') mod.resumePlayback();
+        else mod.pausePlayback();
+        refreshTransport();
+      });
+    });
+    stopButton?.addEventListener('click', () => {
+      void loadPlayer().then((mod) => {
+        mod.stopPlayback(true);
+        playbackState = 'idle';
+        clearHighlight();
+        refreshTransport();
+      });
+    });
+    repeatButton?.addEventListener('click', () => {
+      if (!(repeatButton instanceof HTMLButtonElement)) return;
+      const next = repeatButton.getAttribute('aria-pressed') !== 'true';
+      repeatButton.setAttribute('aria-pressed', next ? 'true' : 'false');
+    });
+
     wavButton?.addEventListener('click', () => {
       if (!(wavButton instanceof HTMLButtonElement) || preparingWav) return;
       const face = wavButton.querySelector('[data-face]');
@@ -670,6 +928,7 @@ const referenceEntries = MORSE_ALPHABET;
         refreshAudio();
       });
     });
+
     wpm?.addEventListener('input', () => {
       if (!(wpm instanceof HTMLInputElement)) return;
       haltAudio();
@@ -691,6 +950,34 @@ const referenceEntries = MORSE_ALPHABET;
         showSliders();
       });
     }
+
+    presetSelect?.addEventListener('change', () => {
+      if (!(presetSelect instanceof HTMLSelectElement)) return;
+      const id = presetSelect.value as PresetId;
+      if (id === 'custom') return;
+      haltAudio();
+      const pair = applyPreset(id);
+      speedNow = pair.speed;
+      spacingNow = pair.farnsworth;
+      showSliders();
+    });
+    soundTypeSelect?.addEventListener('change', () => {
+      haltAudio();
+      syncWaveformEnabled();
+      void loadPlayer();
+    });
+    waveformSelect?.addEventListener('change', () => {
+      haltAudio();
+      void loadPlayer();
+    });
+    for (const input of [autoplayInput, flashInput, vibrationInput]) {
+      input?.addEventListener('change', () => {
+        void loadPlayer();
+      });
+    }
+
+    setupMotionAndVibrate();
+    syncWaveformEnabled();
     showSliders();
     refreshAudio();
     refreshCounters();
@@ -724,12 +1011,14 @@ const referenceEntries = MORSE_ALPHABET;
       }
       if ('random' in control.dataset) {
         haltAudio();
+        allowAutoplay = true;
         const phrase = pickRandomExample(() => Math.random(), lastExample);
         lastExample = phrase;
         text.value = phrase;
         fromText();
         showAnnounce(`Loaded example: ${phrase}`);
         refreshAudio();
+        queueAutoplay();
         text.focus();
         return;
       }

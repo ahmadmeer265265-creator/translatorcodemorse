@@ -165,3 +165,37 @@ export function buildTxtFile(morse: string): { filename: string; body: string; n
     notice: txtExportNotice(countCharacters(body)),
   };
 }
+
+export const AUTOPLAY_DELAY_MS = 800;
+
+export function canAutoplayMorse(morse: string): boolean {
+  const trimmed = morse.trim();
+  if (!trimmed) return false;
+  return /[.\-·•–—−]/.test(trimmed);
+}
+
+export type AutoplayController = {
+  schedule: (run: () => void) => void;
+  cancel: () => void;
+};
+
+export function createAutoplayController(
+  delayMs = AUTOPLAY_DELAY_MS,
+  setTimer: (fn: () => void, ms: number) => number = (fn, ms) => globalThis.setTimeout(fn, ms) as unknown as number,
+  clearTimer: (id: number) => void = (id) => globalThis.clearTimeout(id),
+): AutoplayController {
+  let timer = 0;
+  return {
+    schedule(run) {
+      if (timer) clearTimer(timer);
+      timer = setTimer(() => {
+        timer = 0;
+        run();
+      }, delayMs);
+    },
+    cancel() {
+      if (timer) clearTimer(timer);
+      timer = 0;
+    },
+  };
+}
