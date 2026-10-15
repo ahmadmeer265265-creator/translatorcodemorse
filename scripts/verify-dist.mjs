@@ -170,16 +170,16 @@ if (!translatorScript) {
     fail(`Homepage translator script is missing on disk: ${translatorName}`);
   } else {
     const translatorCode = fs.readFileSync(translatorPath, 'utf8');
-    const audioNames = dynamicImportFiles(translatorCode);
-    if (audioNames.length === 0) {
-      fail('Translator script has no dynamic import for the audio chunk');
+    const lazyNames = dynamicImportFiles(translatorCode);
+    if (lazyNames.length === 0) {
+      fail('Translator script has no dynamic import for lazy chunks (audio/actions)');
     }
-    for (const name of audioNames) {
-      const audioPath = path.join(astroDir, name);
-      if (!fs.existsSync(audioPath)) fail(`Audio chunk is missing on disk: ${name}`);
+    for (const name of lazyNames) {
+      const lazyPath = path.join(astroDir, name);
+      if (!fs.existsSync(lazyPath)) fail(`Lazy chunk is missing on disk: ${name}`);
       const leaked = homeRefs.filter((ref) => fileNameOf(ref.href) === name);
       for (const ref of leaked) {
-        fail(`Homepage HTML references the audio chunk in a ${ref.kind} tag: ${ref.href}`);
+        fail(`Homepage HTML references a lazy chunk in a ${ref.kind} tag: ${ref.href}`);
       }
     }
   }

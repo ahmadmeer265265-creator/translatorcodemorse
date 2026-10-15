@@ -1,26 +1,71 @@
 ---
+import { MORSE_ALPHABET } from '../lib/morse';
+
 const fieldClass =
   'mt-1 h-20 w-full resize-none rounded-xl border border-line bg-canvas px-3 py-2 text-base text-ink';
 const buttonClass =
   'inline-flex min-h-11 items-center justify-center rounded-full border-2 px-3 text-sm font-medium';
 const quietButton = `${buttonClass} border-line bg-canvas text-ink`;
 const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`;
+const modeLabel =
+  'inline-flex min-h-11 min-w-0 flex-1 cursor-pointer items-center justify-center rounded-full border-2 border-line px-2 text-center text-sm font-medium text-ink has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-on-accent has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent';
+const counterClass = 'mt-1 min-h-5 text-sm text-muted';
+const detailsClass = 'rounded-xl border border-line bg-canvas';
+const summaryClass =
+  'flex min-h-11 cursor-pointer list-none items-center px-3 text-sm font-semibold text-ink marker:content-none [&::-webkit-details-marker]:hidden';
+
+const referenceEntries = MORSE_ALPHABET;
 ---
 
-<section class="translator rounded-2xl border border-line bg-surface p-3 shadow-[0_16px_40px_-28px_rgba(18,20,26,0.7)] sm:p-4" data-translator data-copy-error="Couldn't copy automatically. Select the text and press Ctrl+C (or Cmd+C).">
-  <div class="grid gap-3">
-    <div>
-      <label class="text-sm font-semibold" for="translator-text">Text</label>
-      <textarea
-        id="translator-text"
-        class={fieldClass}
-        rows="3"
-        spellcheck="false"
-        autocomplete="off"
-        autocapitalize="off"
-        placeholder="Type letters, numbers, or punctuation"></textarea>
+<section
+  class="translator rounded-2xl border border-line bg-surface p-2.5 shadow-[0_16px_40px_-28px_rgba(18,20,26,0.7)] sm:p-4"
+  data-translator
+  data-copy-error="Couldn't copy automatically. Select the text and press Ctrl+C (or Cmd+C)."
+>
+  <div
+    class="grid grid-cols-[1fr_1fr_minmax(0,1fr)_auto] gap-1.5"
+    role="radiogroup"
+    aria-label="Translation direction"
+    data-mode-group
+  >
+    <label class={modeLabel}>
+      <input class="sr-only" type="radio" name="translator-mode" value="text-to-morse" checked data-mode />
+      <span>Text to Morse</span>
+    </label>
+    <label class={modeLabel}>
+      <input class="sr-only" type="radio" name="translator-mode" value="morse-to-text" data-mode />
+      <span>Morse to Text</span>
+    </label>
+    <span class="min-h-11 rounded-full border-2 border-transparent" aria-hidden="true" data-mode-slot></span>
+    <button class={quietButton} type="button" data-swap aria-label="Swap input and output">Swap</button>
+  </div>
+
+  <div class="mt-2 grid gap-2" data-panels>
+    <div data-panel="text">
+      <div class="flex items-center justify-between gap-2">
+        <label class="text-sm font-semibold" for="translator-text">Text</label>
+      </div>
+      <div class="relative" data-text-shell>
+        <textarea
+          id="translator-text"
+          class={fieldClass}
+          rows="3"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          placeholder="Type letters, numbers, or punctuation"></textarea>
+        <div
+          class="absolute inset-0 mt-1 hidden items-center justify-center rounded-xl border border-line bg-canvas px-3 text-sm text-muted"
+          data-text-mask
+          hidden
+        >
+          <span>Text hidden</span>
+          <button class={`${quietButton} ml-3`} type="button" data-show-text>Show text</button>
+        </div>
+      </div>
+      <p class={counterClass} data-text-count aria-hidden="true">0 characters</p>
     </div>
-    <div>
+    <div data-panel="morse">
       <label class="text-sm font-semibold" for="translator-morse">Morse code</label>
       <textarea
         id="translator-morse"
@@ -30,43 +75,246 @@ const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`
         autocomplete="off"
         autocapitalize="off"
         placeholder="Type dots, dashes, and spaces"></textarea>
+      <p class={counterClass} data-morse-count aria-hidden="true">0 signals</p>
     </div>
   </div>
-  <div class="mt-3 flex flex-wrap gap-2">
-    <button class={`${quietButton} data-[state=copied]:border-accent`} type="button" data-copy="translator-text" data-label="Copy text" data-flash="Copied" aria-label="Copy text">
+
+  <div class="mt-2 flex flex-wrap gap-2">
+    <button
+      class={`${quietButton} data-[state=copied]:border-accent`}
+      type="button"
+      data-copy="translator-text"
+      data-label="Copy text"
+      data-flash="Copied"
+      aria-label="Copy text"
+    >
       <span class="inline-grid">
-        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Copied</span>
+        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"
+          ><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"
+            ><path
+              d="M3 8.5 6.2 12 13 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          >Copied</span
+        >
         <span class="invisible col-start-1 row-start-1" aria-hidden="true">Copy text</span>
-        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span data-t>Copy text</span></span>
+        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face
+          ><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"
+            ><path
+              d="M3 8.5 6.2 12 13 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          ><span data-t>Copy text</span></span
+        >
       </span>
     </button>
-    <button class={`${quietButton} data-[state=copied]:border-accent`} type="button" data-copy="translator-morse" data-label="Copy Morse code" data-flash="Copied" aria-label="Copy Morse code">
+    <button
+      class={`${quietButton} data-[state=copied]:border-accent`}
+      type="button"
+      data-copy="translator-morse"
+      data-label="Copy Morse code"
+      data-flash="Copied"
+      aria-label="Copy Morse code"
+    >
       <span class="inline-grid">
-        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Copied</span>
+        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"
+          ><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"
+            ><path
+              d="M3 8.5 6.2 12 13 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          >Copied</span
+        >
         <span class="invisible col-start-1 row-start-1" aria-hidden="true">Copy Morse code</span>
-        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span data-t>Copy Morse code</span></span>
+        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face
+          ><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"
+            ><path
+              d="M3 8.5 6.2 12 13 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          ><span data-t>Copy Morse code</span></span
+        >
       </span>
     </button>
     <button class={quietButton} type="button" data-clear data-announce="Cleared">Clear</button>
-    <button class={quietButton} type="button" data-sample="SOS" data-announce="Loaded sample: SOS">SOS</button>
-    <button class={quietButton} type="button" data-sample="Hello world" data-announce="Loaded sample: Hello world">Hello world</button>
-    <button class={`${shareButton} data-[state=copied]:border-on-accent`} type="button" data-share data-label="Copy share link" data-flash="Link copied" aria-label="Copy share link">
-      <span class="inline-grid">
-        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Link copied</span>
-        <span class="invisible col-start-1 row-start-1" aria-hidden="true">Copy share link</span>
-        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span data-t>Copy share link</span></span>
-      </span>
-    </button>
+    <button class={quietButton} type="button" data-random>Random example</button>
   </div>
+
   <p id="translator-status" class="mt-2 min-h-6 text-sm text-muted" aria-live="polite">
     <span id="translator-announce" class="sr-only"></span>
     <span id="translator-notice"></span>
   </p>
+
+  <div class="mt-2 flex flex-wrap gap-2">
+    <button
+      class={`${shareButton} data-[state=copied]:border-on-accent`}
+      type="button"
+      data-share-copy
+      data-label="Copy share link"
+      data-flash="Link copied"
+      aria-label="Copy share link"
+    >
+      <span class="inline-grid">
+        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"
+          ><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"
+            ><path
+              d="M3 8.5 6.2 12 13 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          >Link copied</span
+        >
+        <span class="invisible col-start-1 row-start-1" aria-hidden="true">Copy share link</span>
+        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face
+          ><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"
+            ><path
+              d="M3 8.5 6.2 12 13 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          ><span data-t>Copy share link</span></span
+        >
+      </span>
+    </button>
+    <button
+      class={`${quietButton} data-[state=copied]:border-accent`}
+      type="button"
+      data-share-native
+      data-label="Share"
+      data-flash="Link copied"
+      aria-label="Share"
+    >
+      <span class="inline-grid">
+        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"
+          ><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"
+            ><path
+              d="M3 8.5 6.2 12 13 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          >Link copied</span
+        >
+        <span class="invisible col-start-1 row-start-1" aria-hidden="true">Share</span>
+        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face
+          ><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"
+            ><path
+              d="M3 8.5 6.2 12 13 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          ><span data-t>Share</span></span
+        >
+      </span>
+    </button>
+    <button
+      class={`${quietButton} data-[state=copied]:border-accent`}
+      type="button"
+      data-puzzle
+      data-label="Copy puzzle link"
+      data-flash="Link copied"
+      aria-label="Copy puzzle link"
+      disabled
+    >
+      <span class="inline-grid">
+        <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"
+          ><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"
+            ><path
+              d="M3 8.5 6.2 12 13 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          >Link copied</span
+        >
+        <span class="invisible col-start-1 row-start-1" aria-hidden="true">Copy puzzle link</span>
+        <span class="col-start-1 row-start-1 inline-flex items-center justify-center gap-1" data-face
+          ><svg data-i class="hidden size-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true"
+            ><path
+              d="M3 8.5 6.2 12 13 4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path></svg
+          ><span data-t>Copy puzzle link</span></span
+        >
+      </span>
+    </button>
+    <button class={quietButton} type="button" data-export-txt disabled>Export TXT</button>
+  </div>
+
+  <details class={`${detailsClass} mt-2`}>
+    <summary class={summaryClass}>Settings</summary>
+    <div class="grid gap-2 border-t border-line px-3 py-3 text-sm">
+      <label class="flex min-h-11 items-center gap-2">
+        <input class="size-4" type="checkbox" checked data-slash />
+        <span>Show slash between words</span>
+      </label>
+      <label class="flex min-h-11 items-center gap-2">
+        <input class="size-4" type="checkbox" data-hide-text />
+        <span>Hide text</span>
+      </label>
+    </div>
+  </details>
+
+  <details class={`${detailsClass} mt-2`}>
+    <summary class={summaryClass}>Reference</summary>
+    <div class="border-t border-line px-3 py-3">
+      <div class="grid grid-cols-4 gap-x-2 gap-y-1 text-sm sm:grid-cols-6 md:grid-cols-8">
+        {
+          referenceEntries.map((entry) => (
+            <div class="flex min-w-0 items-baseline justify-between gap-1 font-mono">
+              <span class="font-sans font-semibold text-ink">{entry.char}</span>
+              <span class="truncate text-muted">{entry.code}</span>
+            </div>
+          ))
+        }
+      </div>
+      <p class="mt-3 text-sm">
+        <a class="font-medium text-accent underline underline-offset-2" href="/morse-code-alphabet/"
+          >Full alphabet chart</a
+        >
+      </p>
+    </div>
+  </details>
+
   <div class="mt-3 grid gap-3 border-t border-line pt-3">
     <p class="text-sm font-semibold">Audio</p>
     <div class="flex flex-wrap gap-2">
-      <button id="translator-play" class={shareButton} type="button" data-play disabled aria-pressed="false">Play</button>
-      <button id="translator-wav" class={quietButton} type="button" data-wav disabled aria-label="Download WAV" data-label="Download WAV" data-busy="Preparing...">
+      <button id="translator-play" class={shareButton} type="button" data-play disabled aria-pressed="false"
+        >Play</button
+      >
+      <button
+        id="translator-wav"
+        class={quietButton}
+        type="button"
+        data-wav
+        disabled
+        aria-label="Download WAV"
+        data-label="Download WAV"
+        data-busy="Preparing..."
+      >
         <span class="inline-grid">
           <span class="invisible col-start-1 row-start-1" aria-hidden="true">Download WAV</span>
           <span class="invisible col-start-1 row-start-1" aria-hidden="true">Preparing...</span>
@@ -108,7 +356,9 @@ const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`
     <p class="min-h-6 text-sm text-muted">No sound on iPhone? Turn off silent mode.</p>
   </div>
   <noscript>
-    <p class="text-sm text-muted">JavaScript is off, so the panels and audio controls will not run. The chart below still works.</p>
+    <p class="text-sm text-muted"
+      >JavaScript is off, so the panels and audio controls will not run. The chart below still works.</p
+    >
   </noscript>
 </section>
 
@@ -116,22 +366,61 @@ const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`
   import { copyWithFallback } from '../lib/copy-feedback';
   import { changeFarnsworth, changeSpeed, farnsworthLabel } from '../lib/farnsworth';
   import { decode, encode } from '../lib/morse';
+  import {
+    buildPuzzleUrl,
+    buildShareUrl,
+    characterCountLabel,
+    convertWordSeparators,
+    countCharacters,
+    countSignals,
+    modeAnnouncement,
+    parseTranslatorHash,
+    pickRandomExample,
+    signalCountLabel,
+    swapMode,
+    unknownMorseNotice,
+    unsupportedNotice,
+    wordSeparatorFor,
+    type TranslatorMode,
+  } from '../lib/translator-core';
 
   const root = document.querySelector('[data-translator]');
   const text = document.querySelector('#translator-text');
   const morse = document.querySelector('#translator-morse');
   const notice = document.querySelector('#translator-notice');
   const announce = document.querySelector('#translator-announce');
+  const panels = document.querySelector('[data-panels]');
+  const textPanel = document.querySelector('[data-panel="text"]');
+  const morsePanel = document.querySelector('[data-panel="morse"]');
+  const textCount = document.querySelector('[data-text-count]');
+  const morseCount = document.querySelector('[data-morse-count]');
+  const textMask = document.querySelector('[data-text-mask]');
+  const slashInput = document.querySelector('[data-slash]');
+  const hideInput = document.querySelector('[data-hide-text]');
+  const puzzleButton = document.querySelector('[data-puzzle]');
+  const exportButton = document.querySelector('[data-export-txt]');
 
   if (
     root instanceof HTMLElement &&
     text instanceof HTMLTextAreaElement &&
     morse instanceof HTMLTextAreaElement &&
     notice instanceof HTMLElement &&
-    announce instanceof HTMLElement
+    announce instanceof HTMLElement &&
+    panels instanceof HTMLElement &&
+    textPanel instanceof HTMLElement &&
+    morsePanel instanceof HTMLElement &&
+    textCount instanceof HTMLElement &&
+    morseCount instanceof HTMLElement &&
+    textMask instanceof HTMLElement &&
+    slashInput instanceof HTMLInputElement &&
+    hideInput instanceof HTMLInputElement
   ) {
     let lock = false;
     let preparingWav = false;
+    let lastSource: 'text' | 'morse' = 'text';
+    let mode: TranslatorMode = 'text-to-morse';
+    let lastExample: string | null = null;
+    let actionsLoading: Promise<typeof import('../lib/translator-actions')> | null = null;
 
     const showNotice = (message: string) => {
       notice.textContent = message;
@@ -141,27 +430,76 @@ const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`
       announce.textContent = message;
     };
 
+    const showSlash = () => slashInput.checked;
+
+    const refreshCounters = () => {
+      textCount.textContent = characterCountLabel(countCharacters(text.value));
+      morseCount.textContent = signalCountLabel(countSignals(morse.value));
+    };
+
+    const refreshSecondary = () => {
+      const hasMorse = morse.value.length > 0;
+      if (puzzleButton instanceof HTMLButtonElement) puzzleButton.disabled = !hasMorse;
+      if (exportButton instanceof HTMLButtonElement) exportButton.disabled = !hasMorse;
+    };
+
+    const applyHide = (hidden: boolean) => {
+      hideInput.checked = hidden;
+      if (hidden) {
+        text.setAttribute('aria-hidden', 'true');
+        text.setAttribute('inert', '');
+        text.tabIndex = -1;
+        text.classList.add('opacity-0');
+        textMask.hidden = false;
+        textMask.classList.remove('hidden');
+        textMask.classList.add('flex');
+      } else {
+        text.removeAttribute('aria-hidden');
+        text.removeAttribute('inert');
+        text.removeAttribute('tabindex');
+        text.classList.remove('opacity-0');
+        textMask.hidden = true;
+        textMask.classList.add('hidden');
+        textMask.classList.remove('flex');
+      }
+    };
+
     const fromText = () => {
       if (lock) return;
       lock = true;
-      const result = encode(text.value);
+      lastSource = 'text';
+      const result = encode(text.value, { wordSeparator: wordSeparatorFor(showSlash()) });
       morse.value = result.output;
-      if (result.unsupported.length > 0) {
-        const shown = [...new Set(result.unsupported)].join(' ');
-        showNotice(`Skipped ${result.unsupported.length} unsupported characters: ${shown}`);
-      } else {
-        showNotice('');
-      }
+      showNotice(unsupportedNotice(result.unsupported.length));
       lock = false;
+      refreshCounters();
+      refreshSecondary();
     };
 
     const fromMorse = () => {
       if (lock) return;
       lock = true;
+      lastSource = 'morse';
       const result = decode(morse.value);
       text.value = result.output;
-      showNotice(result.unknown > 0 ? `${result.unknown} unrecognized Morse groups shown as ?` : '');
+      showNotice(unknownMorseNotice(result.unknown));
       lock = false;
+      refreshCounters();
+      refreshSecondary();
+    };
+
+    const applyMode = (next: TranslatorMode, announceChange: boolean) => {
+      mode = next;
+      const radio = root.querySelector<HTMLInputElement>(`input[data-mode][value="${next}"]`);
+      if (radio) radio.checked = true;
+      if (next === 'morse-to-text') {
+        if (panels.firstElementChild !== morsePanel) panels.insertBefore(morsePanel, textPanel);
+      } else if (panels.firstElementChild !== textPanel) {
+        panels.insertBefore(textPanel, morsePanel);
+      }
+      const top = next === 'morse-to-text' ? morse : text;
+      top.focus();
+      if (announceChange) showAnnounce(modeAnnouncement(next));
     };
 
     const legacyCopy = (value: string) => {
@@ -197,12 +535,18 @@ const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`
       const writeText = navigator.clipboard?.writeText?.bind(navigator.clipboard);
       if ((await copyWithFallback(value, writeText, legacyCopy)) === 'copied') {
         flashCopy(button);
-        return;
+        return 'copied' as const;
       }
       showNotice(root.dataset.copyError!);
-      const field = document.getElementById(fieldId) as HTMLTextAreaElement;
-      field.focus();
-      field.select();
+      const field = document.getElementById(fieldId) as HTMLTextAreaElement | null;
+      field?.focus();
+      field?.select();
+      return 'failed' as const;
+    };
+
+    const loadActions = () => {
+      actionsLoading ??= import('../lib/translator-actions');
+      return actionsLoading;
     };
 
     text.addEventListener('input', () => {
@@ -214,6 +558,33 @@ const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`
       haltAudio();
       fromMorse();
       refreshAudio();
+    });
+
+    root.querySelectorAll<HTMLInputElement>('input[data-mode]').forEach((input) => {
+      input.addEventListener('change', () => {
+        if (!input.checked) return;
+        applyMode(input.value as TranslatorMode, true);
+      });
+    });
+
+    slashInput.addEventListener('change', () => {
+      haltAudio();
+      if (lastSource === 'morse') {
+        morse.value = convertWordSeparators(morse.value, showSlash());
+        refreshCounters();
+        refreshSecondary();
+      } else {
+        fromText();
+      }
+      refreshAudio();
+    });
+
+    hideInput.addEventListener('change', () => {
+      applyHide(hideInput.checked);
+    });
+
+    root.querySelector('[data-show-text]')?.addEventListener('click', () => {
+      applyHide(false);
     });
 
     const playButton = document.querySelector('#translator-play');
@@ -264,7 +635,9 @@ const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`
     };
     const openAudio = () => {
       if (!audioCtx) {
-        const Ctx = window.AudioContext ?? (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        const Ctx =
+          window.AudioContext ??
+          (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
         if (!Ctx) return null;
         audioCtx = new Ctx();
       }
@@ -320,6 +693,8 @@ const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`
     }
     showSliders();
     refreshAudio();
+    refreshCounters();
+    refreshSecondary();
 
     root.addEventListener('click', (event) => {
       const target = event.target;
@@ -337,39 +712,73 @@ const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`
         haltAudio();
         text.value = '';
         morse.value = '';
+        lastSource = 'text';
         showAnnounce('');
         showNotice(control.dataset.announce!);
+        refreshCounters();
+        refreshSecondary();
         refreshAudio();
-        text.focus();
+        const top = mode === 'morse-to-text' ? morse : text;
+        top.focus();
         return;
       }
-      const sample = control.dataset.sample;
-      if (sample) {
+      if ('random' in control.dataset) {
         haltAudio();
-        text.value = sample;
+        const phrase = pickRandomExample(() => Math.random(), lastExample);
+        lastExample = phrase;
+        text.value = phrase;
         fromText();
-        showAnnounce(control.dataset.announce!);
+        showAnnounce(`Loaded example: ${phrase}`);
         refreshAudio();
         text.focus();
         return;
       }
-      if ('share' in control.dataset) {
-        const url = new URL(location.href);
-        url.search = '';
-        url.hash = text.value ? `text=${encodeURIComponent(text.value)}` : '';
-        void copyValue(control, url.href, 'translator-text');
+      if ('swap' in control.dataset) {
+        applyMode(swapMode(mode), true);
+        return;
+      }
+      if ('shareCopy' in control.dataset || control.hasAttribute('data-share-copy')) {
+        const url = buildShareUrl(location.href, text.value);
+        void copyValue(control, url, 'translator-text');
+        return;
+      }
+      if ('shareNative' in control.dataset || control.hasAttribute('data-share-native')) {
+        const url = buildShareUrl(location.href, text.value);
+        void loadActions().then(async (mod) => {
+          const result = await mod.shareOrCopy(url, async (value) => copyWithFallback(value, navigator.clipboard?.writeText?.bind(navigator.clipboard), legacyCopy));
+          if (result === 'copied') flashCopy(control);
+          else if (result === 'failed') showNotice(root.dataset.copyError!);
+        });
+        return;
+      }
+      if ('puzzle' in control.dataset) {
+        if (!morse.value) return;
+        const url = buildPuzzleUrl(location.href, morse.value);
+        void copyValue(control, url, 'translator-morse');
+        return;
+      }
+      if ('exportTxt' in control.dataset || control.hasAttribute('data-export-txt')) {
+        if (!morse.value) return;
+        void loadActions().then((mod) => {
+          const result = mod.downloadTxt(morse.value);
+          showNotice(result.notice);
+        });
       }
     });
 
-    const hash = location.hash;
-    if (hash.startsWith('#text=')) {
-      try {
-        text.value = decodeURIComponent(hash.slice('#text='.length));
+    const payload = parseTranslatorHash(location.hash);
+    if (payload) {
+      if (payload.morse !== undefined) {
+        morse.value = payload.morse;
+        fromMorse();
+        applyMode('morse-to-text', false);
+        morse.focus();
+      } else if (payload.text !== undefined) {
+        text.value = payload.text;
         fromText();
-        refreshAudio();
-      } catch {
-        showNotice('');
       }
+      if (payload.hide) applyHide(true);
+      refreshAudio();
     }
   }
 </script>

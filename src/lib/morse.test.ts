@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { buildTimeline } from './morse-audio';
 import { MORSE_ALPHABET, decode, encode } from './morse';
 
 describe('encode', () => {
@@ -9,6 +10,12 @@ describe('encode', () => {
 
   it('encodes HELLO WORLD with a slash between words', () => {
     expect(encode('HELLO WORLD').output).toBe('.... . .-.. .-.. --- / .-- --- .-. .-.. -..');
+  });
+
+  it('encodes with three spaces when slash is off', () => {
+    expect(encode('HELLO WORLD', { wordSeparator: '   ' }).output).toBe(
+      '.... . .-.. .-.. ---   .-- --- .-. .-.. -..',
+    );
   });
 
   it('encodes digits', () => {
@@ -38,10 +45,16 @@ describe('encode', () => {
     expect(encode('   ')).toEqual({ output: '', unsupported: [] });
   });
 
-  it('skips unsupported characters and lists them', () => {
+  it('places # for unsupported characters and lists them', () => {
     const result = encode('SOS😀');
-    expect(result.output).toBe('... --- ...');
+    expect(result.output).toBe('... --- ... #');
     expect(result.unsupported).toEqual(['😀']);
+  });
+
+  it('places one # per code point including accented letters', () => {
+    const result = encode('café');
+    expect(result.output).toBe('-.-. .- ..-. #');
+    expect(result.unsupported).toEqual(['é']);
   });
 });
 
@@ -69,9 +82,14 @@ describe('decode', () => {
     expect(decode('   ... --- ...   ').output).toBe('SOS');
   });
 
-  it('replaces unknown sequences with question marks and counts them', () => {
-    expect(decode('........')).toEqual({ output: '?', unknown: 1 });
-    expect(decode('.- ........')).toEqual({ output: 'A?', unknown: 1 });
+  it('replaces unknown sequences with # and counts them', () => {
+    expect(decode('........')).toEqual({ output: '#', unknown: 1 });
+    expect(decode('.- ........')).toEqual({ output: 'A#', unknown: 1 });
+  });
+
+  it('decodes a literal # group to #', () => {
+    expect(decode('#')).toEqual({ output: '#', unknown: 0 });
+    expect(decode('... --- ... #')).toEqual({ output: 'SOS#', unknown: 0 });
   });
 
   it('returns an empty result for empty input', () => {
@@ -82,14 +100,26 @@ describe('decode', () => {
 
 describe('round trip', () => {
   it('recovers uppercase text from Morse', () => {
-    const samples = ['SOS', 'HELLO WORLD', '109', "OK?", 'A/B', '1+1=2', 'AT @ HOME'];
+    const samples = ['SOS', 'HELLO WORLD', '109', 'OK?', 'A/B', '1+1=2', 'AT @ HOME'];
     for (const sample of samples) {
       expect(decode(encode(sample).output).output).toBe(sample);
     }
   });
 
+  it('turns emoji into # on a round trip', () => {
+    expect(decode(encode('Hi😀').output).output).toBe('HI#');
+  });
+
   it('uses a unique Morse pattern for every character', () => {
     const codes = MORSE_ALPHABET.map((entry) => entry.code);
     expect(new Set(codes).size).toBe(codes.length);
+  });
+});
+
+describe('audio timeline skips #', () => {
+  it('ignores # groups when building a timeline', () => {
+    const withHash = buildTimeline('... --- ... #', { wpm: 20 });
+    const without = buildTimeline('... --- ...', { wpm: 20 });
+    expect(withHash).toEqual(without);
   });
 });

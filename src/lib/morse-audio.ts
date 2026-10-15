@@ -31,8 +31,9 @@ export function buildTimeline(morse: string, options: TimelineOptions): Segment[
   const letterGap = stretched ? farnsworthGapMs(wpm, farnsworthWpm, 3) : 3 * unit;
   const wordGap = stretched ? farnsworthGapMs(wpm, farnsworthWpm, 7) : 7 * unit;
 
-  const words = morse
-    .split(/[/|]/)
+  const marked = morse.replace(/\|/g, '/').replace(/ {3,}/g, ' / ');
+  const words = marked
+    .split('/')
     .map((word) => word.trim().split(/\s+/).filter((token) => MARK.test(token)))
     .filter((word) => word.length > 0);
 

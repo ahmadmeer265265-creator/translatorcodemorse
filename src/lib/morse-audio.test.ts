@@ -36,12 +36,12 @@ describe('buildTimeline', () => {
     expect(buildTimeline('. .', { wpm: 20, farnsworthWpm: 40 })[1].ms).toBe(180);
   });
 
-  it('returns nothing for empty input and skips question-mark groups without extra gaps', () => {
+  it('returns nothing for empty input and skips # groups without extra gaps', () => {
     expect(buildTimeline('', { wpm: 20 })).toEqual([]);
     expect(buildTimeline('   /   ', { wpm: 20 })).toEqual([]);
-    expect(buildTimeline('?', { wpm: 20 })).toEqual([]);
-    expect(buildTimeline('? .', { wpm: 20 })).toEqual([{ on: true, ms: 60 }]);
-    expect(buildTimeline('. ?', { wpm: 20 })).toEqual([{ on: true, ms: 60 }]);
+    expect(buildTimeline('#', { wpm: 20 })).toEqual([]);
+    expect(buildTimeline('# .', { wpm: 20 })).toEqual([{ on: true, ms: 60 }]);
+    expect(buildTimeline('. #', { wpm: 20 })).toEqual([{ on: true, ms: 60 }]);
   });
 
   it('does not emit a leading or trailing gap', () => {

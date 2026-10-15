@@ -70,6 +70,12 @@ export const MORSE_ALPHABET: readonly MorseEntry[] = [
 const CHAR_TO_MORSE = new Map(MORSE_ALPHABET.map((entry) => [entry.char, entry.code]));
 const MORSE_TO_CHAR = new Map(MORSE_ALPHABET.map((entry) => [entry.code, entry.char]));
 
+export type WordSeparator = ' / ' | '   ';
+
+export type EncodeOptions = {
+  wordSeparator?: WordSeparator;
+};
+
 export type EncodeResult = {
   output: string;
   unsupported: string[];
@@ -83,10 +89,11 @@ export type DecodeResult = {
 const DOTS = /[·•]/g;
 const DASHES = /[–—−]/g;
 
-export function encode(text: string): EncodeResult {
+export function encode(text: string, options: EncodeOptions = {}): EncodeResult {
+  const wordSeparator = options.wordSeparator ?? ' / ';
   const unsupported: string[] = [];
   const lines = text.split(/\r\n|\n|\r/);
-  const output = lines.map((line) => encodeLine(line, unsupported)).join('\n');
+  const output = lines.map((line) => encodeLine(line, unsupported, wordSeparator)).join('\n');
   return { output, unsupported };
 }
 
@@ -107,7 +114,7 @@ export function decode(morse: string): DecodeResult {
   return { output, unknown };
 }
 
-function encodeLine(line: string, unsupported: string[]): string {
+function encodeLine(line: string, unsupported: string[], wordSeparator: WordSeparator): string {
   const words: string[][] = [];
   let current: string[] = [];
 
@@ -128,10 +135,11 @@ function encodeLine(line: string, unsupported: string[]): string {
       continue;
     }
     unsupported.push(char);
+    current.push('#');
   }
   flush();
 
-  return words.map((word) => word.join(' ')).join(' / ');
+  return words.map((word) => word.join(' ')).join(wordSeparator);
 }
 
 function decodeLine(line: string): { text: string; unknown: number } {
@@ -151,10 +159,11 @@ function decodeLine(line: string): { text: string; unknown: number } {
         .split(/\s+/)
         .filter((token) => token.length > 0)
         .map((token) => {
+          if (token === '#') return '#';
           const char = MORSE_TO_CHAR.get(token);
           if (char) return char;
           unknown += 1;
-          return '?';
+          return '#';
         })
         .join(''),
     )
