@@ -22,11 +22,13 @@ describe('mode swap', () => {
   it('swaps between text and Morse modes', () => {
     expect(swapMode('text-to-morse')).toBe('morse-to-text');
     expect(swapMode('morse-to-text')).toBe('text-to-morse');
+    expect(swapMode('tap-input')).toBe('tap-input');
   });
 
   it('announces the top panel after a mode change', () => {
     expect(modeAnnouncement('morse-to-text')).toContain('Morse to Text');
     expect(modeAnnouncement('text-to-morse')).toContain('Text to Morse');
+    expect(modeAnnouncement('tap-input')).toContain('Tap input');
   });
 });
 

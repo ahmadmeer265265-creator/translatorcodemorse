@@ -40,9 +40,14 @@ const referenceEntries = MORSE_ALPHABET;
       <input class="sr-only" type="radio" name="translator-mode" value="morse-to-text" data-mode />
       <span>Morse to Text</span>
     </label>
-    <span class="min-h-11 rounded-full border-2 border-transparent" aria-hidden="true" data-mode-slot></span>
+    <label class={modeLabel}>
+      <input class="sr-only" type="radio" name="translator-mode" value="tap-input" data-mode />
+      <span>Tap input</span>
+    </label>
     <button class={quietButton} type="button" data-swap aria-label="Swap input and output">Swap</button>
   </div>
+
+  <div class="mt-2 hidden" data-tap-mount hidden></div>
 
   <div class="mt-2 grid gap-2" data-panels>
     <div data-panel="text">
@@ -465,6 +470,7 @@ const referenceEntries = MORSE_ALPHABET;
 <script>
   import { copyWithFallback } from '../lib/copy-feedback';
   import { applyPreset, matchPreset, type PresetId } from '../lib/audio-presets';
+  import { transportButtons } from '../lib/audio-transport';
   import { changeFarnsworth, changeSpeed, farnsworthLabel } from '../lib/farnsworth';
   import { decode, encode } from '../lib/morse';
   import {
@@ -524,7 +530,11 @@ const referenceEntries = MORSE_ALPHABET;
     let mode: TranslatorMode = 'text-to-morse';
     let lastExample: string | null = null;
     let actionsLoading: Promise<typeof import('../lib/translator-actions')> | null = null;
+    let tapLoading: Promise<{ mountTapMode: typeof import('../lib/tap-input').mountTapMode }> | null = null;
+    let tapHandle: { focusPad: () => void; destroy: () => void; clear: () => void } | null = null;
     let allowAutoplay = false;
+    const tapMount = root.querySelector('[data-tap-mount]');
+    const swapButton = root.querySelector('[data-swap]');
     const textMirror = root.querySelector('[data-text-mirror]');
     const morseMirror = root.querySelector('[data-morse-mirror]');
     const autoplayInput = root.querySelector('[data-autoplay]');
@@ -640,16 +650,59 @@ const referenceEntries = MORSE_ALPHABET;
     };
 
     const applyMode = (next: TranslatorMode, announceChange: boolean) => {
+      const prev = mode;
       mode = next;
       const radio = root.querySelector<HTMLInputElement>(`input[data-mode][value="${next}"]`);
       if (radio) radio.checked = true;
-      if (next === 'morse-to-text') {
-        if (panels.firstElementChild !== morsePanel) panels.insertBefore(morsePanel, textPanel);
-      } else if (panels.firstElementChild !== textPanel) {
-        panels.insertBefore(textPanel, morsePanel);
+      if (prev === 'tap-input' && next !== 'tap-input') {
+        tapHandle?.destroy();
+        tapHandle = null;
+        if (tapMount instanceof HTMLElement) {
+          tapMount.hidden = true;
+          tapMount.classList.add('hidden');
+        }
+        if (swapButton instanceof HTMLButtonElement) {
+          swapButton.disabled = false;
+          swapButton.removeAttribute('title');
+        }
       }
-      const top = next === 'morse-to-text' ? morse : text;
-      top.focus();
+      if (next === 'tap-input') {
+        if (swapButton instanceof HTMLButtonElement) {
+          swapButton.disabled = true;
+          swapButton.title = 'Swap is not available in Tap input';
+        }
+        if (tapMount instanceof HTMLElement) {
+          tapMount.hidden = false;
+          tapMount.classList.remove('hidden');
+        }
+        tapLoading ??= import('../lib/tap-input');
+        void tapLoading.then((mod) => {
+          if (mode !== 'tap-input' || !(tapMount instanceof HTMLElement)) return;
+          tapHandle?.destroy();
+          tapHandle = mod.mountTapMode({
+            root: tapMount,
+            text,
+            morse,
+            announce: showAnnounce,
+            vibrateEnabled: () => vibrationInput instanceof HTMLInputElement && vibrationInput.checked,
+            showSlash,
+            onOutput: () => {
+              lastSource = 'morse';
+              refreshCounters();
+              refreshSecondary();
+              refreshAudio();
+            },
+            haltAudio,
+          });
+          tapHandle.focusPad();
+        });
+      } else if (next === 'morse-to-text') {
+        if (panels.firstElementChild !== morsePanel) panels.insertBefore(morsePanel, textPanel);
+        morse.focus();
+      } else {
+        if (panels.firstElementChild !== textPanel) panels.insertBefore(textPanel, morsePanel);
+        text.focus();
+      }
       if (announceChange) showAnnounce(modeAnnouncement(next));
     };
 
@@ -738,14 +791,14 @@ const referenceEntries = MORSE_ALPHABET;
 
     const refreshTransport = () => {
       const canPlay = /[.-]/.test(morse.value);
-      const active = playbackState === 'playing' || playbackState === 'paused';
-      if (playButton instanceof HTMLButtonElement) playButton.disabled = !canPlay || active;
+      const buttons = transportButtons(playbackState, canPlay);
+      if (playButton instanceof HTMLButtonElement) playButton.disabled = buttons.playDisabled;
       if (pauseButton instanceof HTMLButtonElement) {
-        pauseButton.disabled = !active;
-        pauseButton.textContent = playbackState === 'paused' ? 'Resume' : 'Pause';
+        pauseButton.disabled = buttons.pauseDisabled;
+        pauseButton.textContent = buttons.pauseLabel;
       }
-      if (stopButton instanceof HTMLButtonElement) stopButton.disabled = !active;
-      if (wavButton instanceof HTMLButtonElement && !preparingWav) wavButton.disabled = !canPlay;
+      if (stopButton instanceof HTMLButtonElement) stopButton.disabled = buttons.stopDisabled;
+      if (wavButton instanceof HTMLButtonElement && !preparingWav) wavButton.disabled = buttons.wavDisabled;
     };
 
     const playerUi = {
@@ -997,16 +1050,20 @@ const referenceEntries = MORSE_ALPHABET;
       }
       if ('clear' in control.dataset) {
         haltAudio();
-        text.value = '';
-        morse.value = '';
+        if (mode === 'tap-input' && tapHandle) {
+          tapHandle.clear();
+        } else {
+          text.value = '';
+          morse.value = '';
+        }
         lastSource = 'text';
         showAnnounce('');
         showNotice(control.dataset.announce!);
         refreshCounters();
         refreshSecondary();
         refreshAudio();
-        const top = mode === 'morse-to-text' ? morse : text;
-        top.focus();
+        if (mode === 'tap-input') tapHandle?.focusPad();
+        else (mode === 'morse-to-text' ? morse : text).focus();
         return;
       }
       if ('random' in control.dataset) {
@@ -1023,6 +1080,7 @@ const referenceEntries = MORSE_ALPHABET;
         return;
       }
       if ('swap' in control.dataset) {
+        if (mode === 'tap-input') return;
         applyMode(swapMode(mode), true);
         return;
       }

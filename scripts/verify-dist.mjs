@@ -172,7 +172,7 @@ if (!translatorScript) {
     const translatorCode = fs.readFileSync(translatorPath, 'utf8');
     const lazyNames = dynamicImportFiles(translatorCode);
     if (lazyNames.length === 0) {
-      fail('Translator script has no dynamic import for lazy chunks (audio/actions)');
+      fail('Translator script has no dynamic import for lazy chunks (audio/actions/tap)');
     }
     for (const name of lazyNames) {
       const lazyPath = path.join(astroDir, name);
