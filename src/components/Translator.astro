@@ -409,19 +409,20 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     </div>
   </details>
 
-  <details class={`${detailsClass} mt-2`} data-ref-panel>
+  <details class={`${detailsClass} mt-2`}>
     <summary
       ><Fragment set:html={iconChevron} /><Fragment set:html={iconBook} />Reference</summary
     >
     <div class="border-t border-line px-3 py-3">
-      {/* Grid filled on first open — keeps ~55×3 nodes out of initial parse/layout. */}
-      <div
-        class="grid grid-cols-4 gap-x-2 gap-y-1 text-sm sm:grid-cols-6 md:grid-cols-8"
-        data-ref-grid
-      >
-      </div>
-      <div hidden data-ref-json>
-        {JSON.stringify(referenceEntries.map((entry) => [entry.char, entry.code]))}
+      <div class="grid grid-cols-4 gap-x-2 gap-y-1 text-sm sm:grid-cols-6 md:grid-cols-8">
+        {
+          referenceEntries.map((entry) => (
+            <div class="flex min-w-0 items-baseline justify-between gap-1 font-mono">
+              <span class="font-sans font-semibold text-ink">{entry.char}</span>
+              <span class="truncate text-muted">{entry.code}</span>
+            </div>
+          ))
+        }
       </div>
       <p class="mt-3 text-sm">
         <a class="font-medium text-accent underline underline-offset-2" href="/morse-code-alphabet/"
@@ -602,32 +603,6 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     const pauseButton = root.querySelector('#translator-pause');
     const stopButton = root.querySelector('#translator-stop');
     const repeatButton = root.querySelector('#translator-repeat');
-    const refPanel = root.querySelector('[data-ref-panel]');
-    const refGrid = root.querySelector('[data-ref-grid]');
-    const refJson = root.querySelector('[data-ref-json]');
-    let refReady = false;
-    const fillReference = () => {
-      if (refReady || !(refGrid instanceof HTMLElement) || !refJson?.textContent) return;
-      refReady = true;
-      const entries = JSON.parse(refJson.textContent) as [string, string][];
-      const frag = document.createDocumentFragment();
-      for (const [char, code] of entries) {
-        const row = document.createElement('div');
-        row.className = 'flex min-w-0 items-baseline justify-between gap-1 font-mono';
-        const charEl = document.createElement('span');
-        charEl.className = 'font-sans font-semibold text-ink';
-        charEl.textContent = char;
-        const codeEl = document.createElement('span');
-        codeEl.className = 'truncate text-muted';
-        codeEl.textContent = code;
-        row.append(charEl, codeEl);
-        frag.append(row);
-      }
-      refGrid.append(frag);
-    };
-    refPanel?.addEventListener('toggle', () => {
-      if (refPanel instanceof HTMLDetailsElement && refPanel.open) fillReference();
-    });
     const autoplay = createAutoplayController();
 
     const showNotice = (message: string) => {
