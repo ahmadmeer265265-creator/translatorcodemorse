@@ -43,10 +43,10 @@ const codeClass = 'font-mono tracking-wide';
   <section class="cv grid gap-3">
     <h2 class={h2}>About Morse Code Translator</h2>
     <p>
-      A Morse Code Translator is an online tool that converts simple text into Morse code — dots and dashes. In Morse
-      code, short beeps are known as dots (“dits”) and long beeps are called dashes (“dahs”). You can also convert Morse
-      code back into simple English text, which means a message can be coded and decoded with a few easy steps with a
-      Morse code translator.
+      A Morse Code Translator is an online Morse code converter that turns simple text into Morse code — dots and dashes.
+      In Morse code, short beeps are known as dots (“dits”) and long beeps are called dashes (“dahs”). You can also
+      convert Morse code back into simple English text, which means a message can be coded and decoded with a few easy
+      steps with a Morse code translator.
     </p>
     <p>
       In Morse code, there is a unique sequence of dots and dashes for every letter, number and punctuation. Characters
@@ -69,7 +69,7 @@ const codeClass = 'font-mono tracking-wide';
       <li>
         <p class="font-semibold">Choose your direction.</p>
         <p>
-          Choose Text to Morse to convert words into dots and dashes, or Morse to Text to decode a message back into
+          Choose Text to Morse to convert words into dots and dashes, or Morse to Text to decode Morse code back into
           English.
         </p>
       </li>
@@ -260,6 +260,7 @@ const codeClass = 'font-mono tracking-wide';
               ['THANKS', '- .... .- -. -.- ...'],
               ['THANK YOU', '- .... .- -. -.- / -.-- --- ..-'],
               ['I LOVE YOU', '.. / .-.. --- ...- . / -.-- --- ..-'],
+              ['I MISS YOU', '.. / -- .. ... ... / -.-- --- ..-'],
               ['SOS', '... --- ...'],
               ['GOOD MORNING', '--. --- --- -.. / -- --- .-. -. .. -. --.'],
             ].map(([message, code]) => (
@@ -357,19 +358,23 @@ const codeClass = 'font-mono tracking-wide';
     </p>
     <h3 class={h3}>Morse Code to Text</h3>
     <p>
-      When decoding a message, type or paste every dot as ( . ) and dash as ( - ) into the top box. Always put one space
-      between letters and put a slash ( / ) between words. You’ll see the result in the form of plain text in the output
-      box instantly. It works for Morse that came from a flashing light, a series of beeps, or a note on paper. If you
-      find “ # “ in the result box, it means your character can’t be translated; you can spot and fix the mistake easily.
+      This online Morse code decoder turns dots and dashes into plain text. When decoding a message, type or paste every
+      dot as ( . ) and dash as ( - ) into the top box. Always put one space between letters and put a slash ( / ) between
+      words. You’ll see the result in the form of plain text in the output box instantly. It works for Morse that came
+      from a flashing light, a series of beeps, or a note on paper. If you find “ # “ in the result box, it means your
+      character can’t be translated; you can spot and fix the mistake easily.
     </p>
     <h3 class={h3}>Hear It, See It or Feel It</h3>
     <p>
-      Press Play to hear your message as beeps, with short beeps for dots and longer ones for dashes. You can use the
-      Pause, Stop, and Repeat button to control it. You can also choose how you want to receive the code:
+      Use the Morse code player: press Play to hear your message as beeps, with short beeps for dots and longer ones for
+      dashes. You can use the Pause, Stop, and Repeat button to control it. You can also choose how you want to receive
+      the code:
     </p>
     <ul class="grid list-disc gap-1 pl-5">
       <li>Sound: a clear beep for each dot and dash</li>
-      <li>Light: a flashing light that matches the rhythm, like real signal training</li>
+      <li>
+        Light: a flashing light that matches the rhythm, like a Morse code simulator for real signal training
+      </li>
       <li>Vibration: your phone buzzes in short and long pulses</li>
     </ul>
     <h3 class={h3}>Highlight Feature</h3>
@@ -378,7 +383,7 @@ const codeClass = 'font-mono tracking-wide';
       connect what you hear with what you see.
     </p>
     <h3 class={h3}>Customize the Sound</h3>
-    <p>You can customize the settings below to make playback fit your level:</p>
+    <p>You can customize the Morse code translator sound settings below to make playback fit your level:</p>
     <ul class="grid list-disc gap-1 pl-5">
       <li>
         Presets: If you are not sure when picking a speed, pick a preset and then fine-tune it with the options below.
@@ -401,15 +406,19 @@ const codeClass = 'font-mono tracking-wide';
     </p>
     <h3 class={h3}>Send a Morse Puzzle</h3>
     <p>
-      Convert your message into a link and send it to someone as a little puzzle to solve. It is a fun way to challenge
-      friends, and it works well for games, parties, and classrooms.
+      Convert your message into a link and send it to someone as a Morse code puzzle solver challenge. It is a fun way to
+      challenge friends, and it works well for games, parties, and classrooms.
     </p>
     <h3 class={h3}>Look Up a Letter</h3>
-    <p>If you want to check a letter or a number while translating, just open Reference.</p>
+    <p>
+      If you want to check a letter or a number while translating, just open Reference — a built-in Morse code dictionary.
+      For a printable Morse code chart of the full alphabet, see the{' '}
+      <a class={link} href="/morse-code-alphabet/">alphabet page</a>.
+    </p>
     <h3 class={h3}>Try a Random Message</h3>
     <p>
-      When you are not sure what to type? Press the Random or Example button to load a sample message. It is a quick and
-      easy way to practice reading Morse, test your speed, or see how the tool works.
+      When you are not sure what to type? Press the Random or Example button to load a sample from the phrase generator.
+      It is a quick and easy way to practice reading Morse, test your speed, or see how the tool works.
     </p>
     <h3 class={h3}>Clear</h3>
     <p>To start a new translation, tap the clear option and both of your boxes will be clear.</p>
@@ -704,9 +713,9 @@ const codeClass = 'font-mono tracking-wide';
   <section class="cv grid gap-3">
     <h2 class={h2}>Why Choose Our Morse Code Translator</h2>
     <p>
-      This translator works both ways, turns your message into sound, light, or vibration, and updates as you type. It is
-      free, needs no sign-up, and runs in your browser, so your messages stay on your device. It works for beginners
-      learning their first letters and for anyone who wants a quick, reliable translation.
+      This Morse code maker works both ways, turns your message into sound, light, or vibration, and updates as you type.
+      It is free, needs no sign-up, and runs as a browser-based web application, so your messages stay on your device. It
+      works for beginners learning their first letters and for anyone who wants a quick, reliable translation.
     </p>
   </section>
 

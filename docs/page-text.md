@@ -1,28 +1,41 @@
 URL: https://translatorcodemorse.com/
-Title: Morse Code Translator: Text to Morse & Morse to Text
-Description: Translate text to Morse code or Morse code to text in your browser, then play the sound or download a WAV file. Nothing you type is uploaded.
+Title: Morse Code Translator: Free Online Converter & Audio
+Description: Free private Morse code translator to convert or decode text online. Play sound, use tap and flash, download WAV—no sign-up, works in your browser.
 
 Skip to content (#main) Morse Code Translator (/)
 # Morse Code Translator
 Translate text to Morse code and Morse code to text, then play it as sound or download a WAV file.
 Type in either panel. The other one updates as you go.
-Text Morse code Copy text Copy Morse code Clear SOS Hello world Copy share link
+Text to Morse Morse to Text Tap input Swap Text Morse code Copy text Copy Morse code Clear Random example
+Copy share link Share Copy puzzle link Export TXT
+Q: Settings
+Show slash between words Hide text Autoplay Flash
+Flashing light. Not suitable for people who are sensitive to flashing lights.
+Vibration
 Audio
-Play Download WAV
-Speed (WPM) 20 Farnsworth (overall speed) Off Tone (Hz) 600 Volume 70
+Preset
+Sound type
+Waveform
+Tone (Hz) 600 Volume 70
+Q: Reference
+A .- B -... C -.-. D -.. E . F ..-. G --. H .... I .. J .--- K -.- L .-.. M -- N -. O --- P .--. Q --.- R .-. S ... T - U ..- V ...- W .-- X -..- Y -.-- Z --.. 1 .---- 2 ..--- 3 ...-- 4 ....- 5 ..... 6 -.... 7 --... 8 ---.. 9 ----. 0 ----- . .-.-.- , --..-- ? ..--.. ' .----. ! -.-.-- / -..-. ( -.--. ) -.--.- & .-... : ---... ; -.-.-. = -...- + .-.-. - -....- _ ..--.- " .-..-. $ ...-..- @ .--.-.
+Full alphabet chart (/morse-code-alphabet/)
+Audio
+Play Pause Stop Repeat Download WAV
+Speed (WPM) 20 Farnsworth (overall speed) Off
 No sound on iPhone? Turn off silent mode.
 ## A Brief Origin of Morse Code
 In the 1830s, Samuel Morse and his colleague Alfred Vail took initiative about Morse code for electric telegraph and developed a proper system of dots and dashes in 1837 and finally revealed it publicly in 1838. In 1844, Samuel Morse sent the famous message “What hath God wrought?” from Washington, D.C. to Baltimore, over a new telegraph line. Without computer technology, people used to send and receive these codes by hand in the form of letters and numbers.
 Morse code crossed the Atlantic Ocean in 1866 and SOS (/sos-in-morse-code/) was adopted as the international distress signal in 1906. Fun fact: SOS does not stand for any words. It was chosen because ... --- ... is simple and easy to recognize. Morse code was used in emergency situations when there was no internet available. It was widely used for telegram and radio signals.
 Nowadays, you can still find Morse code in ham radio, in aviation beacons, and in tools that help people to communicate who have some disabilities. The dots and dashes of Morse code are also used for troubleshooting micro electronic systems having just one LED or button. You can spot Morse code in escape room puzzles, movies, bracelets and necklaces, and even tattoos.
 ## About Morse Code Translator
-A Morse Code Translator is an online tool that converts simple text into Morse code — dots and dashes. In Morse code, short beeps are known as dots (“dits”) and long beeps are called dashes (“dahs”). You can also convert Morse code back into simple English text, which means a message can be coded and decoded with a few easy steps with a Morse code translator.
+A Morse Code Translator is an online Morse code converter that turns simple text into Morse code — dots and dashes. In Morse code, short beeps are known as dots (“dits”) and long beeps are called dashes (“dahs”). You can also convert Morse code back into simple English text, which means a message can be coded and decoded with a few easy steps with a Morse code translator.
 In Morse code, there is a unique sequence of dots and dashes for every letter, number and punctuation. Characters within a word are separated by a single space while two words are separated by a slash (/). So HELLO is .... . .-.. .-.. ---, and HELLO WORLD is .... . .-.. .-.. --- / .-- --- .-. .-.. -..
 Our Morse code translator works both ways, converting plain text into Morse code and translating Morse code back into simple text. This tool can play Morse code out loud with the correct timing. A dash is three times longer than a dot, and there are proper pauses between letters and words, so you can easily learn to recognize Morse by listening. It all works inside your browser locally, so nothing leaves your device.
 ## How to Use Our Morse Code Translator
 It takes only a few seconds. Here is how to convert text to Morse code and Morse code to text.
 Choose your direction.
-Choose Text to Morse to convert words into dots and dashes, or Morse to Text to decode a message back into English.
+Choose Text to Morse to convert words into dots and dashes, or Morse to Text to decode Morse code back into English.
 Type your message.
 Type your message, or paste your Morse code. Always use a space between letters and a slash (/) between words.
 Read the result.
@@ -105,6 +118,7 @@ HELP ME: .... . .-.. .--. / -- .
 THANKS: - .... .- -. -.- ...
 THANK YOU: - .... .- -. -.- / -.-- --- ..-
 I LOVE YOU: .. / .-.. --- ...- . / -.-- --- ..-
+I MISS YOU: .. / -- .. ... ... / -.-- --- ..-
 SOS: ... --- ...
 GOOD MORNING: --. --- --- -.. / -- --- .-. -. .. -. --.
 ### Try These Examples in the Translator
@@ -150,16 +164,16 @@ In our Morse code translator, you can use all features like audio playback, shar
 ### Text to Morse Code
 Type your message into the top box and you’ll see the results in the form of dots ( . ) and dashes ( - ). If the result appears in the form of “ # “, it means your character can’t be translated. It offers all letters ( A - Z ), numbers ( 0 - 9 ) and punctuation marks.
 ### Morse Code to Text
-When decoding a message, type or paste every dot as ( . ) and dash as ( - ) into the top box. Always put one space between letters and put a slash ( / ) between words. You’ll see the result in the form of plain text in the output box instantly. It works for Morse that came from a flashing light, a series of beeps, or a note on paper. If you find “ # “ in the result box, it means your character can’t be translated; you can spot and fix the mistake easily.
+This online Morse code decoder turns dots and dashes into plain text. When decoding a message, type or paste every dot as ( . ) and dash as ( - ) into the top box. Always put one space between letters and put a slash ( / ) between words. You’ll see the result in the form of plain text in the output box instantly. It works for Morse that came from a flashing light, a series of beeps, or a note on paper. If you find “ # “ in the result box, it means your character can’t be translated; you can spot and fix the mistake easily.
 ### Hear It, See It or Feel It
-Press Play to hear your message as beeps, with short beeps for dots and longer ones for dashes. You can use the Pause, Stop, and Repeat button to control it. You can also choose how you want to receive the code:
+Use the Morse code player: press Play to hear your message as beeps, with short beeps for dots and longer ones for dashes. You can use the Pause, Stop, and Repeat button to control it. You can also choose how you want to receive the code:
 - Sound: a clear beep for each dot and dash
-- Light: a flashing light that matches the rhythm, like real signal training
+- Light: a flashing light that matches the rhythm, like a Morse code simulator for real signal training
 - Vibration: your phone buzzes in short and long pulses
 ### Highlight Feature
 Press Play and watch each letter light up in both the Text and Morse code boxes as it sounds. It is a simple way to connect what you hear with what you see.
 ### Customize the Sound
-You can customize the settings below to make playback fit your level:
+You can customize the Morse code translator sound settings below to make playback fit your level:
 - Presets: If you are not sure when picking a speed, pick a preset and then fine-tune it with the options below.
 - Sound type: choose a telegraph click or a CW radio tone
 - Pitch (Hz): set the tone to whatever is comfortable for your ears
@@ -171,11 +185,11 @@ You can customize the settings below to make playback fit your level:
 ### Copy and Share in One Click
 There is also a copy button, so you can grab the text or the Morse code immediately. The share button allows you to send your translation straight to people.
 ### Send a Morse Puzzle
-Convert your message into a link and send it to someone as a little puzzle to solve. It is a fun way to challenge friends, and it works well for games, parties, and classrooms.
+Convert your message into a link and send it to someone as a Morse code puzzle solver challenge. It is a fun way to challenge friends, and it works well for games, parties, and classrooms.
 ### Look Up a Letter
-If you want to check a letter or a number while translating, just open Reference.
+If you want to check a letter or a number while translating, just open Reference — a built-in Morse code dictionary. For a printable Morse code chart of the full alphabet, see the alphabet page (/morse-code-alphabet/).
 ### Try a Random Message
-When you are not sure what to type? Press the Random or Example button to load a sample message. It is a quick and easy way to practice reading Morse, test your speed, or see how the tool works.
+When you are not sure what to type? Press the Random or Example button to load a sample from the phrase generator. It is a quick and easy way to practice reading Morse, test your speed, or see how the tool works.
 ### Clear
 To start a new translation, tap the clear option and both of your boxes will be clear.
 ### Download as Audio
@@ -275,7 +289,7 @@ If your result looks wrong, the problem could be in the input. Check these five 
 - If you want Morse to text, just type dots and dashes in your Morse code section. In this way you don’t need to switch modes.
 - If you want the experience of light just turn on Flash.
 ## Why Choose Our Morse Code Translator
-This translator works both ways, turns your message into sound, light, or vibration, and updates as you type. It is free, needs no sign-up, and runs in your browser, so your messages stay on your device. It works for beginners learning their first letters and for anyone who wants a quick, reliable translation.
+This Morse code maker works both ways, turns your message into sound, light, or vibration, and updates as you type. It is free, needs no sign-up, and runs as a browser-based web application, so your messages stay on your device. It works for beginners learning their first letters and for anyone who wants a quick, reliable translation.
 ## Difference Between International Morse & American Morse
 ### International Morse Code vs American Morse Code
 When people say “Morse code” today, they almost always mean International Morse code. Its older cousin, American Morse code, was built for the first telegraph lines in the United States, and the two are not the same alphabet.
