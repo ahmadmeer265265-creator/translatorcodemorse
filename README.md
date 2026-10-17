@@ -10,8 +10,27 @@ Use pnpm 12.9.1 through Corepack (`corepack enable`, then `corepack pnpm <script
 - `pnpm build` — `astro build` plus `scripts/verify-dist.mjs`
 - `pnpm preview` — serve `dist/`
 - `pnpm test` — Vitest
-- `pnpm lighthouse` — local Lighthouse on the built pages
+- `pnpm lighthouse` — local Lighthouse on the built pages (mobile uses realistic `--throttling-method=simulate` / Slow 4G + 4× CPU)
+- `pnpm images` — regenerate the annotated homepage article screenshots (see below)
 - `node scripts/generate-icons.mjs` — regenerate PNG favicons and the Open Graph image into `public/` (run by hand; commit the PNGs)
+
+## Regenerating article screenshots
+
+The homepage article embeds four annotated screenshots of the tool UI
+(`src/assets/article/*.webp`). They are **not** regenerated during `npm run build`.
+
+To update them after any UI change:
+
+1. `npm run images`
+2. Review the four files in `src/assets/article/`.
+3. Commit the updated `.webp` files.
+
+`npm run images` (see `scripts/generate-article-images.mjs`) builds `dist`, starts
+a local preview, drives a real Chromium (1280×900, 2× device scale factor) through
+Playwright, types `SOS` so panels are populated, captures each area, composites
+numbered amber callout outlines, and overwrites the WebP files. It is idempotent
+and safe to re-run. It never adds JS to the tool — the screenshots are static
+images referenced from `HomeArticle.astro`.
 
 ## Config you may need before deploy
 

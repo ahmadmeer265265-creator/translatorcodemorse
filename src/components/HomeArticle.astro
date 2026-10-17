@@ -3,9 +3,14 @@
  * Editable homepage article (below the translator).
  * Untouched original: docs/article-source.txt
  */
+import { Image } from 'astro:assets';
 import AmericanMorseBlock from './AmericanMorseBlock.astro';
 import TimingBlock from './TimingBlock.astro';
 import { homeFaqs } from '../data/faq';
+import translatePanel from '../assets/article/translate-panel.webp';
+import audioControls from '../assets/article/audio-controls.webp';
+import tapInput from '../assets/article/tap-input.webp';
+import settingsPanel from '../assets/article/settings-panel.webp';
 
 const link = 'text-accent underline underline-offset-4';
 const h2 = 'text-2xl font-semibold tracking-tight';
@@ -14,6 +19,10 @@ const tableClass = 'w-full border-collapse text-left text-base';
 const thClass = 'border-b border-line bg-surface px-3 py-2 font-semibold';
 const tdClass = 'border-b border-line px-3 py-2 align-top';
 const codeClass = 'font-mono tracking-wide';
+// Light-card wrapper so the light-mode screenshots stay legible on a dark page.
+const figure = 'overflow-hidden rounded-xl border border-line bg-surface';
+const imgClass = 'block h-auto w-full';
+const caption = 'border-t border-line bg-canvas px-3 py-2 text-sm text-muted';
 ---
 
 <div class="mt-12 grid max-w-3xl gap-10 text-[1.0625rem] leading-7">
@@ -100,6 +109,20 @@ const codeClass = 'font-mono tracking-wide';
         </p>
       </li>
     </ol>
+    <figure class={figure}>
+      <Image
+        src={translatePanel}
+        alt="Morse code translator Text and Morse panels with Copy, Clear, and Random example buttons marked 1, 2, and 3"
+        widths={[480, 768, 1000]}
+        sizes="(max-width: 640px) 100vw, 672px"
+        loading="lazy"
+        decoding="async"
+        class={imgClass}
+      />
+      <figcaption class={caption}>
+        Type or paste your message, then use 1 Copy, 2 Clear, or 3 Random example to work faster.
+      </figcaption>
+    </figure>
   </section>
 
   <section class="cv grid gap-3">
@@ -377,6 +400,20 @@ const codeClass = 'font-mono tracking-wide';
       </li>
       <li>Vibration: your phone buzzes in short and long pulses</li>
     </ul>
+    <figure class={figure}>
+      <Image
+        src={audioControls}
+        alt="Audio transport row with Play, Download WAV, and Repeat buttons marked, above Speed and Farnsworth sliders"
+        widths={[480, 768, 986]}
+        sizes="(max-width: 640px) 100vw, 672px"
+        loading="lazy"
+        decoding="async"
+        class={imgClass}
+      />
+      <figcaption class={caption}>
+        Press 1 Play to hear it, grab the file with 2 Download WAV, or loop it with 3 Repeat.
+      </figcaption>
+    </figure>
     <h3 class={h3}>Highlight Feature</h3>
     <p>
       Press Play and watch each letter light up in both the Text and Morse code boxes as it sounds. It is a simple way to
@@ -399,6 +436,20 @@ const codeClass = 'font-mono tracking-wide';
       <li>Autoplay: Turn Autoplay button on; it will automatically play your message when it is translated.</li>
       <li>Word separator: You can show or hide the slash between words</li>
     </ul>
+    <figure class={figure}>
+      <Image
+        src={settingsPanel}
+        alt="Settings disclosure open, showing the Flash, Vibration, Autoplay, and word-separator toggles marked"
+        widths={[480, 768, 1000]}
+        sizes="(max-width: 640px) 100vw, 672px"
+        loading="lazy"
+        decoding="async"
+        class={imgClass}
+      />
+      <figcaption class={caption}>
+        Open Settings to switch on Flash, Vibration, Autoplay, or the word separator exactly as marked.
+      </figcaption>
+    </figure>
     <h3 class={h3}>Copy and Share in One Click</h3>
     <p>
       There is also a copy button, so you can grab the text or the Morse code immediately. The share button allows you to
@@ -645,6 +696,20 @@ const codeClass = 'font-mono tracking-wide';
       <code class={codeClass}>-.-</code> appears as you tap it, then turns into K), and every decoded letter is added to
       the output area below the tap pad.
     </p>
+    <figure class={figure}>
+      <Image
+        src={tapInput}
+        alt="Tap input mode with the tap pad, its live dot-dash readout, and the Word break button marked"
+        widths={[480, 768, 1000]}
+        sizes="(max-width: 640px) 100vw, 672px"
+        loading="lazy"
+        decoding="async"
+        class={imgClass}
+      />
+      <figcaption class={caption}>
+        Tap the pad in short and long presses; watch your marks appear live, or add a word break.
+      </figcaption>
+    </figure>
     <p>Tap mode is made for learning by doing. You feel the Morse timing instead of just reading about it.</p>
     <p>After a few practice rounds, the 200 ms limit starts to feel natural.</p>
     <p>
