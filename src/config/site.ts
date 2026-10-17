@@ -17,8 +17,8 @@ export const OG_IMAGE_ALT = 'Morse Code Translator';
 
 /** Keep in sync with --canvas in src/styles/global.css */
 export const THEME_COLOR = {
-  light: '#f4f6f8',
-  dark: '#0e1218',
+  light: '#f3efe8',
+  dark: '#14110e',
 } as const;
 
 export function absoluteUrl(pathname: string): string {

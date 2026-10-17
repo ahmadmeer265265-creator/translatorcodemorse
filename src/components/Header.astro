@@ -10,21 +10,23 @@ const posts = await getCollection('blog', ({ data }) => !data.draft);
 const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog' }] : [...primaryNav];
 ---
 
-<header class="border-b border-line bg-surface" data-site-header>
+<header class="site-header" data-site-header>
   <div class="mx-auto flex min-h-11 w-full max-w-5xl items-center gap-x-2 px-4 sm:gap-x-3">
     <a class="inline-flex min-h-11 min-w-0 shrink items-center gap-2 font-semibold text-ink" href="/">
-      <Picture
-        src={mark}
-        formats={['avif', 'webp']}
-        alt=""
-        width={32}
-        height={32}
-        densities={[1, 2]}
-        loading="eager"
-        decoding="async"
-        fetchpriority="high"
-        class="size-8 shrink-0"
-      />
+      <span class="site-logo-mark shrink-0">
+        <Picture
+          src={mark}
+          formats={['avif', 'webp']}
+          alt=""
+          width={32}
+          height={32}
+          densities={[1, 2]}
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+          class="size-8"
+        />
+      </span>
       <span class="truncate">{SITE_NAME}</span>
     </a>
     <nav class="ml-auto hidden min-w-0 flex-1 flex-nowrap justify-end md:flex" aria-label="Primary">

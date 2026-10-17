@@ -5,45 +5,46 @@ const fieldClass =
   'relative z-10 mt-1 h-20 w-full resize-none rounded-xl border border-line bg-transparent px-3 py-2 text-base text-ink caret-ink';
 const mirrorClass =
   'pointer-events-none absolute inset-0 z-0 mt-1 overflow-hidden whitespace-pre-wrap break-words rounded-xl border border-transparent bg-canvas px-3 py-2 text-base text-ink [&_mark]:rounded-sm [&_mark]:bg-[#f5d76e] [&_mark]:text-[#12141a] dark:[&_mark]:bg-[#c9a227] dark:[&_mark]:text-[#12141a]';
-const buttonClass =
-  'inline-flex min-h-11 items-center justify-center rounded-full border-2 px-3 text-sm font-medium';
-const quietButton = `${buttonClass} border-line bg-canvas text-ink`;
-const shareButton = `${buttonClass} border-transparent bg-accent text-on-accent`;
-const modeLabel =
-  'inline-flex min-h-11 min-w-0 flex-1 cursor-pointer items-center justify-center rounded-full border-2 border-line px-2 text-center text-sm font-medium text-ink has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-on-accent has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent';
+const quietButton = 'btn btn-secondary';
+const shareButton = 'btn btn-primary';
+const ghostButton = 'btn btn-ghost';
 const counterClass = 'mt-1 min-h-5 text-sm text-muted';
-const detailsClass = 'rounded-xl border border-line bg-canvas';
-const summaryClass =
-  'flex min-h-11 cursor-pointer list-none items-center px-3 text-sm font-semibold text-ink marker:content-none [&::-webkit-details-marker]:hidden';
+const detailsClass = 'disclosure';
 const fieldSelect =
   'min-h-11 w-full rounded-xl border border-line bg-surface px-3 text-sm text-ink';
+const iconCopy = `<svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="7" height="8" rx="1.25"/><path d="M3.5 10.5V3.75A1.25 1.25 0 0 1 4.75 2.5H10"/></svg>`;
+const iconShare = `<svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="3.5" r="1.75"/><circle cx="12" cy="12.5" r="1.75"/><circle cx="4" cy="8" r="1.75"/><path d="m5.6 7.2 4.8-2.7M5.6 8.8l4.8 2.7"/></svg>`;
+const iconClear = `<svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>`;
+const iconPlay = `<svg class="btn-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 2.8v10.4L13 8z"/></svg>`;
+const iconStop = `<svg class="btn-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="4" y="4" width="8" height="8" rx="1"/></svg>`;
+const iconDownload = `<svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8M4.5 7.5 8 11l3.5-3.5M3 13.5h10"/></svg>`;
+const iconGear = `<svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h4l.7 1.4 1.5.4 1 1.2-.7 1.4.7 1.4-1 1.2-1.5.4L10 12.5H6l-.7-1.4-1.5-.4-1-1.2.7-1.4-.7-1.4 1-1.2 1.5-.4L6 3.5z"/><circle cx="8" cy="8" r="1.6"/></svg>`;
+const iconBook = `<svg class="btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 3.5h7.5A1.5 1.5 0 0 1 12.5 5v7.5H5A1.5 1.5 0 0 0 3.5 14z"/><path d="M3.5 3.5V14"/></svg>`;
+const iconChevron = `<svg class="disclosure-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 3.5 5 4.5-5 4.5"/></svg>`;
 
 const referenceEntries = MORSE_ALPHABET;
 ---
 
 <section
-  class="translator rounded-2xl border border-line bg-surface p-2.5 shadow-[0_16px_40px_-28px_rgba(18,20,26,0.7)] sm:p-4"
+  class="translator rounded-2xl border border-line bg-surface p-2.5 sm:p-4"
   data-translator
   data-copy-error="Couldn't copy automatically. Select the text and press Ctrl+C (or Cmd+C)."
 >
-  <div
-    class="grid grid-cols-[1fr_1fr_minmax(0,1fr)_auto] gap-1.5"
-    role="radiogroup"
-    aria-label="Translation direction"
-    data-mode-group
-  >
-    <label class={modeLabel}>
-      <input class="sr-only" type="radio" name="translator-mode" value="text-to-morse" checked data-mode />
-      <span>Text to Morse</span>
-    </label>
-    <label class={modeLabel}>
-      <input class="sr-only" type="radio" name="translator-mode" value="morse-to-text" data-mode />
-      <span>Morse to Text</span>
-    </label>
-    <label class={modeLabel}>
-      <input class="sr-only" type="radio" name="translator-mode" value="tap-input" data-mode />
-      <span>Tap input</span>
-    </label>
+  <div class="flex flex-wrap items-stretch gap-1.5">
+    <div class="mode-seg" role="radiogroup" aria-label="Translation direction" data-mode-group>
+      <label class="mode-seg__opt">
+        <input class="sr-only" type="radio" name="translator-mode" value="text-to-morse" checked data-mode />
+        <span>Text to Morse</span>
+      </label>
+      <label class="mode-seg__opt">
+        <input class="sr-only" type="radio" name="translator-mode" value="morse-to-text" data-mode />
+        <span>Morse to Text</span>
+      </label>
+      <label class="mode-seg__opt">
+        <input class="sr-only" type="radio" name="translator-mode" value="tap-input" data-mode />
+        <span>Tap input</span>
+      </label>
+    </div>
     <button class={quietButton} type="button" data-swap aria-label="Swap input and output">Swap</button>
   </div>
 
@@ -101,6 +102,7 @@ const referenceEntries = MORSE_ALPHABET;
       data-flash="Copied"
       aria-label="Copy text"
     >
+      <Fragment set:html={iconCopy} />
       <span class="inline-grid">
         <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"
           ><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"
@@ -135,6 +137,7 @@ const referenceEntries = MORSE_ALPHABET;
       data-flash="Copied"
       aria-label="Copy Morse code"
     >
+      <Fragment set:html={iconCopy} />
       <span class="inline-grid">
         <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"
           ><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"
@@ -161,7 +164,9 @@ const referenceEntries = MORSE_ALPHABET;
         >
       </span>
     </button>
-    <button class={quietButton} type="button" data-clear data-announce="Cleared">Clear</button>
+    <button class={ghostButton} type="button" data-clear data-announce="Cleared"
+      ><Fragment set:html={iconClear} />Clear</button
+    >
     <button class={quietButton} type="button" data-random>Random example</button>
   </div>
 
@@ -179,6 +184,7 @@ const referenceEntries = MORSE_ALPHABET;
       data-flash="Link copied"
       aria-label="Copy share link"
     >
+      <Fragment set:html={iconShare} />
       <span class="inline-grid">
         <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"
           ><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"
@@ -213,6 +219,7 @@ const referenceEntries = MORSE_ALPHABET;
       data-flash="Link copied"
       aria-label="Share"
     >
+      <Fragment set:html={iconShare} />
       <span class="inline-grid">
         <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"
           ><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"
@@ -248,6 +255,7 @@ const referenceEntries = MORSE_ALPHABET;
       aria-label="Copy puzzle link"
       disabled
     >
+      <Fragment set:html={iconCopy} />
       <span class="inline-grid">
         <span class="invisible col-start-1 row-start-1 inline-flex items-center gap-1" aria-hidden="true"
           ><svg class="size-4" viewBox="0 0 16 16" aria-hidden="true"
@@ -274,27 +282,35 @@ const referenceEntries = MORSE_ALPHABET;
         >
       </span>
     </button>
-    <button class={quietButton} type="button" data-export-txt disabled>Export TXT</button>
+    <button class={quietButton} type="button" data-export-txt disabled
+      ><Fragment set:html={iconDownload} />Export TXT</button
+    >
   </div>
 
   <details class={`${detailsClass} mt-2`}>
-    <summary class={summaryClass}>Settings</summary>
+    <summary
+      ><Fragment set:html={iconChevron} /><Fragment set:html={iconGear} />Settings</summary
+    >
     <div class="grid gap-3 border-t border-line px-3 py-3 text-sm">
-      <label class="flex min-h-11 items-center gap-2">
-        <input class="size-4" type="checkbox" checked data-slash />
+      <label class="toggle-row">
+        <input class="toggle-input" type="checkbox" checked data-slash />
+        <span class="toggle-ui" aria-hidden="true"></span>
         <span>Show slash between words</span>
       </label>
-      <label class="flex min-h-11 items-center gap-2">
-        <input class="size-4" type="checkbox" data-hide-text />
+      <label class="toggle-row">
+        <input class="toggle-input" type="checkbox" data-hide-text />
+        <span class="toggle-ui" aria-hidden="true"></span>
         <span>Hide text</span>
       </label>
-      <label class="flex min-h-11 items-center gap-2">
-        <input class="size-4" type="checkbox" data-autoplay />
+      <label class="toggle-row">
+        <input class="toggle-input" type="checkbox" data-autoplay />
+        <span class="toggle-ui" aria-hidden="true"></span>
         <span>Autoplay</span>
       </label>
       <div class="grid gap-1">
-        <label class="flex min-h-11 items-center gap-2">
-          <input class="size-4" type="checkbox" data-flash-opt />
+        <label class="toggle-row">
+          <input class="toggle-input" type="checkbox" data-flash-opt />
+          <span class="toggle-ui" aria-hidden="true"></span>
           <span>Flash</span>
         </label>
         <p class="text-xs text-muted" data-flash-warning>
@@ -305,8 +321,9 @@ const referenceEntries = MORSE_ALPHABET;
         </p>
       </div>
       <div class="grid gap-1">
-        <label class="flex min-h-11 items-center gap-2">
-          <input class="size-4" type="checkbox" data-vibration />
+        <label class="toggle-row">
+          <input class="toggle-input" type="checkbox" data-vibration />
+          <span class="toggle-ui" aria-hidden="true"></span>
           <span>Vibration</span>
         </label>
         <p class="hidden text-xs text-muted" data-vibration-note>
@@ -360,7 +377,9 @@ const referenceEntries = MORSE_ALPHABET;
   </details>
 
   <details class={`${detailsClass} mt-2`}>
-    <summary class={summaryClass}>Reference</summary>
+    <summary
+      ><Fragment set:html={iconChevron} /><Fragment set:html={iconBook} />Reference</summary
+    >
     <div class="border-t border-line px-3 py-3">
       <div class="grid grid-cols-4 gap-x-2 gap-y-1 text-sm sm:grid-cols-6 md:grid-cols-8">
         {
@@ -383,9 +402,14 @@ const referenceEntries = MORSE_ALPHABET;
   <div class="mt-3 grid gap-3 border-t border-line pt-3">
     <p class="text-sm font-semibold">Audio</p>
     <div class="flex flex-wrap items-start gap-2">
-      <button id="translator-play" class={shareButton} type="button" data-play disabled>Play</button>
+      <button id="translator-play" class={shareButton} type="button" data-play disabled
+        ><Fragment set:html={iconPlay} />Play</button
+      >
+      {/* Pause/Resume text is set via textContent in script — no child icon. */}
       <button id="translator-pause" class={quietButton} type="button" data-pause disabled>Pause</button>
-      <button id="translator-stop" class={quietButton} type="button" data-stop disabled>Stop</button>
+      <button id="translator-stop" class={quietButton} type="button" data-stop disabled
+        ><Fragment set:html={iconStop} />Stop</button
+      >
       <button
         id="translator-repeat"
         class={quietButton}
@@ -406,6 +430,7 @@ const referenceEntries = MORSE_ALPHABET;
         data-label="Download WAV"
         data-busy="Preparing..."
       >
+        <Fragment set:html={iconDownload} />
         <span class="inline-grid">
           <span class="invisible col-start-1 row-start-1" aria-hidden="true">Download WAV</span>
           <span class="invisible col-start-1 row-start-1" aria-hidden="true">Preparing...</span>
@@ -413,7 +438,7 @@ const referenceEntries = MORSE_ALPHABET;
         </span>
       </button>
       <div
-        class="size-24 shrink-0 rounded-full border border-line bg-[#2a2f38] shadow-inner"
+        class="size-24 shrink-0 rounded-full bg-[#2a2f38]"
         style="background: #2a2f38"
         aria-hidden="true"
         data-lamp
@@ -458,10 +483,7 @@ const referenceEntries = MORSE_ALPHABET;
     background: #c9a227;
     color: #12141a;
   }
-  [data-translator] [data-lamp][data-lit='true'] {
-    background: #f5c542 !important;
-    box-shadow: inset 0 0 0 1px #d4a017;
-  }
+  /* Lamp lit styles live in global.css so the brass bezel stays consistent. */
   [data-translator] textarea.is-highlighting {
     color: transparent;
   }
