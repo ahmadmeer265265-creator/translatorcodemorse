@@ -57,7 +57,7 @@ const jsonLd = supportingJsonLd({
       </p>
     </header>
 
-    <section class="grid gap-3">
+    <section class="cv grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">The sequence</h2>
       <p>
         Write the groups from left to right. Three dots, then three dashes, then three dots again. On this site the translator encodes the text SOS as one word, so the written Morse has a space between the groups and no slash. A slash would mean a new word. SOS is not S, then a word gap, then O, then a word gap, then S.
@@ -73,7 +73,7 @@ const jsonLd = supportingJsonLd({
       </p>
     </section>
 
-    <section class="grid gap-3">
+    <section class="cv grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">What the signal means</h2>
       <p>
         SOS is not an abbreviation. “Save Our Souls” and “Save Our Ship” are popular backronyms. They were fitted to the letters later. They are not the origin of the signal. The letters were chosen because the pattern is unmistakable: three short marks, three long marks, three short marks, with no extra word break in the middle.
@@ -86,7 +86,7 @@ const jsonLd = supportingJsonLd({
       </p>
     </section>
 
-    <section class="grid gap-3">
+    <section class="cv grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">How people signal it</h2>
       <p>
         Any way of making a short mark and a long mark can carry the pattern. A short sound is a dot and a long sound, about three times as long, is a dash. A whistle, a horn, or a tapped coin on a pipe can do that. The same idea works with light: a short flash, then a long flash. It also works by knocking, with a short knock and a longer knock. The listener needs the rhythm of three short, three long, and three short, sent as one run.
@@ -103,12 +103,12 @@ const jsonLd = supportingJsonLd({
       </p>
     </section>
 
-    <section class="grid gap-3">
+    <section class="cv cv-faq grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">Questions</h2>
       <div class="grid gap-4">
         {
           faqs.map((item) => (
-            <details class="rounded-xl border border-line bg-surface px-3 py-2" open>
+            <details class="rounded-xl border border-line bg-surface px-3 py-2">
               <summary class="flex min-h-11 cursor-pointer items-center font-semibold">{item.question}</summary>
               <p class="pb-2 text-muted">{item.answer}</p>
             </details>

@@ -1,0 +1,357 @@
+/* —— Translator instrument panel —— */
+[data-translator].translator {
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow), 0 0 0 1px rgba(180, 83, 9, 0.04);
+}
+
+[data-translator] button[data-state='copied'] {
+  border-color: var(--accent);
+}
+
+[data-translator] button[data-share][data-state='copied'] {
+  border-color: var(--on-accent);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 9999px;
+  border-width: 2px;
+  border-style: solid;
+  padding-inline: 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.btn-primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 1px 0 rgba(28, 22, 18, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+}
+
+.btn-secondary {
+  border-color: var(--line);
+  background: var(--canvas);
+  color: var(--ink);
+  box-shadow: var(--inset);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.45;
+}
+
+.btn-ghost {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--muted);
+}
+
+.btn-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* Hidden SVG symbol sheet — keeps icons in DOM for <use> without layout cost. */
+.icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Mode segmented control */
+.mode-seg {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding: 0.2rem;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: var(--canvas);
+  box-shadow: var(--inset);
+}
+
+.mode-seg::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 0.2rem;
+  bottom: 0.2rem;
+  left: 0.2rem;
+  width: calc((100% - 0.4rem) / 3);
+  border-radius: 9999px;
+  background: var(--accent);
+  box-shadow: 0 1px 2px rgba(28, 22, 18, 0.2);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+
+.mode-seg:has([value="morse-to-text"]:checked)::before {
+  transform: translateX(100%);
+}
+
+.mode-seg:has([value="tap-input"]:checked)::before {
+  transform: translateX(200%);
+}
+
+.mode-seg__opt {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  min-height: 2.55rem;
+  min-width: 0;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 0.35rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.mode-seg__opt:has(:checked) {
+  color: var(--on-accent);
+}
+
+.mode-seg__opt:has(:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 9999px;
+}
+
+/* Text / Morse field shells */
+[data-translator] [data-text-shell],
+[data-translator] [data-morse-shell] {
+  border-radius: 0.75rem;
+}
+
+[data-translator] textarea,
+[data-translator] [data-text-mirror],
+[data-translator] [data-morse-mirror] {
+  box-shadow: var(--inset);
+}
+
+/* Custom checkbox toggles — real input stays for a11y; adjacent span is the switch UI. */
+[data-translator] .toggle-row {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+[data-translator] .toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+[data-translator] .toggle-ui {
+  position: relative;
+  display: inline-block;
+  width: 2.75rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background-color: var(--track);
+  box-shadow: var(--inset);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+[data-translator] .toggle-ui::before {
+  content: "";
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 9999px;
+  background-color: var(--surface);
+  box-shadow: 0 1px 2px rgba(28, 22, 18, 0.28), 0 0 0 1px rgba(28, 22, 18, 0.06);
+  transition: transform 0.15s ease;
+}
+
+[data-translator] .toggle-input:checked + .toggle-ui {
+  background-color: var(--accent);
+  border-color: transparent;
+}
+
+[data-translator] .toggle-input:checked + .toggle-ui::before {
+  transform: translateX(1.2rem);
+  background-color: var(--on-accent);
+}
+
+[data-translator] .toggle-input:disabled + .toggle-ui {
+  opacity: 0.45;
+}
+
+[data-translator] .toggle-input:focus-visible + .toggle-ui {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+[data-translator] .toggle-input:disabled ~ span {
+  opacity: 0.7;
+}
+
+/* Range sliders */
+[data-translator] input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2.75rem;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+[data-translator] input[type="range"]:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+[data-translator] input[type="range"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 0.25rem;
+}
+
+[data-translator] input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--canvas), 0 0 0 5px var(--accent);
+}
+
+[data-translator] input[type="range"]:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--canvas), 0 0 0 5px var(--accent);
+}
+
+[data-translator] input[type="range"]::-webkit-slider-runnable-track {
+  height: 0.45rem;
+  border-radius: 9999px;
+  /* WebKit has no fill pseudo without JS; warm track + accent thumb. */
+  background: var(--track);
+  box-shadow: var(--inset);
+}
+
+[data-translator] input[type="range"]::-moz-range-track {
+  height: 0.45rem;
+  border-radius: 9999px;
+  background: var(--track);
+  box-shadow: var(--inset);
+}
+
+[data-translator] input[type="range"]::-moz-range-progress {
+  height: 0.45rem;
+  border-radius: 9999px;
+  background: var(--accent);
+}
+
+[data-translator] input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: -0.4rem;
+  border: 2px solid var(--accent);
+  border-radius: 9999px;
+  background: var(--thumb-ring);
+  box-shadow: 0 1px 3px rgba(28, 22, 18, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+[data-translator] input[type="range"]::-moz-range-thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--accent);
+  border-radius: 9999px;
+  background: var(--thumb-ring);
+  box-shadow: 0 1px 3px rgba(28, 22, 18, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Disclosure summaries */
+.disclosure {
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--canvas);
+  box-shadow: var(--inset);
+}
+
+.disclosure > summary {
+  display: flex;
+  min-height: 2.75rem;
+  cursor: pointer;
+  list-style: none;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure > summary::marker {
+  content: "";
+}
+
+.disclosure-chevron {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--accent);
+  transition: transform 0.15s ease;
+}
+
+.disclosure[open] > summary .disclosure-chevron {
+  transform: rotate(90deg);
+}
+
+/* Flash lamp — brass bezel, same 96px footprint */
+[data-translator] [data-lamp] {
+  border: 3px solid var(--lamp-bezel);
+  box-shadow:
+    var(--inset),
+    0 0 0 1px rgba(28, 22, 18, 0.2),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.35);
+}
+
+[data-translator] [data-lamp][data-lit="true"] {
+  background: #f5c542 !important;
+  box-shadow:
+    inset 0 0 0 1px #d4a017,
+    0 0 0 1px rgba(180, 83, 9, 0.25),
+    0 0 14px rgba(245, 197, 66, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mode-seg::before,
+  [data-translator] .toggle-ui,
+  [data-translator] .toggle-ui::before,
+  .disclosure-chevron {
+    transition: none !important;
+  }
+}

@@ -66,7 +66,7 @@ const jsonLd = supportingJsonLd({
       <MorseChart />
     </section>
 
-    <section class="grid gap-3">
+    <section class="cv grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">How to read dots and dashes</h2>
       <p>
         Read a pattern from left to right. A dot or a dash is one mark. Marks that belong to the same character are written with no space between them. When you write a word, a single space separates one character from the next. A slash, with a space on each side, separates words.
@@ -79,7 +79,7 @@ const jsonLd = supportingJsonLd({
       </p>
     </section>
 
-    <section class="grid gap-3">
+    <section class="cv grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">Timing in units</h2>
       <p>
         The chart shows shape, not time. Sound needs both. Timing is counted in units. A dot is one unit. A dash is three units. The gap between two marks inside one character is one unit. The gap between two characters is three units. The gap between two words is seven units.
@@ -92,7 +92,7 @@ const jsonLd = supportingJsonLd({
       </p>
     </section>
 
-    <section class="grid gap-3">
+    <section class="cv grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">Learn the alphabet by sound</h2>
       <p>
         A chart is the right tool when you need to look a letter up. It is a weak way to learn to hear Morse. Counting dots on a page is slower than the sound, and the count falls apart once the speed rises. Learn the rhythm of each character instead of a picture of marks.
@@ -109,12 +109,12 @@ const jsonLd = supportingJsonLd({
       </p>
     </section>
 
-    <section class="grid gap-3">
+    <section class="cv cv-faq grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">Questions</h2>
       <div class="grid gap-4">
         {
           faqs.map((item) => (
-            <details class="rounded-xl border border-line bg-surface px-3 py-2" open>
+            <details class="rounded-xl border border-line bg-surface px-3 py-2">
               <summary class="flex min-h-11 cursor-pointer items-center font-semibold">{item.question}</summary>
               <p class="pb-2 text-muted">{item.answer}</p>
             </details>

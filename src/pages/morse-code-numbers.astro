@@ -64,7 +64,7 @@ const jsonLd = supportingJsonLd({
       <MorseChart groups={['digit']} />
     </section>
 
-    <section class="grid gap-3">
+    <section class="cv grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">The five-symbol pattern</h2>
       <p>
         Count the marks in any row. There are always five. One is a dot and four dashes. Two is two dots and three dashes. The dots stay in front and the dashes fill whatever is left, until five, which is five dots and no dashes.
@@ -80,7 +80,7 @@ const jsonLd = supportingJsonLd({
       </p>
     </section>
 
-    <section class="grid gap-3">
+    <section class="cv grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">Numbers inside a message</h2>
       <p>
         Treat each digit as a character. In the written Morse this site uses, characters in one word are separated by a single space. The number 10 is the digit 1, a space, then the digit 0: <span class="font-mono">.---- -----</span>. There is no slash inside the number. A slash would start a new word.
@@ -97,12 +97,12 @@ const jsonLd = supportingJsonLd({
       </p>
     </section>
 
-    <section class="grid gap-3">
+    <section class="cv cv-faq grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">Questions</h2>
       <div class="grid gap-4">
         {
           faqs.map((item) => (
-            <details class="rounded-xl border border-line bg-surface px-3 py-2" open>
+            <details class="rounded-xl border border-line bg-surface px-3 py-2">
               <summary class="flex min-h-11 cursor-pointer items-center font-semibold">{item.question}</summary>
               <p class="pb-2 text-muted">{item.answer}</p>
             </details>
