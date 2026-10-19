@@ -1,7 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
+import SocialLinks from './SocialLinks.astro';
 import { primaryNav } from '../config/nav';
-import { FACEBOOK_URL, SITE_NAME } from '../config/site';
+import { SITE_NAME } from '../config/site';
 
 const posts = await getCollection('blog', ({ data }) => !data.draft);
 const links = [
@@ -31,20 +32,7 @@ const links = [
           ))
         }
       </nav>
-      <a
-        class="inline-flex size-11 items-center justify-center rounded-md text-accent"
-        href={FACEBOOK_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Visit our Facebook page"
-      >
-        <svg class="size-5" viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            fill="currentColor"
-            d="M14 8.2h2.1V5.1H14c-2.4 0-4 1.5-4 4.1v1.6H7.8v3.1H10V21h3.2v-7.1h2.3l.5-3.1H13.2V9.5c0-.8.3-1.3.8-1.3z"
-          ></path>
-        </svg>
-      </a>
+      <SocialLinks />
     </div>
   </div>
 </footer>

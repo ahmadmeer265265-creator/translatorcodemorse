@@ -10,10 +10,16 @@ export const SITE_NAME = 'Morse Code Translator';
 export const CONTACT_EMAIL = 'contact@translatorcodemorse.com';
 
 /**
- * Public Facebook Page URL for the footer icon.
+ * Public Facebook Page URL for header/footer social icons.
  * TODO: replace with real Facebook page URL
  */
 export const FACEBOOK_URL = 'https://facebook.com/';
+
+/**
+ * Public Instagram profile URL for header/footer social icons.
+ * TODO: replace with real Instagram page URL
+ */
+export const INSTAGRAM_URL = 'https://instagram.com/';
 
 /** Default Open Graph / Twitter share image (1200×630). */
 export const OG_IMAGE_PATH = '/og-default.png';

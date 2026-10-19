@@ -1,0 +1,59 @@
+---
+import { FACEBOOK_URL, INSTAGRAM_URL } from '../config/site';
+
+/**
+ * Official-style brand glyphs (Facebook “f” tile, Instagram camera tile).
+ * Facebook uses Meta blue + white “f” for instant recognition; Instagram uses
+ * the familiar purple–pink–orange tile with a white camera so it still reads
+ * as Instagram at 20px, not a generic outline.
+ */
+const igGradId = `ig-g-${crypto.randomUUID().slice(0, 8)}`;
+---
+
+<a
+  class="inline-flex size-11 shrink-0 items-center justify-center rounded-md"
+  href={FACEBOOK_URL}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Visit our Facebook page"
+>
+  <svg class="size-5" viewBox="0 0 24 24" aria-hidden="true">
+    <rect width="24" height="24" rx="6" fill="#1877F2"></rect>
+    <path
+      fill="#ffffff"
+      d="M15.1 8.4h1.7V5.5h-1.7c-2.2 0-3.6 1.3-3.6 3.6v1.4H9.5v2.9h2v6.6h2.9v-6.6h2.1l.4-2.9h-2.5V9.3c0-.6.2-1 .7-1z"
+    ></path>
+  </svg>
+</a>
+<a
+  class="inline-flex size-11 shrink-0 items-center justify-center rounded-md"
+  href={INSTAGRAM_URL}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Visit our Instagram page"
+>
+  <svg class="size-5" viewBox="0 0 24 24" aria-hidden="true">
+    <defs>
+      <radialGradient id={igGradId} cx="30%" cy="107%" r="150%">
+        <stop offset="0%" stop-color="#fdf497"></stop>
+        <stop offset="5%" stop-color="#fdf497"></stop>
+        <stop offset="45%" stop-color="#fd5949"></stop>
+        <stop offset="60%" stop-color="#d6249f"></stop>
+        <stop offset="90%" stop-color="#285AEB"></stop>
+      </radialGradient>
+    </defs>
+    <rect width="24" height="24" rx="6" fill={`url(#${igGradId})`}></rect>
+    <rect
+      x="5.5"
+      y="5.5"
+      width="13"
+      height="13"
+      rx="4"
+      fill="none"
+      stroke="#ffffff"
+      stroke-width="1.75"
+    ></rect>
+    <circle cx="12" cy="12" r="3.25" fill="none" stroke="#ffffff" stroke-width="1.75"></circle>
+    <circle cx="16.35" cy="7.65" r="1.1" fill="#ffffff"></circle>
+  </svg>
+</a>

@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import mark from '../assets/mark.png';
+import SocialLinks from './SocialLinks.astro';
 import { primaryNav } from '../config/nav';
 import { SITE_NAME } from '../config/site';
 
@@ -68,6 +69,7 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
             d="M6 6l12 12M18 6L6 18"></path>
         </svg>
       </button>
+      <SocialLinks />
       <button
         class="theme-toggle size-11 shrink-0 items-center justify-center rounded-md text-ink"
         type="button"
