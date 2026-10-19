@@ -10,6 +10,7 @@ const homepage = path.join(dist, 'index.html');
 const FORBIDDEN = ['example.com', 'TODO', 'lorem'];
 const REQUIRED_ASSETS = [
   'favicon.svg',
+  'favicon.ico',
   'favicon-32x32.png',
   'apple-touch-icon.png',
   'og-default.png',
