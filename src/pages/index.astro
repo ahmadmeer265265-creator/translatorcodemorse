@@ -58,11 +58,13 @@ const jsonLd = [
 ---
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
-  <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">Morse Code Translator</h1>
-  <p class="mt-1 max-w-2xl text-sm text-muted sm:text-base">
+  <h1 class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">Morse Code Translator</h1>
+  <p class="mx-auto mt-1 max-w-2xl text-center text-sm text-muted sm:text-base">
     Translate text to Morse code and Morse code to text, then play it as sound or download a WAV file.
   </p>
-  <p class="mt-0.5 max-w-2xl text-sm text-muted sm:text-base">Type in either panel. The other one updates as you go.</p>
+  <p class="mx-auto mt-0.5 max-w-2xl text-center text-sm text-muted sm:text-base">
+    Type in either panel. The other one updates as you go.
+  </p>
   <div class="mt-2 sm:mt-4">
     <Translator />
   </div>
