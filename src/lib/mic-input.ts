@@ -25,8 +25,12 @@ const BTN =
 const PRIMARY =
   'inline-flex min-h-11 items-center justify-center rounded-full border-2 border-transparent bg-accent px-4 text-sm font-semibold text-on-accent';
 
-/** Map the 0–100 slider to an RMS threshold (0.004 quiet … 0.12 loud). */
-const thresholdFor = (sensitivity: number) => 0.004 + ((100 - sensitivity) / 100) * 0.116;
+/**
+ * Map the 0–100 slider to an RMS threshold (0.02 sensitive … 0.12 strict).
+ * Floor stays above typical CW tone-ramp / AnalyserNode bleed so letter gaps
+ * (3 units) are not eaten into intra gaps at max sensitivity.
+ */
+const thresholdFor = (sensitivity: number) => 0.02 + ((100 - sensitivity) / 100) * 0.1;
 
 export function mountMicMode(options: MicMountOptions): MicModeHandle {
   const { root, text, morse, announce, showSlash, onOutput, haltAudio } = options;

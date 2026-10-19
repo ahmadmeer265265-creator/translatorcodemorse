@@ -132,13 +132,14 @@ export function classifyMark(durationMs: number, unitMs: number): '.' | '-' {
 
 /**
  * Classify one space duration against the current unit. Nominal gaps are
- * 1 / 3 / 7 units; the intra/letter boundary sits at 2.5x and the
- * letter/word boundary at 5x so a slower letter (unit already growing)
- * is not split early.
+ * 1 / 3 / 7 units; the intra/letter boundary sits at 2x (midpoint of 1 and 3)
+ * and the letter/word boundary at 5x (midpoint of 3 and 7). A 2x letter floor
+ * tolerates AnalyserNode / tone-ramp bleed that shortens measured gaps, which
+ * a 2.5x floor mistook for intra-element spacing on real mic audio.
  */
 export function classifyGap(durationMs: number, unitMs: number): GapClass {
   if (durationMs >= unitMs * 5) return 'word';
-  if (durationMs >= unitMs * 2.5) return 'letter';
+  if (durationMs >= unitMs * 2) return 'letter';
   return 'intra';
 }
 
@@ -225,7 +226,7 @@ export function createMicDecoder(options: { showSlash?: boolean; now?: () => num
       }
 
       // Space segment. The dot unit anchors both boundaries. A run's
-      // nominal gaps are 1 / 3 / 7 units, so intra ends below ~2.5u and a
+      // nominal gaps are 1 / 3 / 7 units, so intra ends below ~2u and a
       // word gap begins at ~5u.
       const dot = unit.mark();
       const gap = classifyGap(segment.durationMs, dot);

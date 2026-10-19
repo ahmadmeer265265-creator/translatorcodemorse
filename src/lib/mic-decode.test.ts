@@ -57,8 +57,8 @@ describe('classification', () => {
   it('classifyGap maps spaces to intra/letter/word by 1/3/7 ratio', () => {
     const unit = 100;
     expect(classifyGap(100, unit)).toBe('intra');
-    expect(classifyGap(249, unit)).toBe('intra');
-    expect(classifyGap(250, unit)).toBe('letter');
+    expect(classifyGap(199, unit)).toBe('intra');
+    expect(classifyGap(200, unit)).toBe('letter');
     expect(classifyGap(300, unit)).toBe('letter');
     expect(classifyGap(499, unit)).toBe('letter');
     expect(classifyGap(500, unit)).toBe('word');
@@ -179,7 +179,7 @@ describe('robustness', () => {
     // Sender pauses; report growing silence.
     decoder.silence(100);
     expect(decoder.snapshot().text).toBe('');
-    decoder.silence(250); // past the 2.5x letter boundary
+    decoder.silence(250); // past the 2x letter boundary
     expect(decoder.snapshot().text).toBe('E');
     // The gap is not consumed: a following mark still sees intra spacing and
     // would extend the SAME letter had the pause been short.

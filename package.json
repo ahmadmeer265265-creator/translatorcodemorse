@@ -13,7 +13,8 @@
     "preview": "astro preview",
     "lighthouse": "node scripts/lighthouse.mjs",
     "images": "node scripts/generate-article-images.mjs",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:mic-e2e": "node scripts/generate-mic-e2e-fixtures.mjs && npm run build && node scripts/run-mic-e2e.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "8.0.2",
