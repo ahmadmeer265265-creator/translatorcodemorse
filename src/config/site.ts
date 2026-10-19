@@ -9,6 +9,12 @@ export const SITE_NAME = 'Morse Code Translator';
 /** Public contact address used by the Contact page mailto link. */
 export const CONTACT_EMAIL = 'contact@translatorcodemorse.com';
 
+/**
+ * Public Facebook Page URL for the footer icon.
+ * TODO: replace with real Facebook page URL
+ */
+export const FACEBOOK_URL = 'https://facebook.com/';
+
 /** Default Open Graph / Twitter share image (1200×630). */
 export const OG_IMAGE_PATH = '/og-default.png';
 export const OG_IMAGE_WIDTH = 1200;

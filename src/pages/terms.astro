@@ -1,0 +1,94 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedFor, lastUpdatedIso } from '../config/pages';
+import { absoluteUrl, CONTACT_EMAIL } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
+
+const title = 'Terms of Use';
+const description =
+  'Terms of use for this free Morse code translator: no accounts, no warranty, and why you should not rely on it for emergencies or critical signals.';
+const pageUrl = absoluteUrl('/terms/');
+const lastUpdated = lastUpdatedFor('/terms/')!;
+const crumbs = [
+  { name: 'Home', url: absoluteUrl('/') },
+  { name: 'Terms of Use', url: pageUrl },
+];
+const jsonLd = supportingJsonLd({
+  name: 'Terms of Use',
+  description,
+  url: pageUrl,
+  crumbs,
+  dateModified: lastUpdatedIso('/terms/'),
+});
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Terms of Use' }]} />
+    <header class="grid gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight">Terms of Use</h1>
+      <p class="text-sm text-muted">Last updated: {lastUpdated}</p>
+      <p>
+        These terms are a short, plain-language summary of how you may use this free Morse code translator. They are not legal advice. If you need a formal agreement for a business or high-stakes use, talk to a lawyer.
+      </p>
+    </header>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">What this site is</h2>
+      <p>
+        This site provides a browser-based Morse code translator and related reference pages. Encoding, decoding, audio playback, WAV download, tap input, and microphone listening run on your device. You do not create an account. The site does not charge for these tools.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Acceptable use</h2>
+      <p>
+        Use the tool for learning, practice, and ordinary conversion between text and Morse code. Do not misuse the site to attack, overload, or disrupt the service or other visitors’ access. Do not use it to break the law.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">No warranty</h2>
+      <p>
+        The translator and charts are provided as-is, without a promise that they are complete, error-free, or fit for a particular purpose. Codes, timing, and audio may differ from other tools or from what a human operator expects in the field.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Not for emergencies or critical signals</h2>
+      <p>
+        Do not rely on this site for distress calls, aviation or maritime safety, medical situations, or any other case where a wrong or missing signal could cause harm. It is not an emergency service, a radio station, or a substitute for licensed procedures and equipment. If you need help, use official emergency channels for your location.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Your content and share links</h2>
+      <p>
+        Text and Morse code you enter stay in your browser for translation and playback. If you copy a share link, the message sits in the page hash. Anyone with that link can read it. You are responsible for what you type and for what you share.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Intellectual property</h2>
+      <p>
+        The site’s layout, branding, and original written pages belong to this site’s operator. Morse code itself is a public signalling system. You may use the free tool and reference charts for personal and educational use. Do not scrape, mirror, or republish the site wholesale without permission.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Privacy and contact</h2>
+      <p>
+        How the site handles information is described on the
+        <a class="text-accent underline underline-offset-4" href="/privacy/">Privacy</a>
+        page. Accessibility notes are on the
+        <a class="text-accent underline underline-offset-4" href="/accessibility/">Accessibility</a>
+        page. Questions about these terms:
+        <a class="text-accent underline underline-offset-4" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        or the
+        <a class="text-accent underline underline-offset-4" href="/contact/">Contact</a>
+        page.
+      </p>
+    </section>
+  </article>
+</BaseLayout>

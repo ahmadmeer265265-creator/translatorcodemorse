@@ -30,21 +30,38 @@ const jsonLd = supportingJsonLd({
       <h1 class="text-3xl font-semibold tracking-tight">Privacy</h1>
       <p class="text-sm text-muted">Last updated: {lastUpdated}</p>
       <p>
-        This page explains, in plain English, what happens to information when you use the Morse code translator on this site. It is not a contract and it does not name specific privacy laws.
+        This page explains, in plain English, what happens to information when you use the Morse code translator on this site. It is not a contract and it does not name specific privacy laws. Related pages:
+        <a class="text-accent underline underline-offset-4" href="/terms/">Terms of Use</a>,
+        <a class="text-accent underline underline-offset-4" href="/accessibility/">Accessibility</a>, and
+        <a class="text-accent underline underline-offset-4" href="/contact/">Contact</a>.
       </p>
     </header>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Text you type</h2>
+      <h2 class="text-2xl font-semibold tracking-tight">No account required</h2>
       <p>
-        The translator runs in your browser. The text and Morse code you enter stay on your device for that work. This site does not upload that text to translate it, play it, or build a WAV file.
+        You do not sign up, log in, or create a profile. The translator does not need an email address or password to convert text, play Morse, tap a pad, or listen with a microphone.
       </p>
     </section>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Cookies, ads, and analytics</h2>
+      <h2 class="text-2xl font-semibold tracking-tight">Text, Morse, and tap input</h2>
       <p>
-        Today the site sets no cookies of its own for tracking. It does not load analytics scripts, advertising networks, or other third-party trackers. A theme preference may be stored in your browser’s local storage so the light or dark choice can stick between visits. That value stays on your device.
+        Encoding, decoding, playback, and WAV building run in your browser. The text and Morse code you enter stay on your device for that work. Tap input records short and long presses on the pad in the same way: timing stays in the browser so letters can be decoded. This site does not upload that content to translate it, play it, or build a WAV file.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Microphone</h2>
+      <p>
+        The Listen (mic) mode asks for microphone access only when you press Start listening. The audio is analyzed entirely in your browser to decode Morse code; it is never recorded, stored, or sent to this site or to anyone else. You can deny the permission, or revoke it at any time, in your browser’s site settings. Pressing Stop listening, or leaving the mode, stops access to the microphone immediately.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Cookies, trackers, and local storage</h2>
+      <p>
+        The site sets no cookies of its own. It does not load analytics scripts, advertising networks, social pixels, or other third-party trackers. There is no account cookie and no marketing cookie. A theme preference (light or dark) may be stored in your browser’s local storage so the choice can stick between visits. That single value stays on your device and is not sent to this site as a tracker.
       </p>
     </section>
 
@@ -63,18 +80,13 @@ const jsonLd = supportingJsonLd({
     </section>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Microphone</h2>
-      <p>
-        The Listen (mic) mode asks for microphone access only when you press Start listening. The audio is analyzed entirely in your browser to decode Morse code; it is never recorded, stored, or sent to this site or to anyone else. You can deny the permission, or revoke it at any time, in your browser’s site settings. Pressing Stop listening, or leaving the mode, stops access to the microphone immediately.
-      </p>
-    </section>
-
-    <section class="grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">Questions</h2>
       <p>
         If you have a question about this page, email
-        <a class="text-accent underline underline-offset-4" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
-        If any of the practices above change, this page will be updated and the last-updated date will change.
+        <a class="text-accent underline underline-offset-4" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        or use the
+        <a class="text-accent underline underline-offset-4" href="/contact/">Contact</a>
+        page. If any of the practices above change, this page will be updated and the last-updated date will change.
       </p>
     </section>
   </article>

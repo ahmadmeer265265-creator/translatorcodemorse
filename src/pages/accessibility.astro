@@ -1,0 +1,70 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedFor, lastUpdatedIso } from '../config/pages';
+import { absoluteUrl, CONTACT_EMAIL } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
+
+const title = 'Accessibility';
+const description =
+  'Accessibility notes for this Morse code translator: keyboard use, focus styles, live updates, contrast, and how to report barriers by email.';
+const pageUrl = absoluteUrl('/accessibility/');
+const lastUpdated = lastUpdatedFor('/accessibility/')!;
+const crumbs = [
+  { name: 'Home', url: absoluteUrl('/') },
+  { name: 'Accessibility', url: pageUrl },
+];
+const jsonLd = supportingJsonLd({
+  name: 'Accessibility',
+  description,
+  url: pageUrl,
+  crumbs,
+  dateModified: lastUpdatedIso('/accessibility/'),
+});
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Accessibility' }]} />
+    <header class="grid gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight">Accessibility</h1>
+      <p class="text-sm text-muted">Last updated: {lastUpdated}</p>
+      <p>
+        This page describes accessibility work built into the Morse code translator and how to report barriers. It is a practical summary of what the site aims to support, not a formal conformance claim against a named standard.
+      </p>
+    </header>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">What is in place</h2>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>A skip link to jump to the main content.</li>
+        <li>Keyboard-operable controls with visible focus styles and large enough tap targets on primary actions.</li>
+        <li>Translator mode choices exposed as a labelled radiogroup, with clear pressed and selected states.</li>
+        <li>Live status updates for decoding and related actions through an accessible announcement region.</li>
+        <li>Light and dark themes with accent colours chosen for readable contrast on the page background.</li>
+        <li>Honouring reduced-motion preferences where decorative transitions would otherwise run.</li>
+      </ul>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Microphone and tap modes</h2>
+      <p>
+        Listen (mic) and Tap input are optional modes. Microphone access is requested only when you start listening, and it can be denied or revoked in the browser. If a mode is hard to use with your assistive technology, say so when you write in so the barrier can be fixed.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Report a barrier</h2>
+      <p>
+        Email
+        <a class="text-accent underline underline-offset-4" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        or use the
+        <a class="text-accent underline underline-offset-4" href="/contact/">Contact</a>
+        page. Include the page address, what you were trying to do, the browser or assistive technology if you know it, and what went wrong. Related pages:
+        <a class="text-accent underline underline-offset-4" href="/about/">About</a>,
+        <a class="text-accent underline underline-offset-4" href="/privacy/">Privacy</a>, and
+        <a class="text-accent underline underline-offset-4" href="/terms/">Terms of Use</a>.
+      </p>
+    </section>
+  </article>
+</BaseLayout>
