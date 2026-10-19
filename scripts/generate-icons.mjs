@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const publicDir = path.join(root, 'public');
+const assetsDir = path.join(root, 'src', 'assets');
 const faviconSvg = fs.readFileSync(path.join(publicDir, 'favicon.svg'));
 
 /** Build a multi-size .ico from PNG buffers (PNG-compressed ICO entries). */
@@ -65,5 +66,7 @@ fs.writeFileSync(
   ]),
 );
 await sharp(Buffer.from(ogSvg)).resize(1200, 630).png().toFile(path.join(publicDir, 'og-default.png'));
+// Header logo (Header.astro Picture) — same Dit-Dah mark as the favicon.
+await sharp(faviconSvg).resize(64, 64).png().toFile(path.join(assetsDir, 'mark.png'));
 
-console.log('Wrote favicon-32x32.png, favicon.ico (16/32/48), apple-touch-icon.png, og-default.png');
+console.log('Wrote favicon-32x32.png, favicon.ico (16/32/48), apple-touch-icon.png, og-default.png, src/assets/mark.png');
