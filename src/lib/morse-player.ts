@@ -379,7 +379,7 @@ function readSettings(): AudioSettings {
   const sound = (document.querySelector('[data-sound-type]') as HTMLSelectElement | null)?.value;
   const wave = (document.querySelector('[data-waveform]') as HTMLSelectElement | null)?.value;
   const repeat = document.querySelector('[data-repeat]') as HTMLButtonElement | null;
-  const flash = document.querySelector('[data-flash-opt]') as HTMLInputElement | null;
+  const flash = document.querySelector('[data-flash-toggle]') as HTMLButtonElement | null;
   const vibration = document.querySelector('[data-vibration]') as HTMLInputElement | null;
   return {
     wpm: num('translator-wpm'),
@@ -389,7 +389,7 @@ function readSettings(): AudioSettings {
     soundType: sound === 'telegraph' ? 'telegraph' : 'cw',
     waveform: wave === 'square' ? 'square' : 'sine',
     repeat: repeat?.getAttribute('aria-pressed') === 'true',
-    flash: Boolean(flash?.checked),
+    flash: flash?.getAttribute('aria-pressed') === 'true',
     vibration: Boolean(vibration?.checked),
   };
 }
@@ -412,7 +412,6 @@ export type PlayerUi = {
   morse?: HTMLTextAreaElement | null;
   textMirror?: HTMLElement | null;
   morseMirror?: HTMLElement | null;
-  lamp?: HTMLElement | null;
   setState: (state: PlaybackState) => void;
   onFlash: (on: boolean) => void;
   onProgress?: (elapsedSec: number, totalSec: number) => void;

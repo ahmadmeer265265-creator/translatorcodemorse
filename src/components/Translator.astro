@@ -21,7 +21,6 @@ const icon = (id: string, cls = 'btn-icon') =>
 const iconCopy = icon('i-copy');
 const iconShare = icon('i-share');
 const iconClear = icon('i-clear');
-const iconStop = icon('i-stop');
 const iconDownload = icon('i-download');
 const iconGear = icon('i-gear');
 const iconBook = icon('i-book');
@@ -80,6 +79,19 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       </symbol>
       <symbol id="i-stop" viewBox="0 0 16 16" fill="currentColor">
         <rect x="4" y="4" width="8" height="8" rx="1"></rect>
+      </symbol>
+      <symbol id="i-repeat" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13.5 5.5H4.75A2.75 2.75 0 0 0 2 8.25v.5"></path>
+        <path d="m5.5 8.5-3-3 3-3"></path>
+        <path d="M2.5 10.5h8.75A2.75 2.75 0 0 0 14 7.75v-.5"></path>
+        <path d="m10.5 7.5 3 3-3 3"></path>
+      </symbol>
+      <symbol id="i-pause" viewBox="0 0 16 16" fill="currentColor">
+        <rect x="4.5" y="3.5" width="2.5" height="9" rx="0.75"></rect>
+        <rect x="9" y="3.5" width="2.5" height="9" rx="0.75"></rect>
+      </symbol>
+      <symbol id="i-flash" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M9 1.5 4.5 9H8l-1 5.5L11.5 7H8l1-5.5z"></path>
       </symbol>
       <symbol
         id="i-download"
@@ -206,33 +218,95 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
           autocapitalize="off"
           placeholder="Type dots, dashes, and spaces"></textarea>
       </div>
-      {/* Docked play bar: below the textarea (never overlays content), above the signal counter. */}
-      <div class="playbar" data-playbar>
-        <button
-          id="translator-play"
-          class="play-btn"
-          type="button"
-          data-play
-          disabled
-          aria-label="Play"
-        >
-          <Fragment set:html={icon('i-play', 'play-btn-icon')} />
-          <span class="play-btn-label">Play</span>
-        </button>
-        <div class="playbar-meter">
-          <div
-            class="playbar-track"
-            role="progressbar"
-            aria-label="Playback progress"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            aria-valuenow="0"
-            data-play-progress
+      {/* Transport dock: below the textarea (never overlays content), above the signal counter.
+          Play/Pause/Stop/Repeat/WAV all live here; Flash blink is contained to this dock's box only. */}
+      <div class="playbar" data-playbar data-flash-lit="false">
+        <div class="playbar-row">
+          <button
+            id="translator-play"
+            class="play-btn"
+            type="button"
+            data-play
+            disabled
+            aria-label="Play"
           >
-            <div class="playbar-fill" data-play-progress-fill></div>
+            <Fragment set:html={icon('i-play', 'play-btn-icon')} />
+            <span class="play-btn-label">Play</span>
+          </button>
+          <div class="playbar-meter">
+            <div
+              class="playbar-track"
+              role="progressbar"
+              aria-label="Playback progress"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+              data-play-progress
+            >
+              <div class="playbar-fill" data-play-progress-fill></div>
+            </div>
+            <p class="playbar-time" data-play-time aria-hidden="true">0:00</p>
           </div>
-          <p class="playbar-time" data-play-time aria-hidden="true">0:00</p>
+          <div class="playbar-actions">
+            <button
+              id="translator-pause"
+              class="dock-btn"
+              type="button"
+              data-pause
+              disabled
+              aria-label="Pause"
+              data-pause-label="Pause"
+              data-resume-label="Resume"
+            >
+              <Fragment set:html={icon('i-pause', 'dock-btn-icon')} />
+            </button>
+            <button
+              id="translator-stop"
+              class="dock-btn"
+              type="button"
+              data-stop
+              disabled
+              aria-label="Stop"
+            >
+              <Fragment set:html={icon('i-stop', 'dock-btn-icon')} />
+            </button>
+            <button
+              id="translator-repeat"
+              class="dock-btn"
+              type="button"
+              data-repeat
+              aria-pressed="false"
+              aria-label="Repeat"
+            >
+              <Fragment set:html={icon('i-repeat', 'dock-btn-icon')} />
+            </button>
+            <button
+              id="translator-wav"
+              class="dock-btn"
+              type="button"
+              data-wav
+              disabled
+              aria-label="Download WAV"
+              data-busy="Preparing WAV"
+            >
+              <Fragment set:html={icon('i-download', 'dock-btn-icon')} />
+            </button>
+            <button
+              id="translator-flash"
+              class="dock-btn"
+              type="button"
+              data-flash-toggle
+              aria-pressed="false"
+              aria-label="Flash: blink the playback dock in time with the Morse signal"
+              disabled
+            >
+              <Fragment set:html={icon('i-flash', 'dock-btn-icon')} />
+            </button>
+          </div>
         </div>
+        <p class="playbar-flash-note hidden" data-flash-reduced>
+          Flash is off because your system asks to reduce motion.
+        </p>
       </div>
       <p class={counterClass} data-morse-count aria-hidden="true">0 signals</p>
     </div>
@@ -373,16 +447,10 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
         <span>Autoplay</span>
       </label>
       <div class="grid gap-1">
-        <label class="toggle-row">
-          <input class="toggle-input" type="checkbox" data-flash-opt />
-          <span class="toggle-ui" aria-hidden="true"></span>
-          <span>Flash</span>
-        </label>
+        <p class="text-sm font-medium">Flash</p>
         <p class="text-xs text-muted" data-flash-warning>
-          Flashing light. Not suitable for people who are sensitive to flashing lights.
-        </p>
-        <p class="hidden text-xs text-muted" data-flash-reduced>
-          Flash is off because your system asks to reduce motion.
+          Use the bolt button in the playback dock. It pulses the dock's border only — never the
+          page — in time with the signal. Not suitable for people sensitive to flashing lights.
         </p>
       </div>
       <div class="grid gap-1">
@@ -466,49 +534,8 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
 
   <div class="mt-3 grid gap-3 border-t border-line pt-3">
     <p class="text-sm font-semibold">Audio</p>
-    <div class="flex flex-wrap items-start gap-2">
-      {/* Primary Play lives in the Morse panel playbar (above the fold). */}
-      {/* Pause/Resume text is set via textContent in script — no child icon. */}
-      <button id="translator-pause" class={quietButton} type="button" data-pause disabled>Pause</button>
-      <button id="translator-stop" class={quietButton} type="button" data-stop disabled
-        ><Fragment set:html={iconStop} />Stop</button
-      >
-      <button
-        id="translator-repeat"
-        class={quietButton}
-        type="button"
-        data-repeat
-        aria-pressed="false"
-        aria-label="Repeat"
-      >
-        Repeat
-      </button>
-      <button
-        id="translator-wav"
-        class={quietButton}
-        type="button"
-        data-wav
-        disabled
-        aria-label="Download WAV"
-        data-label="Download WAV"
-        data-busy="Preparing..."
-      >
-        <Fragment set:html={iconDownload} />
-        <span class="inline-grid">
-          <span class="invisible col-start-1 row-start-1" aria-hidden="true">Download WAV</span>
-          <span class="invisible col-start-1 row-start-1" aria-hidden="true">Preparing...</span>
-          <span class="col-start-1 row-start-1" data-face>Download WAV</span>
-        </span>
-      </button>
-      <div
-        class="size-24 shrink-0 rounded-full bg-[#2a2f38]"
-        style="background: #2a2f38"
-        aria-hidden="true"
-        data-lamp
-        data-lit="false"
-      >
-      </div>
-    </div>
+    {/* Transport controls (Play/Pause/Stop/Repeat/WAV) live in the Morse panel dock above the fold.
+        This section now holds only speed/tone settings. */}
     <p id="translator-audio-status" class="min-h-6 text-sm text-muted" aria-live="polite"></p>
     <div class="grid gap-3 sm:grid-cols-2">
       <label class="grid min-h-11 content-center gap-1 text-sm" for="translator-wpm">
@@ -546,7 +573,6 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     background: #c9a227;
     color: #12141a;
   }
-  /* Lamp lit styles live in global.css so the brass bezel stays consistent. */
   [data-translator] textarea.is-highlighting {
     color: transparent;
   }
@@ -626,16 +652,16 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     const textMirror = root.querySelector('[data-text-mirror]');
     const morseMirror = root.querySelector('[data-morse-mirror]');
     const autoplayInput = root.querySelector('[data-autoplay]');
-    const flashInput = root.querySelector('[data-flash-opt]');
     const vibrationInput = root.querySelector('[data-vibration]');
     const presetSelect = root.querySelector('[data-preset]');
     const soundTypeSelect = root.querySelector('[data-sound-type]');
     const waveformSelect = root.querySelector('[data-waveform]');
     const waveformNote = root.querySelector('[data-waveform-note]');
-    const lamp = root.querySelector('[data-lamp]');
     const pauseButton = root.querySelector('#translator-pause');
     const stopButton = root.querySelector('#translator-stop');
     const repeatButton = root.querySelector('#translator-repeat');
+    const flashToggleButton = root.querySelector('[data-flash-toggle]');
+    const playbarEl = root.querySelector('[data-playbar]');
     const autoplay = createAutoplayController();
 
     const showNotice = (message: string) => {
@@ -685,10 +711,7 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       morse.classList.remove('is-highlighting');
       if (textMirror instanceof HTMLElement) textMirror.textContent = '';
       if (morseMirror instanceof HTMLElement) morseMirror.textContent = '';
-      if (lamp instanceof HTMLElement) {
-        lamp.dataset.lit = 'false';
-        lamp.style.backgroundColor = '#2a2f38';
-      }
+      if (playbarEl instanceof HTMLElement) playbarEl.dataset.flashLit = 'false';
     };
 
     const syncMirrorsScroll = () => {
@@ -862,7 +885,7 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     };
 
     const playButton = document.querySelector('#translator-play');
-    const playbar = root.querySelector('[data-playbar]');
+    const playbar = playbarEl;
     const playProgress = root.querySelector('[data-play-progress]');
     const playProgressFill = root.querySelector('[data-play-progress-fill]');
     const playTime = root.querySelector('[data-play-time]');
@@ -929,7 +952,9 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       }
       if (pauseButton instanceof HTMLButtonElement) {
         pauseButton.disabled = buttons.pauseDisabled;
-        pauseButton.textContent = buttons.pauseLabel;
+        const resuming = playbackState === 'paused';
+        pauseButton.setAttribute('aria-label', resuming ? 'Resume' : 'Pause');
+        pauseButton.dataset.label = buttons.pauseLabel;
       }
       if (stopButton instanceof HTMLButtonElement) stopButton.disabled = buttons.stopDisabled;
       if (wavButton instanceof HTMLButtonElement && !preparingWav) wavButton.disabled = buttons.wavDisabled;
@@ -940,20 +965,19 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       morse,
       textMirror: textMirror instanceof HTMLElement ? textMirror : null,
       morseMirror: morseMirror instanceof HTMLElement ? morseMirror : null,
-      lamp: lamp instanceof HTMLElement ? lamp : null,
       setState(state: typeof playbackState) {
         playbackState = state;
         if (state === 'idle' || state === 'finished') {
           clearHighlight();
           if (state === 'idle') setPlayProgress(0, 0);
+          if (playbarEl instanceof HTMLElement) playbarEl.dataset.flashLit = 'false';
         }
         refreshTransport();
       },
+      // Contained dock-blink: pulses the playbar's own border/shadow only — never the page.
       onFlash(on: boolean) {
-        if (!(lamp instanceof HTMLElement)) return;
-        lamp.dataset.lit = on ? 'true' : 'false';
-        // Inline color so the lamp stays visible even if scoped CSS fails to match.
-        lamp.style.backgroundColor = on ? '#f5c542' : '#2a2f38';
+        if (!(playbarEl instanceof HTMLElement)) return;
+        playbarEl.dataset.flashLit = on ? 'true' : 'false';
       },
       onProgress(elapsed: number, total: number) {
         setPlayProgress(elapsed, total);
@@ -1003,15 +1027,14 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     const setupMotionAndVibrate = () => {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
       const applyReduce = () => {
-        if (!(flashInput instanceof HTMLInputElement)) return;
+        if (!(flashToggleButton instanceof HTMLButtonElement)) return;
         if (reduce.matches) {
-          flashInput.checked = false;
-          flashInput.disabled = true;
-          root.querySelector('[data-flash-warning]')?.classList.add('hidden');
+          flashToggleButton.setAttribute('aria-pressed', 'false');
+          flashToggleButton.disabled = true;
+          if (playbarEl instanceof HTMLElement) playbarEl.dataset.flashLit = 'false';
           root.querySelector('[data-flash-reduced]')?.classList.remove('hidden');
         } else {
-          flashInput.disabled = false;
-          root.querySelector('[data-flash-warning]')?.classList.remove('hidden');
+          flashToggleButton.disabled = false;
           root.querySelector('[data-flash-reduced]')?.classList.add('hidden');
         }
       };
@@ -1072,7 +1095,7 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       applyHide(false);
     });
 
-    for (const button of [playButton, wavButton, pauseButton, stopButton, repeatButton]) {
+    for (const button of [playButton, wavButton, pauseButton, stopButton, repeatButton, flashToggleButton]) {
       if (!(button instanceof HTMLButtonElement)) continue;
       button.addEventListener('pointerenter', prime);
       button.addEventListener('focus', prime);
@@ -1113,14 +1136,15 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
 
     wavButton?.addEventListener('click', () => {
       if (!(wavButton instanceof HTMLButtonElement) || preparingWav) return;
-      const face = wavButton.querySelector('[data-face]');
       preparingWav = true;
       wavButton.disabled = true;
-      if (face) face.textContent = wavButton.dataset.busy!;
+      wavButton.dataset.busyState = 'true';
+      wavButton.setAttribute('aria-label', wavButton.dataset.busy ?? 'Preparing WAV');
       void loadPlayer().then((mod) => {
         mod.downloadCurrent();
         preparingWav = false;
-        if (face) face.textContent = wavButton.dataset.label!;
+        wavButton.dataset.busyState = 'false';
+        wavButton.setAttribute('aria-label', 'Download WAV');
         refreshAudio();
       });
     });
@@ -1166,11 +1190,21 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       haltAudio();
       void loadPlayer();
     });
-    for (const input of [autoplayInput, flashInput, vibrationInput]) {
+    for (const input of [autoplayInput, vibrationInput]) {
       input?.addEventListener('change', () => {
         void loadPlayer();
       });
     }
+
+    // Flash on/off now lives as a dock toggle button (bolt icon); the blink is contained to the playbar.
+    flashToggleButton?.addEventListener('click', () => {
+      if (!(flashToggleButton instanceof HTMLButtonElement)) return;
+      const next = flashToggleButton.getAttribute('aria-pressed') !== 'true';
+      flashToggleButton.setAttribute('aria-pressed', next ? 'true' : 'false');
+      if (!next && playbarEl instanceof HTMLElement) playbarEl.dataset.flashLit = 'false';
+      showAnnounce(next ? 'Flash on: dock pulses with the signal' : 'Flash off');
+      void loadPlayer();
+    });
 
     setupMotionAndVibrate();
     syncWaveformEnabled();

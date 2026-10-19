@@ -334,38 +334,42 @@
   transform: rotate(90deg);
 }
 
-/* Flash lamp — brass bezel, same 96px footprint (scoped indicator, never full-page flash) */
-[data-translator] [data-lamp] {
-  border: 3px solid var(--lamp-bezel);
-  box-shadow:
-    var(--inset),
-    0 0 0 1px rgba(28, 22, 18, 0.2),
-    inset 0 -2px 6px rgba(0, 0, 0, 0.35);
-}
-
-[data-translator] [data-lamp][data-lit="true"] {
-  background: #f5c542 !important;
-  box-shadow:
-    inset 0 0 0 1px #d4a017,
-    0 0 0 1px rgba(180, 83, 9, 0.25),
-    0 0 14px rgba(245, 197, 66, 0.35);
-}
-
-/* Morse-panel playbar — docked under the textarea, never overlays field content */
+/* Transport dock — docked under the Morse textarea, never overlays field content.
+   The Flash "blink" is contained to this dock's own bounding box (border/shadow/glow
+   pulse only). There is intentionally NO full-page / full-screen flash anywhere:
+   full-screen flashing is a known photosensitive-seizure risk (WCAG 2.3.1). */
 [data-translator] .playbar {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
   margin-top: 0.4rem;
   padding: 0.4rem 0.5rem;
   border: 1px solid var(--line);
   border-radius: 0.85rem;
   background: var(--canvas);
   box-shadow: var(--inset);
+  /* Pulse target — border/box-shadow only, no layout change. */
+  transition:
+    border-color 90ms ease,
+    box-shadow 90ms ease,
+    background-color 90ms ease;
 }
 
-[data-translator] .playbar[data-active="true"] {
+[data-translator] .playbar[data-active='true'] {
   border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+
+/* Contained dock-blink: only the dock's own border/shadow/background tint pulse. */
+[data-translator] .playbar[data-flash-lit='true'] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--canvas));
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent),
+    0 0 16px color-mix(in srgb, var(--accent) 35%, transparent),
+    var(--inset);
+}
+
+[data-translator] .playbar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 [data-translator] .play-btn {
@@ -412,7 +416,7 @@
   box-shadow: none;
 }
 
-[data-translator] .play-btn[data-playing="true"] {
+[data-translator] .play-btn[data-playing='true'] {
   opacity: 1;
   box-shadow:
     0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent),
@@ -462,6 +466,60 @@
   color: var(--muted);
 }
 
+/* Compact icon transport buttons inside the dock (44px touch targets). */
+[data-translator] .playbar-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+[data-translator] .dock-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  border: 2px solid var(--line);
+  border-radius: 9999px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--inset);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease, color 0.12s ease;
+}
+
+[data-translator] .dock-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+[data-translator] .dock-btn:disabled {
+  opacity: 0.4;
+}
+
+[data-translator] .dock-btn[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent),
+    var(--inset);
+}
+
+[data-translator] .dock-btn-icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+}
+
+[data-translator] .playbar-flash-note {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mode-seg::before,
   [data-translator] .toggle-ui,
@@ -469,6 +527,11 @@
   .disclosure-chevron,
   [data-translator] .play-btn,
   [data-translator] .playbar-fill {
+    transition: none !important;
+  }
+  /* Reduced motion: dock-blink switch is disabled by JS; if styles ever apply, keep
+     the lit state static (no animated pulse) rather than blinking. */
+  [data-translator] .playbar {
     transition: none !important;
   }
 }
