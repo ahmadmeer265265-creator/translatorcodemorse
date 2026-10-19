@@ -157,11 +157,16 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
         <input class="sr-only" type="radio" name="translator-mode" value="tap-input" data-mode />
         <span>Tap input</span>
       </label>
+      <label class="mode-seg__opt">
+        <input class="sr-only" type="radio" name="translator-mode" value="mic-listen" data-mode />
+        <span>Listen (mic)</span>
+      </label>
     </div>
     <button class={quietButton} type="button" data-swap aria-label="Swap input and output">Swap</button>
   </div>
 
   <div class="mt-2 hidden" data-tap-mount hidden></div>
+  <div class="mt-2 hidden" data-mic-mount hidden></div>
 
   <div class="mt-2 grid gap-2" data-panels>
     <div data-panel="text">
@@ -587,8 +592,11 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     let actionsLoading: Promise<typeof import('../lib/translator-actions')> | null = null;
     let tapLoading: Promise<{ mountTapMode: typeof import('../lib/tap-input').mountTapMode }> | null = null;
     let tapHandle: { focusPad: () => void; destroy: () => void; clear: () => void } | null = null;
+    let micLoading: Promise<{ mountMicMode: typeof import('../lib/mic-input').mountMicMode }> | null = null;
+    let micHandle: { focusStart: () => void; destroy: () => void; clear: () => void } | null = null;
     let allowAutoplay = false;
     const tapMount = root.querySelector('[data-tap-mount]');
+    const micMount = root.querySelector('[data-mic-mount]');
     const swapButton = root.querySelector('[data-swap]');
     const textMirror = root.querySelector('[data-text-mirror]');
     const morseMirror = root.querySelector('[data-morse-mirror]');
@@ -712,47 +720,64 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       mode = next;
       const radio = root.querySelector<HTMLInputElement>(`input[data-mode][value="${next}"]`);
       if (radio) radio.checked = true;
-      if (prev === 'tap-input' && next !== 'tap-input') {
-        tapHandle?.destroy();
-        tapHandle = null;
-        if (tapMount instanceof HTMLElement) {
-          tapMount.hidden = true;
-          tapMount.classList.add('hidden');
+      const leavingTap = prev === 'tap-input' && next !== 'tap-input';
+      const leavingMic = prev === 'mic-listen' && next !== 'mic-listen';
+      if (leavingTap || leavingMic) {
+        // destroy() releases the mode's resources (mic tracks stop for mic-listen).
+        (leavingTap ? tapHandle : micHandle)?.destroy();
+        if (leavingTap) tapHandle = null;
+        else micHandle = null;
+        const mount = leavingTap ? tapMount : micMount;
+        if (mount instanceof HTMLElement) {
+          mount.hidden = true;
+          mount.classList.add('hidden');
         }
         if (swapButton instanceof HTMLButtonElement) {
           swapButton.disabled = false;
           swapButton.removeAttribute('title');
         }
       }
-      if (next === 'tap-input') {
+      const isMic = next === 'mic-listen';
+      if (isMic || next === 'tap-input') {
         if (swapButton instanceof HTMLButtonElement) {
           swapButton.disabled = true;
-          swapButton.title = 'Swap is not available in Tap input';
+          swapButton.title = `Swap is not available in ${isMic ? 'Listen (mic)' : 'Tap input'}`;
         }
-        if (tapMount instanceof HTMLElement) {
-          tapMount.hidden = false;
-          tapMount.classList.remove('hidden');
+        const mount = isMic ? micMount : tapMount;
+        if (mount instanceof HTMLElement) {
+          mount.hidden = false;
+          mount.classList.remove('hidden');
         }
-        tapLoading ??= import('../lib/tap-input');
-        void tapLoading.then((mod) => {
-          if (mode !== 'tap-input' || !(tapMount instanceof HTMLElement)) return;
-          tapHandle?.destroy();
-          tapHandle = mod.mountTapMode({
-            root: tapMount,
-            text,
-            morse,
-            announce: showAnnounce,
-            vibrateEnabled: () => vibrationInput instanceof HTMLInputElement && vibrationInput.checked,
-            showSlash,
-            onOutput: () => {
-              lastSource = 'morse';
-              refreshCounters();
-              refreshSecondary();
-              refreshAudio();
-            },
-            haltAudio,
-          });
-          tapHandle.focusPad();
+        if (isMic) micLoading ??= import('../lib/mic-input');
+        else tapLoading ??= import('../lib/tap-input');
+        const shared = {
+          text,
+          morse,
+          announce: showAnnounce,
+          showSlash,
+          onOutput: () => {
+            lastSource = 'morse';
+            refreshCounters();
+            refreshSecondary();
+            refreshAudio();
+          },
+          haltAudio,
+        };
+        void (isMic ? micLoading : tapLoading)!.then((mod) => {
+          if (mode !== next || !(mount instanceof HTMLElement)) return;
+          if (isMic) {
+            micHandle?.destroy();
+            micHandle = (mod as typeof import('../lib/mic-input')).mountMicMode({ root: mount, ...shared });
+            micHandle.focusStart();
+          } else {
+            tapHandle?.destroy();
+            tapHandle = (mod as typeof import('../lib/tap-input')).mountTapMode({
+              root: mount,
+              ...shared,
+              vibrateEnabled: () => vibrationInput instanceof HTMLInputElement && vibrationInput.checked,
+            });
+            tapHandle.focusPad();
+          }
         });
       } else if (next === 'morse-to-text') {
         if (panels.firstElementChild !== morsePanel) panels.insertBefore(morsePanel, textPanel);
@@ -1113,6 +1138,8 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
         haltAudio();
         if (mode === 'tap-input' && tapHandle) {
           tapHandle.clear();
+        } else if (mode === 'mic-listen' && micHandle) {
+          micHandle.clear();
         } else {
           text.value = '';
           morse.value = '';
@@ -1124,6 +1151,7 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
         refreshSecondary();
         refreshAudio();
         if (mode === 'tap-input') tapHandle?.focusPad();
+        else if (mode === 'mic-listen') micHandle?.focusStart();
         else (mode === 'morse-to-text' ? morse : text).focus();
         return;
       }
@@ -1141,7 +1169,7 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
         return;
       }
       if ('swap' in control.dataset) {
-        if (mode === 'tap-input') return;
+        if (mode === 'tap-input' || mode === 'mic-listen') return;
         applyMode(swapMode(mode), true);
         return;
       }

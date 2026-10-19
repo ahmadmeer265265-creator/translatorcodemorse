@@ -1,6 +1,6 @@
 import type { WordSeparator } from './morse';
 
-export type TranslatorMode = 'text-to-morse' | 'morse-to-text' | 'tap-input';
+export type TranslatorMode = 'text-to-morse' | 'morse-to-text' | 'tap-input' | 'mic-listen';
 
 export const EXAMPLE_PHRASES = [
   'SOS',
@@ -32,11 +32,13 @@ export type HashPayload = {
 
 export function swapMode(mode: TranslatorMode): TranslatorMode {
   if (mode === 'tap-input') return 'tap-input';
+  if (mode === 'mic-listen') return 'mic-listen';
   return mode === 'text-to-morse' ? 'morse-to-text' : 'text-to-morse';
 }
 
 export function modeAnnouncement(mode: TranslatorMode): string {
   if (mode === 'tap-input') return 'Tap input. Use the tap pad to enter Morse.';
+  if (mode === 'mic-listen') return 'Listen (mic). Press Start listening to decode Morse from the microphone.';
   return mode === 'morse-to-text'
     ? 'Morse to Text. Type Morse code in the top box.'
     : 'Text to Morse. Type text in the top box.';

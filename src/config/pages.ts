@@ -8,8 +8,8 @@ export const pageMeta = [
   { path: '/morse-code-alphabet/', lastUpdated: '2026-10-07' },
   { path: '/morse-code-numbers/', lastUpdated: '2026-10-07' },
   { path: '/sos-in-morse-code/', lastUpdated: '2026-10-07' },
-  { path: '/about/', lastUpdated: '2026-10-07' },
-  { path: '/privacy/', lastUpdated: '2026-10-07' },
+  { path: '/about/', lastUpdated: '2026-10-18' },
+  { path: '/privacy/', lastUpdated: '2026-10-18' },
   { path: '/contact/', lastUpdated: '2026-10-07' },
 ] as const;
 

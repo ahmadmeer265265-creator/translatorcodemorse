@@ -4,6 +4,7 @@
 | --- | --- | --- |
 | Direction choice (Text to Morse / Morse to Text) | done | Mode radios above the panels |
 | Tap input | done | Third mode radio; lazy tap pad UI |
+| Audio/mic decoder | done | Fourth mode radio "Listen (mic)"; lazy mic UI (Start/Stop, level meter, Pickup sensitivity, live marks readout); decodes on-device via getUserMedia + AnalyserNode |
 | Swap | done | Swap button (disabled in Tap input) |
 | # for unsupported characters | done | Encode/decode and tap unrecognized marks |
 | Pause / Stop / Repeat | done | Audio row |
@@ -33,4 +34,5 @@
 Notes:
 
 - Every feature from the homepage article is marked done.
-- Swap is disabled in Tap input (no meaningful text↔Morse panel swap while tapping).
+- Swap is disabled in Tap input and Listen (mic) (no meaningful text↔Morse panel swap in those modes).
+- Listen (mic) decoding runs entirely on-device: microphone audio is analyzed in the browser (getUserMedia + AnalyserNode) and never recorded or uploaded.
