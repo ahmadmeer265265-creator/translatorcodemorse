@@ -43,6 +43,8 @@ export type PlaybackHooks = {
   onGroup: (groupIndex: number, group: MorseGroupSpan | null) => void;
   onFlash: (on: boolean) => void;
   vibrate: (pattern: number[]) => void;
+  /** Optional playback progress (seconds elapsed, total duration). */
+  onProgress?: (elapsedSec: number, totalSec: number) => void;
 };
 
 export type PlaybackState = 'idle' | 'playing' | 'paused' | 'finished';
@@ -156,6 +158,7 @@ export function createPlayback(
   if (!plain.some((segment) => segment.on)) {
     hooks.status('Nothing to play');
     hooks.setState('idle');
+    hooks.onProgress?.(0, 0);
     return {
       pause() {},
       resume() {},
@@ -169,6 +172,7 @@ export function createPlayback(
   master.gain.value = 1;
   master.connect(ctx.destination);
   const peak = effectivePeak(settings.volume, settings.soundType, settings.waveform);
+  const totalSec = plain.reduce((sum, segment) => sum + segment.ms, 0) / 1000;
 
   let index = 0;
   let nextTime = ctx.currentTime;
@@ -193,10 +197,12 @@ export function createPlayback(
 
   const updateVisuals = () => {
     if (state !== 'playing' && state !== 'paused') return;
-    const ms = elapsedSec() * 1000;
+    const elapsed = elapsedSec();
+    const ms = elapsed * 1000;
     const gIndex = groupAtTime(enriched.groupStartMs, enriched.groupDurationMs, ms);
     hooks.onGroup(gIndex, gIndex >= 0 ? enriched.groups[gIndex]! : null);
     if (settings.flash) hooks.onFlash(flashStateAt(plain, ms) === 'on');
+    hooks.onProgress?.(Math.min(elapsed, totalSec), totalSec);
     if (state === 'playing' && typeof requestAnimationFrame === 'function') {
       raf = requestAnimationFrame(updateVisuals);
     }
@@ -266,6 +272,7 @@ export function createPlayback(
       hooks.vibrate([0]);
       hooks.onFlash(false);
       hooks.onGroup(-1, null);
+      hooks.onProgress?.(totalSec, totalSec);
       hooks.setState('finished');
       hooks.status('Finished');
     }, wait) as unknown as number;
@@ -327,6 +334,7 @@ export function createPlayback(
       hooks.vibrate([0]);
       hooks.onFlash(false);
       hooks.onGroup(-1, null);
+      hooks.onProgress?.(0, totalSec);
       hooks.setState('idle');
       if (announce) hooks.status('Stopped');
       if (ctx.state === 'suspended') void ctx.resume();
@@ -407,6 +415,7 @@ export type PlayerUi = {
   lamp?: HTMLElement | null;
   setState: (state: PlaybackState) => void;
   onFlash: (on: boolean) => void;
+  onProgress?: (elapsedSec: number, totalSec: number) => void;
 };
 
 let uiBridge: PlayerUi = {
@@ -490,6 +499,7 @@ export function startPlayback(ctx: AudioContext | null) {
     },
     onGroup: (groupIndex) => applyHighlight(groupIndex),
     onFlash: uiBridge.onFlash,
+    onProgress: (elapsed, total) => uiBridge.onProgress?.(elapsed, total),
     vibrate: defaultVibrate,
   });
   playback = handle;

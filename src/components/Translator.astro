@@ -21,7 +21,6 @@ const icon = (id: string, cls = 'btn-icon') =>
 const iconCopy = icon('i-copy');
 const iconShare = icon('i-share');
 const iconClear = icon('i-clear');
-const iconPlay = icon('i-play');
 const iconStop = icon('i-stop');
 const iconDownload = icon('i-download');
 const iconGear = icon('i-gear');
@@ -206,6 +205,34 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
           autocomplete="off"
           autocapitalize="off"
           placeholder="Type dots, dashes, and spaces"></textarea>
+      </div>
+      {/* Docked play bar: below the textarea (never overlays content), above the signal counter. */}
+      <div class="playbar" data-playbar>
+        <button
+          id="translator-play"
+          class="play-btn"
+          type="button"
+          data-play
+          disabled
+          aria-label="Play"
+        >
+          <Fragment set:html={icon('i-play', 'play-btn-icon')} />
+          <span class="play-btn-label">Play</span>
+        </button>
+        <div class="playbar-meter">
+          <div
+            class="playbar-track"
+            role="progressbar"
+            aria-label="Playback progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+            data-play-progress
+          >
+            <div class="playbar-fill" data-play-progress-fill></div>
+          </div>
+          <p class="playbar-time" data-play-time aria-hidden="true">0:00</p>
+        </div>
       </div>
       <p class={counterClass} data-morse-count aria-hidden="true">0 signals</p>
     </div>
@@ -440,9 +467,7 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
   <div class="mt-3 grid gap-3 border-t border-line pt-3">
     <p class="text-sm font-semibold">Audio</p>
     <div class="flex flex-wrap items-start gap-2">
-      <button id="translator-play" class={shareButton} type="button" data-play disabled
-        ><Fragment set:html={iconPlay} />Play</button
-      >
+      {/* Primary Play lives in the Morse panel playbar (above the fold). */}
       {/* Pause/Resume text is set via textContent in script — no child icon. */}
       <button id="translator-pause" class={quietButton} type="button" data-pause disabled>Pause</button>
       <button id="translator-stop" class={quietButton} type="button" data-stop disabled
@@ -837,6 +862,10 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     };
 
     const playButton = document.querySelector('#translator-play');
+    const playbar = root.querySelector('[data-playbar]');
+    const playProgress = root.querySelector('[data-play-progress]');
+    const playProgressFill = root.querySelector('[data-play-progress-fill]');
+    const playTime = root.querySelector('[data-play-time]');
     const wavButton = document.querySelector('#translator-wav');
     const wpm = document.querySelector('#translator-wpm');
     const farnsworth = document.querySelector('#translator-farnsworth');
@@ -852,6 +881,22 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     let speedNow = wpm instanceof HTMLInputElement ? Number(wpm.value) : 20;
     let spacingNow = farnsworth instanceof HTMLInputElement ? Number(farnsworth.value) : 20;
     let playbackState: 'idle' | 'playing' | 'paused' | 'finished' = 'idle';
+
+    const formatPlayTime = (seconds: number) => {
+      const whole = Math.max(0, Math.floor(seconds));
+      const mins = Math.floor(whole / 60);
+      const secs = whole % 60;
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const setPlayProgress = (elapsed: number, total: number) => {
+      const pct = total > 0 ? Math.min(100, Math.round((elapsed / total) * 100)) : 0;
+      if (playProgressFill instanceof HTMLElement) playProgressFill.style.width = `${pct}%`;
+      if (playProgress instanceof HTMLElement) playProgress.setAttribute('aria-valuenow', String(pct));
+      if (playTime) {
+        playTime.textContent = total > 0 ? `${formatPlayTime(elapsed)} / ${formatPlayTime(total)}` : '0:00';
+      }
+    };
 
     const loadPlayer = () => {
       loading ??= import('../lib/morse-player');
@@ -875,7 +920,13 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     const refreshTransport = () => {
       const canPlay = /[.-]/.test(morse.value);
       const buttons = transportButtons(playbackState, canPlay);
-      if (playButton instanceof HTMLButtonElement) playButton.disabled = buttons.playDisabled;
+      if (playButton instanceof HTMLButtonElement) {
+        playButton.disabled = buttons.playDisabled;
+        playButton.dataset.playing = playbackState === 'playing' ? 'true' : 'false';
+      }
+      if (playbar instanceof HTMLElement) {
+        playbar.dataset.active = playbackState === 'playing' || playbackState === 'paused' ? 'true' : 'false';
+      }
       if (pauseButton instanceof HTMLButtonElement) {
         pauseButton.disabled = buttons.pauseDisabled;
         pauseButton.textContent = buttons.pauseLabel;
@@ -892,7 +943,10 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       lamp: lamp instanceof HTMLElement ? lamp : null,
       setState(state: typeof playbackState) {
         playbackState = state;
-        if (state === 'idle' || state === 'finished') clearHighlight();
+        if (state === 'idle' || state === 'finished') {
+          clearHighlight();
+          if (state === 'idle') setPlayProgress(0, 0);
+        }
         refreshTransport();
       },
       onFlash(on: boolean) {
@@ -900,6 +954,9 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
         lamp.dataset.lit = on ? 'true' : 'false';
         // Inline color so the lamp stays visible even if scoped CSS fails to match.
         lamp.style.backgroundColor = on ? '#f5c542' : '#2a2f38';
+      },
+      onProgress(elapsed: number, total: number) {
+        setPlayProgress(elapsed, total);
       },
     };
 
