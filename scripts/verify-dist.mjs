@@ -9,11 +9,13 @@ const astroDir = path.join(dist, '_astro');
 const homepage = path.join(dist, 'index.html');
 const FORBIDDEN = ['example.com', 'TODO', 'lorem'];
 const REQUIRED_ASSETS = [
-  'favicon.svg',
   'favicon.ico',
+  'favicon-16x16.png',
   'favicon-32x32.png',
+  'favicon-16x16-dark.png',
+  'favicon-32x32-dark.png',
   'apple-touch-icon.png',
-  'og-default.png',
+  'og-default.jpg',
 ];
 
 const errors = [];

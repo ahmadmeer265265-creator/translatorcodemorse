@@ -2,6 +2,8 @@
  * One-shot asset generator. Run with: node scripts/generate-icons.mjs
  * Writes PNG/ICO favicons and the Open Graph image into public/.
  * Do not run at deploy time; commit the outputs.
+ *
+ * Does not regenerate src/assets/mark.png (header chip stays the Dit-Dah mark).
  */
 import sharp from 'sharp';
 import fs from 'node:fs';
@@ -10,8 +12,16 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const publicDir = path.join(root, 'public');
-const assetsDir = path.join(root, 'src', 'assets');
-const faviconSvg = fs.readFileSync(path.join(publicDir, 'favicon.svg'));
+const brandDir = path.join(root, 'src', 'assets', 'brand');
+const lightMark = path.join(brandDir, 'profile-picture-light.png');
+const darkMark = path.join(brandDir, 'profile-picture.png');
+const ogSrc = path.join(brandDir, 'featured-image-1200x630.png');
+
+for (const file of [lightMark, darkMark, ogSrc]) {
+  if (!fs.existsSync(file)) {
+    throw new Error(`Missing brand source: ${path.relative(root, file)}`);
+  }
+}
 
 /** Build a multi-size .ico from PNG buffers (PNG-compressed ICO entries). */
 function encodeIco(images) {
@@ -40,33 +50,63 @@ function encodeIco(images) {
   return Buffer.concat(chunks);
 }
 
-const ogSvg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#14110e"/>
-  <rect x="80" y="185" width="160" height="160" rx="36" fill="#14110e" stroke="#3a322a" stroke-width="2"/>
-  <rect x="80" y="185" width="160" height="160" rx="36" fill="#1c1814"/>
-  <circle cx="128" cy="265" r="22" fill="#f0a94e"/>
-  <rect x="164" y="243" width="52" height="44" rx="22" fill="#f0a94e"/>
-  <text x="280" y="275" fill="#f5efe6" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="64" font-weight="700">Morse Code Translator</text>
-  <text x="280" y="340" fill="#f0a94e" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="28">Text to Morse and Morse to text in your browser</text>
-</svg>`;
+function kb(bytes) {
+  return `${(bytes / 1024).toFixed(1)} KB`;
+}
 
-const png16 = await sharp(faviconSvg).resize(16, 16).png().toBuffer();
-const png32 = await sharp(faviconSvg).resize(32, 32).png().toBuffer();
-const png48 = await sharp(faviconSvg).resize(48, 48).png().toBuffer();
+async function resizePng(src, size) {
+  return sharp(src)
+    .resize(size, size, { fit: 'cover' })
+    .png({ compressionLevel: 9, adaptiveFiltering: true })
+    .toBuffer();
+}
 
-fs.writeFileSync(path.join(publicDir, 'favicon-32x32.png'), png32);
-await sharp(faviconSvg).resize(180, 180).png().toFile(path.join(publicDir, 'apple-touch-icon.png'));
-fs.writeFileSync(
-  path.join(publicDir, 'favicon.ico'),
-  encodeIco([
-    { size: 16, png: png16 },
-    { size: 32, png: png32 },
-    { size: 48, png: png48 },
-  ]),
-);
-await sharp(Buffer.from(ogSvg)).resize(1200, 630).png().toFile(path.join(publicDir, 'og-default.png'));
-// Header logo (Header.astro Picture) — same Dit-Dah mark as the favicon.
-await sharp(faviconSvg).resize(64, 64).png().toFile(path.join(assetsDir, 'mark.png'));
+const light16 = await resizePng(lightMark, 16);
+const light32 = await resizePng(lightMark, 32);
+const light48 = await resizePng(lightMark, 48);
+const dark16 = await resizePng(darkMark, 16);
+const dark32 = await resizePng(darkMark, 32);
+const apple = await sharp(lightMark)
+  .resize(180, 180, { fit: 'cover' })
+  .png({ compressionLevel: 9, adaptiveFiltering: true })
+  .toBuffer();
 
-console.log('Wrote favicon-32x32.png, favicon.ico (16/32/48), apple-touch-icon.png, og-default.png, src/assets/mark.png');
+const writes = [
+  ['favicon-16x16.png', light16],
+  ['favicon-32x32.png', light32],
+  ['favicon-16x16-dark.png', dark16],
+  ['favicon-32x32-dark.png', dark32],
+  ['apple-touch-icon.png', apple],
+  [
+    'favicon.ico',
+    encodeIco([
+      { size: 16, png: light16 },
+      { size: 32, png: light32 },
+      { size: 48, png: light48 },
+    ]),
+  ],
+];
+
+for (const [name, buf] of writes) {
+  fs.writeFileSync(path.join(publicDir, name), buf);
+  console.log(`wrote public/${name} ${kb(buf.length)}`);
+}
+
+const ogMeta = await sharp(ogSrc).metadata();
+if (ogMeta.width !== 1200 || ogMeta.height !== 630) {
+  throw new Error(`OG source must be 1200x630, got ${ogMeta.width}x${ogMeta.height}`);
+}
+
+const ogSourceBytes = fs.statSync(ogSrc).size;
+const ogPng = await sharp(ogSrc).png({ compressionLevel: 9, adaptiveFiltering: true }).toBuffer();
+const ogJpeg = await sharp(ogSrc).jpeg({ quality: 86, mozjpeg: true }).toBuffer();
+console.log(`OG source PNG ${kb(ogSourceBytes)}`);
+console.log(`OG compressed PNG (not used) ${kb(ogPng.length)}`);
+console.log(`OG jpeg q86 ${kb(ogJpeg.length)}`);
+
+// JPEG is ~8× smaller than compressed PNG for this gradient card; crawlers accept JPEG.
+fs.writeFileSync(path.join(publicDir, 'og-default.jpg'), ogJpeg);
+const stalePng = path.join(publicDir, 'og-default.png');
+if (fs.existsSync(stalePng)) fs.unlinkSync(stalePng);
+console.log(`wrote public/og-default.jpg ${kb(ogJpeg.length)} (1200x630)`);
+console.log('Did not write src/assets/mark.png (header logo unchanged).');

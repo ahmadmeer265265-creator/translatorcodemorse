@@ -148,6 +148,11 @@ html.js .theme-toggle {
   }
 }
 
+/* Reserve the article feature frame before the in-view image mounts (no CLS). */
+.article-feature-slot:empty {
+  aspect-ratio: 1200 / 630;
+}
+
 /* —— Header / nav —— */
 .site-header {
   border-bottom: 1px solid var(--line);

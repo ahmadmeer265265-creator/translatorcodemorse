@@ -7,10 +7,17 @@ import { Image } from 'astro:assets';
 import AmericanMorseBlock from './AmericanMorseBlock.astro';
 import TimingBlock from './TimingBlock.astro';
 import { homeFaqs } from '../data/faq';
+import featuredDark from '../assets/brand/featured-image-1200x630.png';
+import featuredLight from '../assets/brand/featured-image-light-1200x630.png';
 import translatePanel from '../assets/article/translate-panel.webp';
 import audioControls from '../assets/article/audio-controls.webp';
 import tapInput from '../assets/article/tap-input.webp';
 import settingsPanel from '../assets/article/settings-panel.webp';
+
+const featureAltLight =
+  'Morse Code Translator on a cream background, with the tagline “Text to Morse and back, with audio, tap input and WAV download,” translatorcodemorse.com, and a circular Morse signal of dots and dashes around two dashes';
+const featureAltDark =
+  'Morse Code Translator on a dark background, with the tagline “Text to Morse and back, with audio, tap input and WAV download,” translatorcodemorse.com, and a circular Morse signal of dots and dashes around two dashes';
 
 const link = 'text-accent underline underline-offset-4';
 const h2 = 'text-2xl font-semibold tracking-tight';
@@ -26,6 +33,75 @@ const caption = 'border-t border-line bg-canvas px-3 py-2 text-sm text-muted';
 ---
 
 <div class="mt-12 grid max-w-3xl gap-10 text-[1.0625rem] leading-7">
+  <figure class={`${figure} article-feature`} data-article-feature>
+    <template data-theme-src="light">
+      <Image
+        src={featuredLight}
+        alt={featureAltLight}
+        widths={[480, 768, 1200]}
+        sizes="(max-width: 640px) 100vw, 672px"
+        loading="lazy"
+        decoding="async"
+        class={imgClass}
+        data-theme-src="light"
+      />
+    </template>
+    <template data-theme-src="dark">
+      <Image
+        src={featuredDark}
+        alt={featureAltDark}
+        widths={[480, 768, 1200]}
+        sizes="(max-width: 640px) 100vw, 672px"
+        loading="lazy"
+        decoding="async"
+        class={imgClass}
+        data-theme-src="dark"
+      />
+    </template>
+    <div class="article-feature-slot" data-feature-slot></div>
+    <script is:inline>
+      (function () {
+        var root = document.querySelector('[data-article-feature]');
+        if (!root) return;
+        var slot = root.querySelector('[data-feature-slot]');
+        var started = false;
+        function theme() {
+          return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        }
+        function mount() {
+          var tpl = root.querySelector('template[data-theme-src="' + theme() + '"]');
+          if (!tpl || !slot) return;
+          slot.replaceChildren(tpl.content.cloneNode(true));
+        }
+        function near() {
+          var box = root.getBoundingClientRect();
+          return box.top < (window.innerHeight || 0) + 80 && box.bottom > -80;
+        }
+        function onView() {
+          if (started || !near()) return;
+          started = true;
+          io.disconnect();
+          window.removeEventListener('scroll', onView);
+          window.removeEventListener('resize', onView);
+          mount();
+          new MutationObserver(mount).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme'],
+          });
+        }
+        var io = new IntersectionObserver(
+          function (entries) {
+            if (entries.some(function (entry) { return entry.isIntersecting; })) onView();
+          },
+          { rootMargin: '80px' },
+        );
+        io.observe(root);
+        window.addEventListener('scroll', onView, { passive: true });
+        window.addEventListener('resize', onView);
+        onView();
+      })();
+    </script>
+  </figure>
   <section class="cv grid gap-3">
     <h2 class={h2}>A Brief Origin of Morse Code</h2>
     <p>

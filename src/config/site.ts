@@ -15,15 +15,19 @@ export const FACEBOOK_URL = 'https://www.facebook.com/profile.php?id=61595608020
 /** Public Instagram profile URL for header/footer social icons and Organization sameAs. */
 export const INSTAGRAM_URL = 'https://www.instagram.com/translatorcodemorse/';
 
-/** Default Open Graph / Twitter share image (1200×630). */
-export const OG_IMAGE_PATH = '/og-default.png';
+/**
+ * Default Open Graph / Twitter share image (1200×630). Dark featured card —
+ * crawlers have no theme, and most chat UIs preview on a dark/neutral surface.
+ */
+export const OG_IMAGE_PATH = '/og-default.jpg';
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
-export const OG_IMAGE_ALT = 'Morse Code Translator';
+export const OG_IMAGE_ALT =
+  'Morse Code Translator — text to Morse and back, with audio, tap input, and WAV download';
 
 /**
- * Organization / schema logo — same Dit-Dah mark as the header chip, served as a
- * stable same-origin public asset (apple-touch-icon is the 180×180 PNG export).
+ * Organization / schema logo — light 180×180 profile mark, served as a stable
+ * same-origin public asset (apple-touch-icon.png).
  */
 export const LOGO_PATH = '/apple-touch-icon.png';
 
