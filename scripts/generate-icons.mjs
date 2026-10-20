@@ -3,7 +3,7 @@
  * Writes PNG/ICO favicons and the Open Graph image into public/.
  * Do not run at deploy time; commit the outputs.
  *
- * Does not regenerate src/assets/mark.png (header chip stays the Dit-Dah mark).
+ * Does not regenerate src/assets/mark.png (header chip uses the brand-kit ring).
  */
 import sharp from 'sharp';
 import fs from 'node:fs';
@@ -61,6 +61,20 @@ async function resizePng(src, size) {
     .toBuffer();
 }
 
+/** 64×64 header chip: slight center crop so the Morse ring fills the 32px slot. */
+async function headerChip(src) {
+  const { width, height } = await sharp(src).metadata();
+  if (!width || !height || width !== height) {
+    throw new Error(`Header source must be square: ${path.relative(root, src)}`);
+  }
+  const inset = Math.round(width * 0.1);
+  return sharp(src)
+    .extract({ left: inset, top: inset, width: width - inset * 2, height: height - inset * 2 })
+    .resize(64, 64, { kernel: 'lanczos3' })
+    .png({ compressionLevel: 9, adaptiveFiltering: true })
+    .toBuffer();
+}
+
 const light16 = await resizePng(lightMark, 16);
 const light32 = await resizePng(lightMark, 32);
 const light48 = await resizePng(lightMark, 48);
@@ -109,4 +123,11 @@ fs.writeFileSync(path.join(publicDir, 'og-default.jpg'), ogJpeg);
 const stalePng = path.join(publicDir, 'og-default.png');
 if (fs.existsSync(stalePng)) fs.unlinkSync(stalePng);
 console.log(`wrote public/og-default.jpg ${kb(ogJpeg.length)} (1200x630)`);
-console.log('Did not write src/assets/mark.png (header logo unchanged).');
+
+const headerLight = await headerChip(lightMark);
+const headerDark = await headerChip(darkMark);
+fs.writeFileSync(path.join(brandDir, 'header-ring-light.png'), headerLight);
+fs.writeFileSync(path.join(brandDir, 'header-ring-dark.png'), headerDark);
+console.log(`wrote src/assets/brand/header-ring-light.png ${kb(headerLight.length)}`);
+console.log(`wrote src/assets/brand/header-ring-dark.png ${kb(headerDark.length)}`);
+console.log('Did not write src/assets/mark.png (header uses brand-kit ring assets).');

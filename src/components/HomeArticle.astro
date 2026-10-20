@@ -58,49 +58,7 @@ const caption = 'border-t border-line bg-canvas px-3 py-2 text-sm text-muted';
         data-theme-src="dark"
       />
     </template>
-    <div class="article-feature-slot" data-feature-slot></div>
-    <script is:inline>
-      (function () {
-        var root = document.querySelector('[data-article-feature]');
-        if (!root) return;
-        var slot = root.querySelector('[data-feature-slot]');
-        var started = false;
-        function theme() {
-          return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-        }
-        function mount() {
-          var tpl = root.querySelector('template[data-theme-src="' + theme() + '"]');
-          if (!tpl || !slot) return;
-          slot.replaceChildren(tpl.content.cloneNode(true));
-        }
-        function near() {
-          var box = root.getBoundingClientRect();
-          return box.top < (window.innerHeight || 0) + 80 && box.bottom > -80;
-        }
-        function onView() {
-          if (started || !near()) return;
-          started = true;
-          io.disconnect();
-          window.removeEventListener('scroll', onView);
-          window.removeEventListener('resize', onView);
-          mount();
-          new MutationObserver(mount).observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['data-theme'],
-          });
-        }
-        var io = new IntersectionObserver(
-          function (entries) {
-            if (entries.some(function (entry) { return entry.isIntersecting; })) onView();
-          },
-          { rootMargin: '80px' },
-        );
-        io.observe(root);
-        window.addEventListener('scroll', onView, { passive: true });
-        window.addEventListener('resize', onView);
-        onView();
-      })();
-    </script>
+    <div class="article-feature-slot" data-theme-slot></div>
   </figure>
   <section class="cv grid gap-3">
     <h2 class={h2}>A Brief Origin of Morse Code</h2>

@@ -166,10 +166,18 @@ html.js .theme-toggle {
   height: 2rem;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   border-radius: 0.5rem;
   background: var(--logo-chip);
   /* Ring sits outside the 32px mark so header metrics stay stable (CLS). */
   box-shadow: var(--inset), 0 0 0 1px var(--line), 0 0 0 3px var(--logo-chip);
+}
+
+.site-logo-mark img {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
 }
 
 nav a[aria-current="page"] {

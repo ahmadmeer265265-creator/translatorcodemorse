@@ -1,7 +1,8 @@
 ---
-import { Picture } from 'astro:assets';
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import mark from '../assets/mark.png';
+import ringDark from '../assets/brand/header-ring-dark.png';
+import ringLight from '../assets/brand/header-ring-light.png';
 import SocialLinks from './SocialLinks.astro';
 import { primaryNav } from '../config/nav';
 import { SITE_NAME } from '../config/site';
@@ -20,19 +21,34 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
   */}
   <div class="mx-auto flex min-h-11 w-full max-w-5xl items-center gap-x-1 px-4 sm:gap-x-2">
     <a class="inline-flex min-h-11 min-w-0 shrink items-center gap-2 font-semibold text-ink" href="/">
-      <span class="site-logo-mark shrink-0">
-        <Picture
-          src={mark}
-          formats={['avif', 'webp']}
-          alt=""
-          width={32}
-          height={32}
-          densities={[1, 2]}
-          loading="eager"
-          decoding="async"
-          fetchpriority="high"
-          class="size-8"
-        />
+      <span class="site-logo-mark shrink-0" data-theme-logo>
+        <template data-theme-src="light">
+          <Image
+            src={ringLight}
+            alt=""
+            width={32}
+            height={32}
+            densities={[2]}
+            loading="eager"
+            decoding="async"
+            class="size-8"
+            data-theme-src="light"
+          />
+        </template>
+        <template data-theme-src="dark">
+          <Image
+            src={ringDark}
+            alt=""
+            width={32}
+            height={32}
+            densities={[2]}
+            loading="eager"
+            decoding="async"
+            class="size-8"
+            data-theme-src="dark"
+          />
+        </template>
+        <span data-theme-slot></span>
       </span>
       <span class="truncate">{SITE_NAME}</span>
     </a>
@@ -128,6 +144,10 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
 </header>
 
 <script>
+  import { initSiteThemeAssets } from '../lib/site-theme-assets';
+
+  initSiteThemeAssets();
+
   const header = document.querySelector('[data-site-header]');
   const toggle = header?.querySelector('[data-nav-toggle]');
   const panel = header?.querySelector('[data-nav-panel]');
