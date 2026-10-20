@@ -1,6 +1,46 @@
 node_modules/
+# node_modules/.vite is covered by node_modules/
 dist/
 .astro/
+live-lh-report-*.json
+favicon-preview/
+
+# One-off QA scripts from local sessions. Not referenced by package.json.
+# Kept tracked: verify-dist.mjs, lighthouse.mjs, generate-article-images.mjs,
+# generate-icons.mjs, generate-mic-e2e-fixtures.mjs, run-mic-e2e.mjs,
+# serve-dist.mjs, extract-text.mjs, probe-fake-mic.mjs, verify-mic-mode.mjs,
+# verify-mic-quality.mjs.
+scripts/check-article-width.mjs
+scripts/check-dock-fold.mjs
+scripts/check-dock-overflow.mjs
+scripts/check-footer-fb.mjs
+scripts/check-header-logo.mjs
+scripts/check-header-social.mjs
+scripts/check-social-header.mjs
+scripts/inspect-brand-dist.mjs
+scripts/inspect-gzip.mjs
+scripts/inspect-lh-home.mjs
+scripts/inspect-theme-html.mjs
+scripts/lh-article-check.mjs
+scripts/lh-brand-gate.mjs
+scripts/lh-dock-check.mjs
+scripts/lh-home-check.mjs
+scripts/lh-home-retry.mjs
+scripts/lh-legal-gate.mjs
+scripts/lh-live-diagnose.mjs
+scripts/lh-seo-gate.mjs
+scripts/live-asset-probe.mjs
+scripts/live-js-inspect.mjs
+scripts/probe-fake-mic-envelope.mjs
+scripts/render-favicon-previews.mjs
+scripts/render-optical-favicon-preview.mjs
+scripts/shot-dock.mjs
+scripts/verify-brand-mismatch-reverse.mjs
+scripts/verify-brand-theme.mjs
+scripts/verify-legal-artifacts.mjs
+scripts/verify-seo-artifacts.mjs
+scripts/verify-social-urls.mjs
+scripts/verify-theme-favicon.mjs
 .lighthouse/
 .DS_Store
 .env
