@@ -4,7 +4,7 @@ import Translator from '../components/Translator.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { homeFaqs } from '../data/faq';
 import { lastUpdatedIso } from '../config/pages';
-import { absoluteUrl, LOGO_PATH, SITE_NAME } from '../config/site';
+import { absoluteUrl, FACEBOOK_URL, INSTAGRAM_URL, LOGO_PATH, SITE_NAME } from '../config/site';
 
 const title = 'Morse Code Translator: Free Online Converter & Audio';
 const description =
@@ -13,15 +13,13 @@ const pageUrl = absoluteUrl('/');
 const dateModified = lastUpdatedIso('/');
 const logoUrl = absoluteUrl(LOGO_PATH);
 
-// FACEBOOK_URL / INSTAGRAM_URL in site.ts are still generic placeholders
-// (facebook.com / instagram.com roots), not real profile pages — omit sameAs
-// until real profile URLs are filled in.
 const organization = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: SITE_NAME,
   url: pageUrl,
   logo: logoUrl,
+  sameAs: [FACEBOOK_URL, INSTAGRAM_URL],
 };
 
 const jsonLd = [

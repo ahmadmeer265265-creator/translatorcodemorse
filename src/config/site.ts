@@ -9,17 +9,11 @@ export const SITE_NAME = 'Morse Code Translator';
 /** Public contact address used by the Contact page mailto link. */
 export const CONTACT_EMAIL = 'contact@translatorcodemorse.com';
 
-/**
- * Public Facebook Page URL for header/footer social icons.
- * TODO: replace with real Facebook page URL
- */
-export const FACEBOOK_URL = 'https://facebook.com/';
+/** Public Facebook profile URL for header/footer social icons and Organization sameAs. */
+export const FACEBOOK_URL = 'https://www.facebook.com/profile.php?id=61595608020174';
 
-/**
- * Public Instagram profile URL for header/footer social icons.
- * TODO: replace with real Instagram page URL
- */
-export const INSTAGRAM_URL = 'https://instagram.com/';
+/** Public Instagram profile URL for header/footer social icons and Organization sameAs. */
+export const INSTAGRAM_URL = 'https://www.instagram.com/translatorcodemorse/';
 
 /** Default Open Graph / Twitter share image (1200×630). */
 export const OG_IMAGE_PATH = '/og-default.png';
