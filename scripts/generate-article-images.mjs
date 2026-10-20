@@ -2,7 +2,7 @@
  * Regenerate annotated UI screenshots for the homepage article.
  *
  * Idempotent: safe to re-run after any UI change. Rebuilds `dist`, starts a
- * preview server, captures the 4 shots in a real Chromium (1280x900, 2x DPR),
+ * preview server, captures the 4 shots in a real Chromium (1400x900, 2x DPR),
  * overlays clean numbered amber badges + rounded-rect outlines, and overwrites
  * the WebP files in src/assets/article/. Run manually with `npm run images`.
  *
@@ -32,15 +32,18 @@ const astroBin = path.join(root, 'node_modules', 'astro', 'bin', 'astro.mjs');
 
 // —— Shared visual constants (one system across all 4 images) ——
 const ACCENT = '#9a3f06'; // brand amber/copper
-const BADGE_R = 16; // numbered circle radius (output px)
-const BADGE_FONT = 20;
-const STROKE = 4; // outline weight
+const BADGE_R = 22; // numbered circle radius (output px) — sized for ~1500px-wide crops
+const BADGE_FONT = 26;
+const STROKE = 5; // outline weight
 const OUTLINE_RX = 12; // outline corner radius
 const OVERLAY_OPACITY = 0.95;
-const EDGE_GUARD = 8; // min px any mark keeps from an edge
-const PAD = 26; // breathing room around the captured group
-const MAX_W = 1000; // max output width
-const MIN_WIDTH = 600; // sanity floor — catches a zoom/crop bug
+const EDGE_GUARD = 10; // min px any mark keeps from an edge
+const PAD = 36; // breathing room around the captured group
+const MAX_W = 1500; // max output width (crisp at article display ~672 CSS px)
+const MIN_WIDTH = 900; // sanity floor — catches a zoom/crop bug
+const VIEWPORT = { width: 1400, height: 900 };
+const DPR = 2;
+const MIN_ELEM = 16; // min CSS-px box on any annotated element (empty-region guard)
 
 function run(command, args) {
   return new Promise((resolve, reject) => {
@@ -116,26 +119,44 @@ const overlap = (a, b) =>
 async function exportShot(name, page, contextSelector, specs, extraContext = []) {
   const contextBox = await page.locator(contextSelector).first().boundingBox();
   if (!contextBox) throw new Error(`no bounding box for context ${contextSelector}`);
-  const context = { x: contextBox.x * 2, y: contextBox.y * 2, width: contextBox.width * 2, height: contextBox.height * 2 };
+  const context = {
+    x: contextBox.x * DPR,
+    y: contextBox.y * DPR,
+    width: contextBox.width * DPR,
+    height: contextBox.height * DPR,
+  };
 
   const elems = [];
   for (const spec of specs) {
-    const box = await page.locator(spec.selector).first().boundingBox();
+    const loc = page.locator(spec.selector).first();
+    await loc.waitFor({ state: 'visible', timeout: 8000 });
+    const box = await loc.boundingBox();
     if (!box) throw new Error(`no bounding box for ${spec.selector}`);
-    elems.push({ n: elems.length + 1, box: { x: box.x * 2, y: box.y * 2, width: box.width * 2, height: box.height * 2 } });
+    if (box.width < MIN_ELEM || box.height < MIN_ELEM) {
+      throw new Error(
+        `empty/tiny region for ${spec.selector}: ${Math.round(box.width)}x${Math.round(box.height)} (need ≥${MIN_ELEM}px)`,
+      );
+    }
+    elems.push({
+      n: elems.length + 1,
+      box: { x: box.x * DPR, y: box.y * DPR, width: box.width * DPR, height: box.height * DPR },
+    });
   }
   // Elements that expand the captured region for context but get no badge.
   const plain = [];
   for (const sel of extraContext) {
-    const box = await page.locator(sel).first().boundingBox();
-    if (box) plain.push({ x: box.x * 2, y: box.y * 2, width: box.width * 2, height: box.height * 2 });
+    const loc = page.locator(sel).first();
+    await loc.waitFor({ state: 'visible', timeout: 8000 });
+    const box = await loc.boundingBox();
+    if (!box) throw new Error(`no bounding box for extra context ${sel}`);
+    plain.push({ x: box.x * DPR, y: box.y * DPR, width: box.width * DPR, height: box.height * DPR });
   }
 
   // Union of every highlighted element + every badge. The context box is used
   // only to bound the WIDTH (so the full panel is readable), never the height —
   // a tall [data-translator] context would otherwise balloon the image into a
   // full-page capture (the settings-panel zoom/crop bug was the inverse of this).
-  const fullCanvas = { width: 1280 * 2, height: 100000 }; // tall enough for fullPage captures
+  const fullCanvas = { width: VIEWPORT.width * DPR, height: 100000 }; // tall enough for fullPage captures
   let badges = elems.map((e) => placeBadge(e.n, e.box, fullCanvas));
   let minX = context.x;
   let maxX = context.x + context.width;
@@ -242,7 +263,7 @@ async function main() {
   try {
     await waitForPreview();
     browser = await chromium.launch({ headless: true });
-    const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 2 });
+    const page = await browser.newPage({ viewport: VIEWPORT, deviceScaleFactor: DPR });
     await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'light'));
 
@@ -261,32 +282,39 @@ async function main() {
           { selector: '[data-clear]' },
           { selector: '[data-random]' },
         ],
-        ['[data-morse-shell]'],
+        ['[data-panels]'],
       ),
     );
 
-    // b. audio-controls — badges on transport + sliders so the group is bounded.
-    await page.locator('#translator-play').scrollIntoViewIfNeeded();
+    // b. audio-controls — the playback dock (Play / Pause / Stop / Repeat / WAV / Flash).
+    // Speed sliders live in a separate Audio section much further down; including them
+    // would crop the entire translator. Caption talks about Play / Repeat / WAV.
+    await page.locator('[data-playbar]').scrollIntoViewIfNeeded();
     await page.waitForTimeout(150);
     results.push(
-      await exportShot('audio-controls', page, '#translator-wpm', [
-        { selector: '#translator-play' },
-        { selector: '#translator-wav' },
-        { selector: '#translator-repeat' },
-        { selector: '#translator-wpm' },
-        { selector: '#translator-farnsworth' },
-      ]),
+      await exportShot(
+        'audio-controls',
+        page,
+        '[data-playbar]',
+        [
+          { selector: '#translator-play' },
+          { selector: '#translator-repeat' },
+          { selector: '#translator-wav' },
+        ],
+        ['[data-playbar]'],
+      ),
     );
 
-    // c. tap-input
+    // c. tap-input — capture before the 800ms letter-gap so live marks still show.
     await page.locator('[data-mode][value="tap-input"]').evaluate((el) => el.click());
     await page.waitForTimeout(500);
     const pad = page.locator('[data-tap-pad]');
+    await pad.waitFor({ state: 'visible', timeout: 8000 });
     await pad.click();
-    await pad.click({ delay: 120 });
-    await page.waitForTimeout(500);
+    await pad.click({ delay: 180 });
+    await page.waitForTimeout(120);
     results.push(
-      await exportShot('tap-input', page, '[data-tap-mount]', [
+      await exportShot('tap-input', page, '[data-tap-shell]', [
         { selector: '[data-tap-pad]' },
         { selector: '[data-tap-marks]' },
         { selector: '[data-tap-word]' },
@@ -297,21 +325,25 @@ async function main() {
     await textArea.fill('SOS');
     await page.waitForTimeout(200);
 
-    // d. settings-panel — context is the whole open Settings disclosure so the
-    // capture shows every toggle row at the same readable scale (fixes the
-    // earlier close-up-of-one-toggle zoom bug).
+    // d. settings-panel — Flash is a dock bolt now, not a Settings checkbox.
+    // Badge the four remaining toggles; open disclosure is the width context.
     const details = page.locator('[data-translator] details').first();
     await details.locator('summary').scrollIntoViewIfNeeded();
     await details.locator('summary').click();
     await page.waitForTimeout(300);
     results.push(
-      await exportShot('settings-panel', page, '[data-translator] details', [
-        { selector: '[data-translator] details [data-slash] ~ .toggle-ui' },
-        { selector: '[data-translator] details [data-hide-text] ~ .toggle-ui' },
-        { selector: '[data-translator] details [data-autoplay] ~ .toggle-ui' },
-        { selector: '[data-translator] details [data-flash-opt] ~ .toggle-ui' },
-        { selector: '[data-translator] details [data-vibration] ~ .toggle-ui' },
-      ]),
+      await exportShot(
+        'settings-panel',
+        page,
+        '[data-translator] details',
+        [
+          { selector: '[data-translator] details [data-slash] ~ .toggle-ui' },
+          { selector: '[data-translator] details [data-hide-text] ~ .toggle-ui' },
+          { selector: '[data-translator] details [data-autoplay] ~ .toggle-ui' },
+          { selector: '[data-translator] details [data-vibration] ~ .toggle-ui' },
+        ],
+        ['[data-translator] details > summary'],
+      ),
     );
   } finally {
     if (browser) await browser.close();
