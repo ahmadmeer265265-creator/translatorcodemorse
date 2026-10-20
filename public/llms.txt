@@ -1,0 +1,13 @@
+# Morse Code Translator
+
+Free browser-based Morse code translator at translatorcodemorse.com. Convert text to Morse and Morse to text in linked panels, with audio playback (Play/Pause/Stop/Repeat, WPM and Farnsworth speed, CW or telegraph sound), tap input, on-device microphone decoding (Listen mode), a contained dock flash indicator, optional vibration, WAV download, share/puzzle links, and a built-in alphabet reference. Everything runs locally in the browser — no account and no upload of what you type or record.
+
+## Pages
+
+- [Home](https://translatorcodemorse.com/): Interactive translator with Text/Morse panels, audio, tap, and mic modes
+- [Morse code alphabet](https://translatorcodemorse.com/morse-code-alphabet/): Letter chart and learning notes for International Morse
+- [Morse code numbers](https://translatorcodemorse.com/morse-code-numbers/): Digit chart and tips for sending numbers
+- [SOS in Morse code](https://translatorcodemorse.com/sos-in-morse-code/): What SOS is, how it sounds and looks, and how to practice it
+- [About](https://translatorcodemorse.com/about/): What the tool does, privacy model, and who it is for
+- [Privacy](https://translatorcodemorse.com/privacy/): How the site handles data (processing stays in your browser)
+- [Contact](https://translatorcodemorse.com/contact/): How to reach the site owner

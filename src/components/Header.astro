@@ -12,7 +12,13 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
 ---
 
 <header class="site-header" data-site-header>
-  <div class="mx-auto flex min-h-11 w-full max-w-5xl items-center gap-x-2 px-4 sm:gap-x-3">
+  {/*
+    Mobile (<md): Logo → Socials (left) ····· Theme → Hamburger (rightmost).
+    Desktop (md+): Logo → Nav (ml-auto) → Socials → Theme (hamburger hidden).
+    SocialLinks sit after the desktop-only nav in the DOM so they land next to
+    the logo on mobile (nav is display:none) and after the nav on desktop.
+  */}
+  <div class="mx-auto flex min-h-11 w-full max-w-5xl items-center gap-x-1 px-4 sm:gap-x-2">
     <a class="inline-flex min-h-11 min-w-0 shrink items-center gap-2 font-semibold text-ink" href="/">
       <span class="site-logo-mark shrink-0">
         <Picture
@@ -43,33 +49,8 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
         ))
       }
     </nav>
+    <SocialLinks />
     <div class="ml-auto flex shrink-0 items-center md:ml-0">
-      <button
-        class="inline-flex size-11 items-center justify-center rounded-md text-ink md:hidden"
-        type="button"
-        data-nav-toggle
-        aria-expanded="false"
-        aria-controls="primary-nav-mobile"
-        aria-label="Open menu"
-      >
-        <svg class="icon-menu size-5" viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            d="M4 7h16M4 12h16M4 17h16"></path>
-        </svg>
-        <svg class="icon-close size-5" viewBox="0 0 24 24" aria-hidden="true" hidden>
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            d="M6 6l12 12M18 6L6 18"></path>
-        </svg>
-      </button>
-      <SocialLinks />
       <button
         class="theme-toggle size-11 shrink-0 items-center justify-center rounded-md text-ink"
         type="button"
@@ -94,6 +75,31 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
             stroke-width="2"
             stroke-linejoin="round"
             d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"></path>
+        </svg>
+      </button>
+      <button
+        class="inline-flex size-11 items-center justify-center rounded-md text-ink md:hidden"
+        type="button"
+        data-nav-toggle
+        aria-expanded="false"
+        aria-controls="primary-nav-mobile"
+        aria-label="Open menu"
+      >
+        <svg class="icon-menu size-5" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+        <svg class="icon-close size-5" viewBox="0 0 24 24" aria-hidden="true" hidden>
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            d="M6 6l12 12M18 6L6 18"></path>
         </svg>
       </button>
     </div>

@@ -27,6 +27,12 @@ export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 export const OG_IMAGE_ALT = 'Morse Code Translator';
 
+/**
+ * Organization / schema logo — same Dit-Dah mark as the header chip, served as a
+ * stable same-origin public asset (apple-touch-icon is the 180×180 PNG export).
+ */
+export const LOGO_PATH = '/apple-touch-icon.png';
+
 /** Keep in sync with --canvas in src/styles/global.css */
 export const THEME_COLOR = {
   light: '#f3efe8',
