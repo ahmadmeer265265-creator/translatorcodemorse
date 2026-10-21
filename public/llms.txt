@@ -10,4 +10,6 @@ Free browser-based Morse code translator at translatorcodemorse.com. Convert tex
 - [SOS in Morse code](https://translatorcodemorse.com/sos-in-morse-code/): What SOS is, how it sounds and looks, and how to practice it
 - [About](https://translatorcodemorse.com/about/): What the tool does, privacy model, and who it is for
 - [Privacy](https://translatorcodemorse.com/privacy/): How the site handles data (processing stays in your browser)
+- [Terms of Use](https://translatorcodemorse.com/terms/): Terms of use, no warranty, and why not to rely on it for emergencies
+- [Accessibility](https://translatorcodemorse.com/accessibility/): Keyboard use, live updates, contrast, and how to report barriers
 - [Contact](https://translatorcodemorse.com/contact/): How to reach the site owner
