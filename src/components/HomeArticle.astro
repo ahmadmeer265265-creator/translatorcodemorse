@@ -5,6 +5,7 @@
  */
 import { Image } from 'astro:assets';
 import AmericanMorseBlock from './AmericanMorseBlock.astro';
+import DemoVideo from './DemoVideo.astro';
 import TimingBlock from './TimingBlock.astro';
 import { homeFaqs } from '../data/faq';
 import featuredDark from '../assets/brand/featured-image-1200x630.png';
@@ -105,9 +106,10 @@ const caption = 'border-t border-line bg-canvas px-3 py-2 text-sm text-muted';
     </p>
   </section>
 
-  <section class="cv grid gap-3">
+  <section class="cv cv-use grid gap-3">
     <h2 class={h2}>How to Use Our Morse Code Translator</h2>
     <p>It takes only a few seconds. Here is how to convert text to Morse code and Morse code to text.</p>
+    <DemoVideo />
     <ol class="grid list-decimal gap-3 pl-5">
       <li>
         <p class="font-semibold">Choose your direction.</p>
