@@ -3,15 +3,14 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 import RelatedPages from '../components/RelatedPages.astro';
 import AudioTranslator from '../components/audio-translator/AudioTranslator.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { lastUpdatedFor } from '../config/pages';
+import { lastUpdatedFor, lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
 
-// Stage 3: basic title/description so the page is not untitled (verify-dist
-// limits: title ≤60, description 140–155). Full SEO (final title, meta
-// description, JSON-LD, OG) is Stage 4. The visible H1 below is the exact
-// required wording and differs from this shorter <title>.
 const title = 'Morse Code Audio Translator: Decode Audio to Text';
 const description =
-  'Decode Morse code audio to text online. Upload a WAV, MP3, or OGG file or use your microphone — speed and tone detected automatically, free.';
+  'Decode Morse code audio to text for free online. Upload a WAV, MP3, or OGG file or use your microphone - speed and tone detected automatically.';
+const pageUrl = absoluteUrl('/morse-code-audio-translator/');
 const lastUpdated = lastUpdatedFor('/morse-code-audio-translator/')!;
 
 const h2 = 'text-2xl font-semibold tracking-tight';
@@ -57,9 +56,45 @@ const faqs = [
       "Processing time depends mainly on the file's length and your device's speed. Most files decode in just a few seconds. Even an hour-long recording typically processes in well under a minute, since the tool only needs to scan for tone patterns, not play the audio in real time.",
   },
 ] as const;
+
+const crumbs = [
+  { name: 'Home', url: absoluteUrl('/') },
+  { name: 'Morse Code Audio Translator', url: pageUrl },
+];
+
+const jsonLd = [
+  ...supportingJsonLd({
+    name: 'Morse Code Audio Translator',
+    description,
+    url: pageUrl,
+    crumbs,
+    faqs,
+    dateModified: lastUpdatedIso('/morse-code-audio-translator/'),
+  }),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Morse Code Audio Translator',
+    url: pageUrl,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    description,
+    featureList: [
+      'Decode Morse from WAV, MP3, or OGG files',
+      'Live microphone Morse decoding',
+      'Text to Morse audio with WAV and MP3 download',
+      'Free, no signup',
+    ],
+  },
+];
 ---
 
-<BaseLayout title={title} description={description} suffix={false}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
   <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Morse Code Audio Translator' }]} />
   <header class="mt-3 grid gap-3 text-center">
     <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">

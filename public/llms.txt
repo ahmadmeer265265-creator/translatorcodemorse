@@ -5,6 +5,7 @@ Free browser-based Morse code translator at translatorcodemorse.com. Convert tex
 ## Pages
 
 - [Home](https://translatorcodemorse.com/): Interactive translator with Text/Morse panels, audio, tap, and mic modes
+- [Morse code audio translator](https://translatorcodemorse.com/morse-code-audio-translator/): Decode Morse from a WAV, MP3, or OGG file or live microphone, and generate Morse audio
 - [Morse code alphabet](https://translatorcodemorse.com/morse-code-alphabet/): Letter chart and learning notes for International Morse
 - [Morse code numbers](https://translatorcodemorse.com/morse-code-numbers/): Digit chart and tips for sending numbers
 - [SOS in Morse code](https://translatorcodemorse.com/sos-in-morse-code/): What SOS is, how it sounds and looks, and how to practice it
