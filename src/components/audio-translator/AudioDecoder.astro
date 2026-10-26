@@ -35,7 +35,7 @@ const D = DECODER_CONFIG_DEFAULTS;
     <div class="at-source-panels">
     {/* Microphone panel — meter stacked under the button, same layout as homepage Listen. */}
     <div class="grid gap-2" data-panel="mic" aria-hidden="false">
-      <button class="btn btn-primary" type="button" data-mic-toggle aria-pressed="false">
+      <button class="btn btn-primary" type="button" data-mic-toggle aria-pressed="false" aria-describedby="at-privacy">
         Start listening
       </button>
       <div class="at-level">
@@ -54,9 +54,6 @@ const D = DECODER_CONFIG_DEFAULTS;
         </div>
       </div>
       <p class="hidden text-sm text-muted" data-mic-error role="alert"></p>
-      <p class="text-xs text-muted">
-        Audio is analyzed on this device only. It is never recorded or sent anywhere.
-      </p>
     </div>
 
     {/* Audio File panel */}
@@ -76,10 +73,9 @@ const D = DECODER_CONFIG_DEFAULTS;
     </div>
     </div>
 
-    <p class="min-h-6 text-sm text-muted" data-status aria-live="polite">Choose a sound source to begin</p>
-    <p class="at-marks text-lg text-ink" data-marks aria-live="off">&nbsp;</p>
-
     <ResultBox id="at-decode" outputAttr="decode" copyAttr="decode" />
+
+    <canvas class="at-spectrogram" width="640" height="64" data-spectrogram aria-label="Spectrogram of the incoming audio" role="img"></canvas>
 
     {/* Decoder Configuration — collapsed by default; after the result so the
         translation box sits above the fold. */}
@@ -122,9 +118,15 @@ const D = DECODER_CONFIG_DEFAULTS;
         </label>
       </div>
     </details>
-
-    <canvas class="at-spectrogram" width="640" height="64" data-spectrogram aria-label="Spectrogram of the incoming audio" role="img"></canvas>
   </div>
+  {/* Live status/marks stay available to AT without occupying the stacked grid
+      (which would leave a gap above Translation). Sighted privacy copy lives in
+      the article and on the file drop ("on your device"). */}
+  <p class="sr-only" data-status aria-live="polite">Choose a sound source to begin</p>
+  <p class="sr-only" data-marks aria-live="off"></p>
+  <p class="sr-only" id="at-privacy">
+    Audio is analyzed on this device only. It is never recorded or sent anywhere.
+  </p>
 </section>
 
 <script>

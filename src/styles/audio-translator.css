@@ -80,7 +80,6 @@
   display: grid;
   gap: 0.35rem;
   place-items: center;
-  min-height: 6.5rem;
   padding: 0.9rem;
   border: 2px dashed var(--line);
   border-radius: 0.85rem;
@@ -99,6 +98,24 @@
 .at-drop:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+/* In-box Copy: sit in the Translation field without new Tailwind utilities
+   (those would leak into the shared homepage CSS). top/right 0.5rem = site
+   spacing * 2; padding-right 7rem clears the Copy/Copied label. */
+.at-result {
+  position: relative;
+}
+
+.at-result__field {
+  padding-right: 7rem;
+}
+
+.at-result__copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 10;
 }
 
 /* Spectrogram strip: fixed dark panel in both themes (same approach as the
@@ -136,11 +153,11 @@
   background: var(--accent);
 }
 
-/* Live decode readout: building text + current letter run. */
+/* Live Morse marks are sr-only in the decoder (Stage 6.3) so they do not
+   reserve a gap above Translation. The class stays for any leftover markup. */
 .at-marks {
   font-family: var(--font-mono);
   letter-spacing: 0.08em;
-  min-height: 1.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

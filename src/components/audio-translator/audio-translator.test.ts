@@ -30,15 +30,18 @@ describe('AudioDecoder component', () => {
     expect(html).toContain('value="file"');
   });
 
-  it('mic panel: real button, level meter, alert region, privacy note', async () => {
+  it('mic panel: real button, level meter, alert region, sr-only privacy', async () => {
     const html = await render(AudioDecoder);
     expect(html).toContain('data-mic-toggle');
     expect(html).toContain('aria-pressed="false"');
+    expect(html).toContain('aria-describedby="at-privacy"');
     expect(html).toContain('role="meter"');
     expect(html).toContain('aria-label="Microphone level"');
     expect(html).toContain('data-mic-error');
     expect((html.match(/role="alert"/g) ?? []).length).toBeGreaterThanOrEqual(2);
-    expect(html).toContain('never recorded or sent anywhere');
+    expect(html).not.toMatch(/data-panel="mic"[\s\S]*?never recorded or sent anywhere[\s\S]*?data-panel="file"/);
+    expect(html).toMatch(/id="at-privacy"[^>]*>[\s\S]*never recorded or sent anywhere/);
+    expect(html).toContain('decoding happens on your device');
   });
 
   it('file panel: dropzone button, hidden file input with accept, starts hidden', async () => {
@@ -81,6 +84,14 @@ describe('AudioDecoder component', () => {
     expect(html).toContain('data-output="decode"');
     expect(html).toContain('data-copy="decode"');
     expect(html).toContain('aria-label="Copy translation"');
+    const outputAt = html.indexOf('data-output="decode"');
+    const specAt = html.indexOf('data-spectrogram');
+    const configAt = html.indexOf('data-config');
+    expect(outputAt).toBeGreaterThan(-1);
+    expect(specAt).toBeGreaterThan(outputAt);
+    expect(configAt).toBeGreaterThan(specAt);
+    expect(html).not.toMatch(/min-h-6[^>]*data-status|data-status[^>]*min-h-6/);
+    expect(html).toMatch(/class="sr-only"[^>]*data-status|data-status[^>]*class="sr-only"/);
   });
 });
 
@@ -125,5 +136,9 @@ describe('ResultBox component', () => {
     expect(html).toContain('data-flash="Copied"');
     expect(html).toContain('aria-label="Copy translation"');
     expect(html).toContain('type="button"');
+    expect(html).toContain('at-result');
+    expect(html).toContain('at-result__copy');
+    expect(html).toContain('at-result__field');
+    expect(html).toMatch(/class="at-result"[\s\S]*data-output="decode"[\s\S]*data-copy="decode"/);
   });
 });

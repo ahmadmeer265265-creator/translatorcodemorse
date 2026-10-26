@@ -19,15 +19,15 @@ const iconCopy =
 
 <div class="grid gap-1">
   <label class="text-sm font-semibold" for={`${id}-output`}>{label}</label>
-  <textarea
-    id={`${id}-output`}
-    class="h-20 w-full resize-none rounded-xl border border-line bg-canvas px-3 py-2 text-base text-ink"
-    readonly
-    spellcheck="false"
-    data-output={outputAttr}></textarea>
-  <div class="flex justify-end">
+  <div class="at-result">
+    <textarea
+      id={`${id}-output`}
+      class="at-result__field h-20 w-full resize-none rounded-xl border border-line bg-canvas px-3 py-2 text-base text-ink"
+      readonly
+      spellcheck="false"
+      data-output={outputAttr}></textarea>
     <button
-      class="btn btn-secondary data-[state=copied]:border-accent"
+      class="btn btn-secondary at-result__copy data-[state=copied]:border-accent"
       type="button"
       data-copy={copyAttr}
       data-label="Copy"
