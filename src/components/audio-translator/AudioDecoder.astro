@@ -261,8 +261,11 @@ const D = DECODER_CONFIG_DEFAULTS;
     async function startMic() {
       showError(micError, '');
       const [{ createMicDecoder }, { gapModelFor }] = await Promise.all([
-        import('../../lib/mic-decode'),
-        import('../../lib/audio-decode-file'),
+        // ?at: cloned module instances (Stage 2.5) — the cascade plugin in
+        // astro.config.ts keeps the whole downstream graph cloned, so the
+        // homepage's originals stay inlined in the homepage's chunks.
+        import('../../lib/mic-decode?at'),
+        import('../../lib/audio-decode-file?at'),
       ]);
       if (!navigator.mediaDevices?.getUserMedia) {
         showError(micError, micErrorMessage('unsupported'));
@@ -382,7 +385,7 @@ const D = DECODER_CONFIG_DEFAULTS;
     async function runFileDecode() {
       if (!fileBytes) return;
       setState('listening');
-      const { decodeAudioFileBytes } = await import('../../lib/audio-decode-file');
+      const { decodeAudioFileBytes } = await import('../../lib/audio-decode-file?at');
       const spec = await spectrogram();
       try {
         const result = await decodeAudioFileBytes(fileBytes.slice(0), configToDecodeOptions(config()));
@@ -476,7 +479,9 @@ const D = DECODER_CONFIG_DEFAULTS;
     copyBtn.addEventListener('click', async () => {
       const text = output.value;
       if (!text) return;
-      const { copyWithFallback } = await import('../../lib/copy-feedback');
+      // ?at: separate module instance (same source file, no duplication in
+      // src) so the homepage copy stays inlined in its own chunk.
+      const { copyWithFallback } = await import('../../lib/copy-feedback?at');
       const label = copyBtn.querySelector('[data-t]');
       const result = await copyWithFallback(
         text,

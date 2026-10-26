@@ -153,8 +153,11 @@ const fieldClass =
         return;
       }
       const [{ playMorse }, { encode }] = await Promise.all([
-        import('../../lib/morse-player'),
-        import('../../lib/morse'),
+        // ?at: cloned module instances (Stage 2.5) — the cascade plugin in
+        // astro.config.ts keeps the whole downstream graph cloned, so the
+        // homepage's originals stay inlined in the homepage's chunks.
+        import('../../lib/morse-player?at'),
+        import('../../lib/morse?at'),
       ]);
       handle?.stop(false);
       ctx ??= new AudioContext();
@@ -192,8 +195,8 @@ const fieldClass =
         return;
       }
       const [{ prepareWav, downloadWav }, { encode }] = await Promise.all([
-        import('../../lib/morse-player'),
-        import('../../lib/morse'),
+        import('../../lib/morse-player?at'),
+        import('../../lib/morse?at'),
       ]);
       const prepared = prepareWav(encode(current.text).output, genFormToAudioSettings(current));
       if (!prepared) {
@@ -220,9 +223,9 @@ const fieldClass =
       mp3Btn.disabled = true;
       try {
         const [{ encodeMp3FromTimeline }, { buildTimeline }, { encode }] = await Promise.all([
-          import('../../lib/mp3-encode'),
-          import('../../lib/morse-audio'),
-          import('../../lib/morse'),
+          import('../../lib/mp3-encode?at'),
+          import('../../lib/morse-audio?at'),
+          import('../../lib/morse?at'),
         ]);
         const settings = genFormToAudioSettings(current);
         const timeline = buildTimeline(encode(current.text).output, {
