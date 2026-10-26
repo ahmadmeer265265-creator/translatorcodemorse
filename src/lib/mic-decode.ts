@@ -40,6 +40,18 @@ export type Segment = {
 
 export type GapClass = 'intra' | 'letter' | 'word';
 
+/**
+ * Absolute gap expectations in ms, used when the operator overrides speed
+ * manually (e.g. fixed WPM plus a Farnsworth overall speed). Boundaries sit
+ * at the geometric midpoints: intra/letter at (intra+letter)/2 and
+ * letter/word at (letter+word)/2, mirroring classifyGap's ratio midpoints.
+ */
+export type GapModel = {
+  intraMs: number;
+  letterMs: number;
+  wordMs: number;
+};
+
 export type DecodedLetter = {
   code: string;
   char: string;
@@ -96,13 +108,15 @@ export function envelopeToSegments(
  * sender's speed up and down. Gaps are classified against this same unit
  * using the 1 / 3 / 7 CW ratios.
  */
-function createUnitTracker() {
+function createUnitTracker(initialMs: number = INITIAL_UNIT_MS, locked = false) {
   const marks: number[] = [];
-  let markUnit = INITIAL_UNIT_MS;
+  let markUnit = initialMs;
 
   const min = (list: readonly number[]) => (list.length === 0 ? 0 : Math.min(...list));
 
   const learnMark = (durationMs: number): number => {
+    // Locked unit (manual WPM override): never adapt to observed marks.
+    if (locked) return markUnit;
     if (marks.length === 0) {
       // Bootstrap: relate the first mark to the seed before deciding.
       if (durationMs >= markUnit * DASH_RATIO) markUnit = durationMs / 3;
@@ -120,7 +134,7 @@ function createUnitTracker() {
     mark: () => markUnit,
     reset: () => {
       marks.length = 0;
-      markUnit = INITIAL_UNIT_MS;
+      markUnit = initialMs;
     },
   };
 }
@@ -143,6 +157,13 @@ export function classifyGap(durationMs: number, unitMs: number): GapClass {
   return 'intra';
 }
 
+/** Classify a gap against absolute expectations instead of an adaptive unit. */
+export function classifyGapWithModel(durationMs: number, model: GapModel): GapClass {
+  if (durationMs >= (model.letterMs + model.wordMs) / 2) return 'word';
+  if (durationMs >= (model.intraMs + model.letterMs) / 2) return 'letter';
+  return 'intra';
+}
+
 export type MicDecoder = {
   /** Feed one mark/space segment; returns the updated state. */
   push: (segment: Segment) => MicDecoderState;
@@ -159,12 +180,38 @@ export type MicDecoder = {
   reset: () => MicDecoderState;
 };
 
-export function createMicDecoder(options: { showSlash?: boolean; now?: () => number } = {}): MicDecoder {
+export function createMicDecoder(
+  options: {
+    showSlash?: boolean;
+    now?: () => number;
+    /**
+     * Seed for the adaptive dot-unit estimate (replaces INITIAL_UNIT_MS).
+     * Used by file decoding when an approximate WPM is already known.
+     */
+    initialUnitMs?: number;
+    /**
+     * Fixed dot unit (manual WPM override). When set, the tracker never
+     * adapts: dot/dash classification always uses exactly this unit.
+     */
+    lockUnitMs?: number;
+    /**
+     * Absolute gap expectations (manual Farnsworth override). When set,
+     * spaces are classified against these values instead of the adaptive
+     * unit ratios.
+     */
+    gapModel?: GapModel;
+  } = {},
+): MicDecoder {
   const showSlash = options.showSlash ?? true;
   const wordSep = showSlash ? ' / ' : '   ';
 
   let marks: Array<'.' | '-'> = [];
-  const unit = createUnitTracker();
+  const unit = createUnitTracker(
+    options.lockUnitMs ?? options.initialUnitMs ?? INITIAL_UNIT_MS,
+    options.lockUnitMs !== undefined,
+  );
+  const gapOf = (durationMs: number): GapClass =>
+    options.gapModel ? classifyGapWithModel(durationMs, options.gapModel) : classifyGap(durationMs, unit.mark());
   let text = '';
   let words: string[][] = [[]];
   let events: MicEvent[] = [];
@@ -227,9 +274,8 @@ export function createMicDecoder(options: { showSlash?: boolean; now?: () => num
 
       // Space segment. The dot unit anchors both boundaries. A run's
       // nominal gaps are 1 / 3 / 7 units, so intra ends below ~2u and a
-      // word gap begins at ~5u.
-      const dot = unit.mark();
-      const gap = classifyGap(segment.durationMs, dot);
+      // word gap begins at ~5u. An explicit gap model overrides the unit.
+      const gap = gapOf(segment.durationMs);
       if (gap === 'word') {
         closeLetter();
         if (!pendingWordBoundary) openWord();
@@ -243,8 +289,7 @@ export function createMicDecoder(options: { showSlash?: boolean; now?: () => num
       // Same boundary rules as a space segment, but only to resolve a
       // trailing letter/word while the sender is paused. Does not close the
       // gap — pendingLetterBoundary stops it re-firing on the next mark.
-      const dot = unit.mark();
-      const gap = classifyGap(durationMs, dot);
+      const gap = gapOf(durationMs);
       if (gap === 'word') {
         closeLetter();
         if (!pendingWordBoundary) openWord();
