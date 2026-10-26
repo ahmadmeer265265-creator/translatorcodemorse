@@ -1,0 +1,256 @@
+---
+/**
+ * Mode B: Text to Audio (text -> audio) for /morse-code-audio-translator/.
+ * Playback and WAV rendering reuse the homepage's morse-player.ts; MP3 is a
+ * lazy dynamic import of the Stage 1 mp3-encode.ts, fetched ONLY on click.
+ */
+import { GEN_DEFAULTS, GEN_LIMITS } from '../../lib/audio-gen-ui';
+
+const D = GEN_DEFAULTS;
+const L = GEN_LIMITS;
+const fieldClass =
+  'relative z-10 mt-1 h-20 w-full resize-none rounded-xl border border-line bg-canvas px-3 py-2 text-base text-ink';
+---
+
+<section
+  class="at-tool rounded-2xl border border-line bg-surface p-2.5 sm:p-4"
+  data-audio-generator
+  aria-label="Text to audio"
+>
+  <div class="grid gap-3">
+    <div class="grid gap-1">
+      <label class="text-sm font-semibold" for="at-gen-text">Text</label>
+      <textarea
+        id="at-gen-text"
+        class={fieldClass}
+        rows="3"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        placeholder="Type text to hear as Morse code"
+        data-gen-text></textarea>
+    </div>
+    <p class="hidden text-sm text-muted" data-gen-error role="alert"></p>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <button class="btn btn-primary" type="button" data-gen-play disabled>Play</button>
+      <button class="btn btn-secondary" type="button" data-gen-stop disabled>Stop</button>
+      <button class="btn btn-secondary" type="button" data-gen-wav disabled>Download WAV</button>
+      <button class="btn btn-secondary" type="button" data-gen-mp3 disabled>Download MP3</button>
+    </div>
+    <p class="min-h-6 text-sm text-muted" data-gen-status aria-live="polite">Type text to enable Play</p>
+
+    <details class="disclosure" data-gen-config>
+      <summary>
+        <svg class="disclosure-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg>
+        Sound settings
+      </summary>
+      <div class="grid gap-3 border-t border-line px-3 py-3 text-sm">
+        <label class="grid min-h-11 content-center gap-1">
+          <span class="flex items-baseline justify-between gap-3 font-medium">
+            <span>Speed (WPM)</span>
+            <output data-gen-wpm-value>{D.wpm}</output>
+          </span>
+          <input class="h-11 w-full max-w-sm" type="range" min={L.wpm.min} max={L.wpm.max} step="1" value={D.wpm} data-gen-wpm />
+        </label>
+        <label class="grid min-h-11 content-center gap-1">
+          <span class="flex items-baseline justify-between gap-3 font-medium">
+            <span>Farnsworth (overall speed)</span>
+            <output data-gen-farnsworth-value>Off</output>
+          </span>
+          <input class="h-11 w-full max-w-sm" type="range" min={L.wpm.min} max={L.wpm.max} step="1" value={D.farnsworthWpm} data-gen-farnsworth />
+        </label>
+        <label class="grid min-h-11 content-center gap-1">
+          <span class="flex items-baseline justify-between gap-3 font-medium">
+            <span>Tone (Hz)</span>
+            <output data-gen-freq-value>{D.frequency}</output>
+          </span>
+          <input class="h-11 w-full max-w-sm" type="range" min={L.frequency.min} max={L.frequency.max} step="10" value={D.frequency} data-gen-freq />
+        </label>
+        <label class="grid min-h-11 content-center gap-1">
+          <span class="flex items-baseline justify-between gap-3 font-medium">
+            <span>Volume</span>
+            <output data-gen-volume-value>{Math.round(D.volume * 100)}</output>
+          </span>
+          <input class="h-11 w-full max-w-sm" type="range" min="0" max="100" step="1" value={Math.round(D.volume * 100)} data-gen-volume />
+        </label>
+      </div>
+    </details>
+  </div>
+</section>
+
+<script>
+  import {
+    canGenerate,
+    genFormToAudioSettings,
+    genValidationMessage,
+    validateGenText,
+    type GenFormState,
+    GEN_DEFAULTS,
+  } from '../../lib/audio-gen-ui';
+
+  const root = document.querySelector('[data-audio-generator]');
+  if (root && !root.hasAttribute('data-bound')) {
+    root.setAttribute('data-bound', '1');
+
+    const $ = <T extends Element = HTMLElement>(sel: string) => root.querySelector(sel) as T;
+    const text = $<HTMLTextAreaElement>('[data-gen-text]');
+    const error = $('[data-gen-error]');
+    const play = $<HTMLButtonElement>('[data-gen-play]');
+    const stop = $<HTMLButtonElement>('[data-gen-stop]');
+    const wavBtn = $<HTMLButtonElement>('[data-gen-wav]');
+    const mp3Btn = $<HTMLButtonElement>('[data-gen-mp3]');
+    const status = $('[data-gen-status]');
+
+    let ctx: AudioContext | null = null;
+    let handle: { stop: (announce?: boolean) => void; getState: () => string } | null = null;
+
+    const form = (): GenFormState => ({
+      text: text.value,
+      wpm: Number($<HTMLInputElement>('[data-gen-wpm]').value),
+      farnsworthWpm: Number($<HTMLInputElement>('[data-gen-farnsworth]').value),
+      frequency: Number($<HTMLInputElement>('[data-gen-freq]').value),
+      volume: Number($<HTMLInputElement>('[data-gen-volume]').value) / 100,
+      soundType: GEN_DEFAULTS.soundType,
+      waveform: GEN_DEFAULTS.waveform,
+    });
+
+    const refresh = () => {
+      const ok = canGenerate(form());
+      play.disabled = !ok;
+      wavBtn.disabled = !ok;
+      mp3Btn.disabled = !ok;
+      if (!ok) status.textContent = 'Type text to enable Play';
+    };
+
+    const showError = (message: string) => {
+      error.textContent = message;
+      error.classList.toggle('hidden', !message);
+    };
+
+    text.addEventListener('input', () => {
+      showError('');
+      refresh();
+    });
+
+    for (const [sel, outSel, fmt] of [
+      ['[data-gen-wpm]', '[data-gen-wpm-value]', (v: number) => String(v)],
+      ['[data-gen-farnsworth]', '[data-gen-farnsworth-value]', (v: number) => (v >= Number($<HTMLInputElement>('[data-gen-wpm]').value) ? 'Off' : String(v))],
+      ['[data-gen-freq]', '[data-gen-freq-value]', (v: number) => String(v)],
+      ['[data-gen-volume]', '[data-gen-volume-value]', (v: number) => String(v)],
+    ] as const) {
+      $(sel).addEventListener('input', (e) => {
+        const out = $(outSel);
+        out.textContent = fmt(Number((e.target as HTMLInputElement).value));
+      });
+    }
+
+    play.addEventListener('click', async () => {
+      const current = form();
+      const valid = validateGenText(current.text);
+      if (!valid.ok) {
+        showError(genValidationMessage(valid.reason));
+        return;
+      }
+      const [{ playMorse }, { encode }] = await Promise.all([
+        import('../../lib/morse-player'),
+        import('../../lib/morse'),
+      ]);
+      handle?.stop(false);
+      ctx ??= new AudioContext();
+      status.textContent = 'Playing…';
+      play.disabled = true;
+      stop.disabled = false;
+      handle = playMorse(ctx, encode(current.text).output, genFormToAudioSettings(current), {
+        status: (message) => {
+          status.textContent = message;
+        },
+        setState: (state) => {
+          if (state === 'finished' || state === 'idle') {
+            play.disabled = false;
+            stop.disabled = true;
+            status.textContent = state === 'finished' ? 'Finished' : 'Stopped';
+          }
+        },
+        onGroup: () => {},
+        onFlash: () => {},
+        vibrate: () => {},
+      });
+    });
+
+    stop.addEventListener('click', () => {
+      handle?.stop(true);
+      play.disabled = false;
+      stop.disabled = true;
+    });
+
+    wavBtn.addEventListener('click', async () => {
+      const current = form();
+      const valid = validateGenText(current.text);
+      if (!valid.ok) {
+        showError(genValidationMessage(valid.reason));
+        return;
+      }
+      const [{ prepareWav, downloadWav }, { encode }] = await Promise.all([
+        import('../../lib/morse-player'),
+        import('../../lib/morse'),
+      ]);
+      const prepared = prepareWav(encode(current.text).output, genFormToAudioSettings(current));
+      if (!prepared) {
+        showError('Nothing to download.');
+        return;
+      }
+      if ('limit' in prepared) {
+        showError(`That audio is too long to download (over ${Math.round(prepared.limit / 60)} minutes).`);
+        return;
+      }
+      downloadWav(prepared.bytes, 'morse-code.wav');
+      status.textContent = `WAV downloaded (${prepared.seconds.toFixed(1)}s)`;
+    });
+
+    // MP3: the Stage 1 encoder (~19 KB gzip) is fetched ONLY here, on click.
+    mp3Btn.addEventListener('click', async () => {
+      const current = form();
+      const valid = validateGenText(current.text);
+      if (!valid.ok) {
+        showError(genValidationMessage(valid.reason));
+        return;
+      }
+      status.textContent = 'Encoding MP3…';
+      mp3Btn.disabled = true;
+      try {
+        const [{ encodeMp3FromTimeline }, { buildTimeline }, { encode }] = await Promise.all([
+          import('../../lib/mp3-encode'),
+          import('../../lib/morse-audio'),
+          import('../../lib/morse'),
+        ]);
+        const settings = genFormToAudioSettings(current);
+        const timeline = buildTimeline(encode(current.text).output, {
+          wpm: settings.wpm,
+          farnsworthWpm: settings.farnsworthWpm,
+        });
+        const bytes = encodeMp3FromTimeline(timeline, {
+          frequency: settings.frequency,
+          volume: settings.volume,
+          sampleRate: 44100,
+          soundType: settings.soundType,
+          waveform: settings.waveform,
+        });
+        const blob = new Blob([bytes.slice()], { type: 'audio/mpeg' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'morse-code.mp3';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 10_000);
+        status.textContent = 'MP3 downloaded';
+      } catch (err) {
+        showError(err instanceof Error ? err.message : 'Could not encode the MP3.');
+      } finally {
+        mp3Btn.disabled = false;
+      }
+    });
+
+    refresh();
+  }
+</script>

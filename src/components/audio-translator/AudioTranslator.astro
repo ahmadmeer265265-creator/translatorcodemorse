@@ -1,0 +1,15 @@
+---
+/**
+ * The two audio-translator modes, composed. Stage 3's page can mount this
+ * directly (with the article around it) or place the modes individually.
+ */
+import AudioDecoder from './AudioDecoder.astro';
+import AudioGenerator from './AudioGenerator.astro';
+import '../../styles/translator.css';
+import '../../styles/audio-translator.css';
+---
+
+<div class="grid gap-4 sm:gap-6" data-audio-translator>
+  <AudioDecoder />
+  <AudioGenerator />
+</div>

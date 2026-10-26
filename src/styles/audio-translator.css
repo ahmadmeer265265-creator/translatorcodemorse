@@ -1,0 +1,107 @@
+/* Audio-translator page: page-specific pieces that translator.css does not
+   already provide. Colors come from the shared tokens (global.css). */
+
+.at-tool {
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow), 0 0 0 1px rgba(180, 83, 9, 0.04);
+}
+
+/* Source segmented control (Microphone / Audio File) — same visual language
+   as the translator's mode switch, but with an even 2-way split. */
+.at-seg {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: var(--canvas);
+  box-shadow: var(--inset);
+  padding: 0.2rem;
+}
+
+.at-seg__opt {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  padding-inline: 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.at-seg__opt:has(:checked) {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.at-seg__opt:has(:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.at-seg__opt input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* File drop zone */
+.at-drop {
+  display: grid;
+  gap: 0.35rem;
+  place-items: center;
+  min-height: 6.5rem;
+  padding: 0.9rem;
+  border: 2px dashed var(--line);
+  border-radius: 0.85rem;
+  background: var(--canvas);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+}
+
+.at-drop:hover,
+.at-drop[data-dragging='true'] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--canvas));
+}
+
+.at-drop:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Spectrogram strip: fixed dark panel in both themes (same approach as the
+   demo-video facade), so the amber heat palette reads everywhere. */
+.at-spectrogram {
+  display: block;
+  width: 100%;
+  height: 96px;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: #14110e;
+}
+
+/* Live decode readout: building text + current letter run. */
+.at-marks {
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  min-height: 1.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-drop {
+    transition: none;
+  }
+}

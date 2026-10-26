@@ -1,0 +1,506 @@
+---
+/**
+ * Mode A: Audio Decoder (audio -> text) for /morse-code-audio-translator/.
+ * Static HTML + one processed script; the decode engine, spectrogram, and mic
+ * decoder are lazy dynamic imports that load only on user interaction.
+ */
+import ResultBox from './ResultBox.astro';
+import { AUDIO_FILE_ACCEPT, DECODER_CONFIG_DEFAULTS, DECODER_LIMITS } from '../../lib/audio-decoder-ui';
+
+const fieldSelect =
+  'min-h-11 w-full rounded-xl border border-line bg-surface px-3 text-sm text-ink';
+const numInput = fieldSelect;
+const L = DECODER_LIMITS;
+const D = DECODER_CONFIG_DEFAULTS;
+---
+
+<section
+  class="at-tool rounded-2xl border border-line bg-surface p-2.5 sm:p-4"
+  data-audio-decoder
+  aria-label="Audio decoder"
+>
+  <div class="grid gap-3">
+    <div class="at-seg" role="radiogroup" aria-label="Sound source" data-source-group>
+      <label class="at-seg__opt">
+        <input type="radio" name="at-source" value="mic" checked data-source />
+        Microphone
+      </label>
+      <label class="at-seg__opt">
+        <input type="radio" name="at-source" value="file" data-source />
+        Audio File
+      </label>
+    </div>
+
+    {/* Microphone panel */}
+    <div class="grid gap-2" data-panel="mic">
+      <div class="flex flex-wrap items-center gap-2">
+        <button class="btn btn-primary" type="button" data-mic-toggle aria-pressed="false">
+          Start listening
+        </button>
+        <div
+          class="h-3 w-full max-w-sm flex-1 overflow-hidden rounded-full border border-line bg-canvas"
+          role="meter"
+          aria-label="Microphone level"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          data-mic-meter
+        >
+          <div class="h-full w-0 bg-accent transition-none" data-mic-bar></div>
+        </div>
+      </div>
+      <p class="hidden text-sm text-muted" data-mic-error role="alert"></p>
+      <p class="text-xs text-muted">
+        Audio is analyzed on this device only. It is never recorded or sent anywhere.
+      </p>
+    </div>
+
+    {/* Audio File panel */}
+    <div class="grid gap-2" data-panel="file" hidden>
+      <button class="at-drop" type="button" data-drop>
+        <span class="font-semibold">Drop an audio file here, or click to browse</span>
+        <span class="text-sm text-muted">.wav, .mp3, or .ogg — decoding happens on your device</span>
+      </button>
+      <input class="sr-only" type="file" accept={AUDIO_FILE_ACCEPT} data-file-input aria-label="Choose an audio file" />
+      <p class="text-sm" data-file-name hidden></p>
+      <div class="flex flex-wrap gap-2" data-file-actions hidden>
+        <button class="btn btn-primary" type="button" data-file-play>Play</button>
+        <button class="btn btn-secondary" type="button" data-file-stop disabled>Stop</button>
+        <button class="btn btn-ghost" type="button" data-file-decode>Decode again</button>
+      </div>
+      <p class="hidden text-sm text-muted" data-file-error role="alert"></p>
+    </div>
+
+    {/* Decoder Configuration */}
+    <details class="disclosure" data-config>
+      <summary>
+        <svg class="disclosure-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg>
+        Decoder configuration
+      </summary>
+      <div class="grid gap-3 border-t border-line px-3 py-3 text-sm">
+        <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <label class="grid min-h-11 content-center gap-1">
+            <span class="font-medium">WPM Rate</span>
+            <input class={numInput} type="number" min={L.wpmRate.min} max={L.wpmRate.max} step="1" placeholder="Auto" data-cfg-wpm />
+          </label>
+          <label class="grid min-h-11 content-center gap-1">
+            <span class="font-medium">Farnsworth WPM</span>
+            <input class={numInput} type="number" min={L.farnsworthWpm.min} max={L.farnsworthWpm.max} step="1" placeholder="Auto" data-cfg-farnsworth />
+          </label>
+          <label class="grid min-h-11 content-center gap-1">
+            <span class="font-medium">Freq (Hz)</span>
+            <input class={numInput} type="number" min={L.frequencyHz.min} max={L.frequencyHz.max} step="10" placeholder="Auto" data-cfg-freq disabled={D.automaticFrequencyTracking} />
+          </label>
+          <label class="grid min-h-11 content-center gap-1">
+            <span class="font-medium">Filter Q</span>
+            <input class={numInput} type="number" min={L.filterQ.min} max={L.filterQ.max} step="1" value={D.filterQ} data-cfg-q />
+          </label>
+          <label class="grid min-h-11 content-center gap-1">
+            <span class="font-medium">Vol dB Min</span>
+            <input class={numInput} type="number" min={L.volumeDb.min} max={L.volumeDb.max} step="1" placeholder="Auto" data-cfg-volmin />
+          </label>
+          <label class="grid min-h-11 content-center gap-1">
+            <span class="font-medium">Vol dB Max</span>
+            <input class={numInput} type="number" min={L.volumeDb.min} max={L.volumeDb.max} step="1" placeholder="Auto" data-cfg-volmax />
+          </label>
+        </div>
+        <label class="toggle-row">
+          <input class="toggle-input" type="checkbox" checked={D.automaticFrequencyTracking} data-cfg-aft />
+          <span class="toggle-ui" aria-hidden="true"></span>
+          <span>Automatic Frequency Tracking</span>
+        </label>
+      </div>
+    </details>
+
+    <canvas class="at-spectrogram" width="640" height="96" data-spectrogram aria-label="Spectrogram of the incoming audio" role="img"></canvas>
+
+    <p class="min-h-6 text-sm text-muted" data-status aria-live="polite">Choose a sound source to begin</p>
+    <p class="at-marks text-lg text-ink" data-marks aria-live="off">&nbsp;</p>
+
+    <ResultBox id="at-decode" outputAttr="decode" copyAttr="decode" />
+  </div>
+</section>
+
+<script>
+  import {
+    configToDecodeOptions,
+    decoderStateLabel,
+    fileErrorMessage,
+    frequencyInputEnabled,
+    isAudioFileName,
+    micErrorKind,
+    micErrorMessage,
+    reduceDecoderState,
+    type DecoderConfig,
+    type DecoderUiState,
+    DECODER_CONFIG_DEFAULTS,
+  } from '../../lib/audio-decoder-ui';
+  const root = document.querySelector('[data-audio-decoder]');
+  if (root && !root.hasAttribute('data-bound')) {
+    root.setAttribute('data-bound', '1');
+
+    const $ = <T extends Element = HTMLElement>(sel: string) => root.querySelector(sel) as T;
+    const panels = { mic: $('[data-panel="mic"]'), file: $('[data-panel="file"]') };
+    const micToggle = $<HTMLButtonElement>('[data-mic-toggle]');
+    const micBar = $('[data-mic-bar]');
+    const micMeter = $('[data-mic-meter]');
+    const micError = $('[data-mic-error]');
+    const drop = $<HTMLButtonElement>('[data-drop]');
+    const fileInput = $<HTMLInputElement>('[data-file-input]');
+    const fileName = $('[data-file-name]');
+    const fileActions = $('[data-file-actions]');
+    const filePlay = $<HTMLButtonElement>('[data-file-play]');
+    const fileStop = $<HTMLButtonElement>('[data-file-stop]');
+    const fileDecodeAgain = $<HTMLButtonElement>('[data-file-decode]');
+    const fileError = $('[data-file-error]');
+    const statusEl = $('[data-status]');
+    const marksEl = $('[data-marks]');
+    const output = $<HTMLTextAreaElement>('[data-output="decode"]');
+    const copyBtn = $<HTMLButtonElement>('[data-copy="decode"]');
+    const canvas = $<HTMLCanvasElement>('[data-spectrogram]');
+    const aft = $<HTMLInputElement>('[data-cfg-aft]');
+    const freqInput = $<HTMLInputElement>('[data-cfg-freq]');
+
+    let uiState: DecoderUiState = 'idle';
+    let source: 'mic' | 'file' = 'mic';
+    let stopMic: (() => void) | null = null;
+    let stopFilePlayback: (() => void) | null = null;
+    let fileBytes: ArrayBuffer | null = null;
+    let decodedBuffer: { channels: Float32Array[]; sampleRate: number } | null = null;
+    let specDrawer: { reset: () => void; pushFileSpec: (buf: { channels: Float32Array[]; sampleRate: number }) => void; pushLive: (mags: Float32Array) => void } | null = null;
+
+    const setState = (next: DecoderUiState) => {
+      uiState = next;
+      statusEl.textContent = decoderStateLabel(next);
+    };
+
+    const showError = (el: HTMLElement, message: string) => {
+      el.textContent = message;
+      el.classList.toggle('hidden', !message);
+    };
+
+    const config = (): DecoderConfig => ({
+      ...DECODER_CONFIG_DEFAULTS,
+      wpmRate: num('[data-cfg-wpm]'),
+      farnsworthWpm: num('[data-cfg-farnsworth]'),
+      frequencyHz: num('[data-cfg-freq]'),
+      filterQ: num('[data-cfg-q]') ?? DECODER_CONFIG_DEFAULTS.filterQ,
+      minVolumeDb: num('[data-cfg-volmin]'),
+      maxVolumeDb: num('[data-cfg-volmax]'),
+      automaticFrequencyTracking: aft.checked,
+    });
+
+    function num(sel: string): number | undefined {
+      const el = $<HTMLInputElement>(sel);
+      const v = el.value.trim();
+      if (v === '') return undefined;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : undefined;
+    }
+
+    aft.addEventListener('change', () => {
+      const enabled = frequencyInputEnabled({ ...config(), automaticFrequencyTracking: aft.checked });
+      freqInput.disabled = !enabled;
+    });
+
+    root.querySelectorAll<HTMLInputElement>('[data-source]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        if (!radio.checked) return;
+        source = radio.value === 'file' ? 'file' : 'mic';
+        panels.mic.hidden = source !== 'mic';
+        panels.file.hidden = source !== 'file';
+        stopAll();
+      });
+    });
+
+    async function spectrogram() {
+      if (specDrawer) return specDrawer;
+      const mod = await import('../../lib/audio-spectrogram');
+      const ctx2d = canvas.getContext('2d')!;
+      const W = canvas.width;
+      const H = canvas.height;
+      specDrawer = {
+        reset() {
+          ctx2d.fillStyle = '#14110e';
+          ctx2d.fillRect(0, 0, W, H);
+        },
+        pushFileSpec(buf) {
+          const spec = mod.stftSpectrogram(buf.channels[0]!, buf.sampleRate);
+          const img = ctx2d.createImageData(W, H);
+          const colW = W / spec.frames.length;
+          for (let x = 0; x < W; x += 1) {
+            const frame = spec.frames[Math.min(spec.frames.length - 1, Math.floor(x / colW))]!;
+            for (let y = 0; y < H; y += 1) {
+              const bin = Math.floor(((H - 1 - y) / H) * frame.length);
+              const [r, g, b] = mod.heatColor(frame[bin] ?? 0);
+              const o = (y * W + x) * 4;
+              img.data[o] = r;
+              img.data[o + 1] = g;
+              img.data[o + 2] = b;
+              img.data[o + 3] = 255;
+            }
+          }
+          ctx2d.putImageData(img, 0, 0);
+        },
+        pushLive(mags) {
+          const norm = mod.normalizeMagnitudes(mags);
+          ctx2d.drawImage(canvas, -1, 0);
+          for (let y = 0; y < H; y += 1) {
+            const bin = Math.floor(((H - 1 - y) / H) * norm.length);
+            const [r, g, b] = mod.heatColor(norm[bin] ?? 0);
+            ctx2d.fillStyle = `rgb(${r},${g},${b})`;
+            ctx2d.fillRect(W - 1, y, 1, 1);
+          }
+        },
+      };
+      specDrawer.reset();
+      return specDrawer;
+    }
+
+    // —— Microphone mode ——
+    async function startMic() {
+      showError(micError, '');
+      const [{ createMicDecoder }, { gapModelFor }] = await Promise.all([
+        import('../../lib/mic-decode'),
+        import('../../lib/audio-decode-file'),
+      ]);
+      if (!navigator.mediaDevices?.getUserMedia) {
+        showError(micError, micErrorMessage('unsupported'));
+        setState('error');
+        return;
+      }
+      if (!window.isSecureContext) {
+        showError(micError, micErrorMessage('insecure'));
+        setState('error');
+        return;
+      }
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+        });
+      } catch (err) {
+        const name = err && typeof err === 'object' && 'name' in err ? String((err as { name: unknown }).name) : '';
+        showError(micError, micErrorMessage(micErrorKind(name)));
+        setState('error');
+        return;
+      }
+
+      const cfg = config();
+      const decoder = createMicDecoder({
+        lockUnitMs: cfg.wpmRate && cfg.wpmRate > 0 ? 1200 / cfg.wpmRate : undefined,
+        gapModel: cfg.wpmRate && cfg.wpmRate > 0 ? gapModelFor(cfg.wpmRate, cfg.farnsworthWpm) : undefined,
+      });
+      const ctx = new AudioContext();
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 2048;
+      const src = ctx.createMediaStreamSource(stream);
+      src.connect(analyser);
+      const timeBuf = new Float32Array(analyser.fftSize);
+      const freqBuf = new Float32Array(analyser.frequencyBinCount);
+      const spec = await spectrogram();
+
+      let raf = 0;
+      let running = true;
+      let markStart: number | null = null;
+      let spaceStart: number | null = null;
+      const threshold = 0.02;
+
+      const applyState = () => {
+        const snap = decoder.snapshot();
+        marksEl.textContent = snap.marks || ' ';
+        output.value = snap.text;
+        if (snap.text.length > 0 && uiState === 'listening') setState('decoding');
+      };
+
+      const tick = (now: number) => {
+        if (!running) return;
+        analyser.getFloatTimeDomainData(timeBuf);
+        analyser.getFloatFrequencyData(freqBuf);
+        spec.pushLive(Float32Array.from(freqBuf, (db) => Math.max(0, (db + 100) / 70)));
+        let sum = 0;
+        for (let i = 0; i < timeBuf.length; i += 1) sum += timeBuf[i]! * timeBuf[i]!;
+        const level = Math.sqrt(sum / timeBuf.length);
+        const pct = Math.min(100, Math.round((level / 0.25) * 100));
+        micBar.style.width = `${pct}%`;
+        micMeter.setAttribute('aria-valuenow', String(pct));
+        if (level >= threshold) {
+          if (spaceStart !== null) {
+            decoder.push({ type: 'space', durationMs: now - spaceStart });
+            spaceStart = null;
+          }
+          if (markStart === null) markStart = now;
+        } else {
+          if (markStart !== null) {
+            decoder.push({ type: 'mark', durationMs: now - markStart });
+            markStart = null;
+          }
+          if (spaceStart === null) spaceStart = now;
+          else decoder.silence(now - spaceStart);
+        }
+        applyState();
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+
+      micToggle.textContent = 'Stop listening';
+      micToggle.setAttribute('aria-pressed', 'true');
+      setState('listening');
+
+      stopMic = () => {
+        running = false;
+        cancelAnimationFrame(raf);
+        decoder.flush();
+        applyState();
+        src.disconnect();
+        analyser.disconnect();
+        for (const track of stream.getTracks()) track.stop();
+        void ctx.close().catch(() => {});
+        micToggle.textContent = 'Start listening';
+        micToggle.setAttribute('aria-pressed', 'false');
+        micBar.style.width = '0%';
+        micMeter.setAttribute('aria-valuenow', '0');
+        setState(output.value.length > 0 ? 'result' : 'idle');
+        stopMic = null;
+      };
+    }
+
+    // —— File mode ——
+    async function handleFile(file: File) {
+      showError(fileError, '');
+      if (!isAudioFileName(file.name)) {
+        showError(fileError, fileErrorMessage('type', file.name));
+        setState('error');
+        return;
+      }
+      fileBytes = await file.arrayBuffer();
+      fileName.textContent = `${file.name} (${(file.size / 1024).toFixed(0)} KB)`;
+      fileName.hidden = false;
+      await runFileDecode();
+    }
+
+    async function runFileDecode() {
+      if (!fileBytes) return;
+      setState('listening');
+      const { decodeAudioFileBytes } = await import('../../lib/audio-decode-file');
+      const spec = await spectrogram();
+      try {
+        const result = await decodeAudioFileBytes(fileBytes.slice(0), configToDecodeOptions(config()));
+        marksEl.textContent = result.marks || ' ';
+        output.value = result.text;
+        fileActions.hidden = false;
+        fileStop.disabled = true;
+        setState(result.text.length > 0 ? 'result' : 'idle');
+        // Cache the decoded buffer for Play + full spectrogram.
+        const AudioCtx = window.AudioContext;
+        if (AudioCtx) {
+          const ctx = new AudioCtx();
+          try {
+            const buf = await ctx.decodeAudioData(fileBytes.slice(0));
+            const channels: Float32Array[] = [];
+            for (let ch = 0; ch < buf.numberOfChannels; ch += 1) channels.push(buf.getChannelData(ch));
+            decodedBuffer = { channels, sampleRate: buf.sampleRate };
+            spec.pushFileSpec(decodedBuffer);
+          } finally {
+            void ctx.close().catch(() => {});
+          }
+        }
+      } catch (err) {
+        showError(fileError, fileErrorMessage('decode', fileName.textContent?.split(' (')[0] ?? 'file'));
+        setState('error');
+        void err;
+      }
+    }
+
+    async function playFile() {
+      if (!decodedBuffer) return;
+      filePlay.disabled = true;
+      fileStop.disabled = false;
+      const ctx = new AudioContext();
+      const buf = ctx.createBuffer(decodedBuffer.channels.length, decodedBuffer.channels[0]!.length, decodedBuffer.sampleRate);
+      decodedBuffer.channels.forEach((data, ch) => buf.copyToChannel(data as Float32Array<ArrayBuffer>, ch));
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(ctx.destination);
+      src.onended = () => {
+        filePlay.disabled = false;
+        fileStop.disabled = true;
+        void ctx.close().catch(() => {});
+        stopFilePlayback = null;
+      };
+      src.start();
+      stopFilePlayback = () => {
+        try {
+          src.stop();
+        } catch {
+          /* already stopped */
+        }
+        void ctx.close().catch(() => {});
+        filePlay.disabled = false;
+        fileStop.disabled = true;
+        stopFilePlayback = null;
+      };
+    }
+
+    function stopAll() {
+      stopMic?.();
+      stopFilePlayback?.();
+    }
+
+    // —— Wiring ——
+    micToggle.addEventListener('click', () => {
+      if (stopMic) stopMic();
+      else void startMic();
+    });
+    drop.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files?.[0];
+      if (file) void handleFile(file);
+      fileInput.value = '';
+    });
+    drop.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      drop.setAttribute('data-dragging', 'true');
+    });
+    drop.addEventListener('dragleave', () => drop.removeAttribute('data-dragging'));
+    drop.addEventListener('drop', (e) => {
+      e.preventDefault();
+      drop.removeAttribute('data-dragging');
+      const file = (e as DragEvent).dataTransfer?.files?.[0];
+      if (file) void handleFile(file);
+    });
+    filePlay.addEventListener('click', () => void playFile());
+    fileStop.addEventListener('click', () => stopFilePlayback?.());
+    fileDecodeAgain.addEventListener('click', () => void runFileDecode());
+
+    copyBtn.addEventListener('click', async () => {
+      const text = output.value;
+      if (!text) return;
+      const { copyWithFallback } = await import('../../lib/copy-feedback');
+      const label = copyBtn.querySelector('[data-t]');
+      const result = await copyWithFallback(
+        text,
+        navigator.clipboard?.writeText?.bind(navigator.clipboard),
+        (value) => {
+          const area = document.createElement('textarea');
+          area.value = value;
+          document.body.append(area);
+          area.select();
+          const ok = document.execCommand('copy');
+          area.remove();
+          return ok;
+        },
+      );
+      if (result === 'copied') {
+        copyBtn.setAttribute('data-state', 'copied');
+        if (label) label.textContent = 'Copied';
+        setTimeout(() => {
+          copyBtn.removeAttribute('data-state');
+          if (label) label.textContent = 'Copy';
+        }, 1500);
+      }
+    });
+
+    void uiState;
+  }
+</script>

@@ -1,0 +1,40 @@
+---
+/**
+ * Shared Translation result box: readonly output + Copy button.
+ * Used by both the Audio Decoder and the Text to Audio modes.
+ */
+interface Props {
+  /** Unique id prefix so multiple instances never collide. */
+  id: string;
+  label?: string;
+  /** data-* attribute the wiring script queries on the output element. */
+  outputAttr: string;
+  copyAttr: string;
+}
+
+const { id, label = 'Translation', outputAttr, copyAttr } = Astro.props;
+const iconCopy =
+  '<svg class="btn-icon" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="5.5" width="7" height="8" rx="1.25"></rect><path d="M3.5 10.5V3.75A1.25 1.25 0 0 1 4.75 2.5H10"></path></svg>';
+---
+
+<div class="grid gap-1">
+  <label class="text-sm font-semibold" for={`${id}-output`}>{label}</label>
+  <textarea
+    id={`${id}-output`}
+    class="h-20 w-full resize-none rounded-xl border border-line bg-canvas px-3 py-2 text-base text-ink"
+    readonly
+    spellcheck="false"
+    data-output={outputAttr}></textarea>
+  <div class="flex justify-end">
+    <button
+      class="btn btn-secondary data-[state=copied]:border-accent"
+      type="button"
+      data-copy={copyAttr}
+      data-label="Copy"
+      aria-label={`Copy ${label.toLowerCase()}`}
+    >
+      <Fragment set:html={iconCopy} />
+      <span data-t>Copy</span>
+    </button>
+  </div>
+</div>
