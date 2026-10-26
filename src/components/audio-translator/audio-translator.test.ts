@@ -48,6 +48,8 @@ describe('AudioDecoder component', () => {
     expect(html).toContain('type="file"');
     expect(html).toMatch(/accept="[^"]*\.wav[^"]*\.mp3[^"]*\.ogg/);
     expect(html).toContain('aria-label="Choose an audio file"');
+    expect(html).toContain('at-source-panels');
+    expect(html).toMatch(/data-panel="file"[^>]*inert|inert[^>]*data-panel="file"/);
   });
 
   it('configuration panel: all 7 controls labelled, AFT checked and Freq disabled', async () => {

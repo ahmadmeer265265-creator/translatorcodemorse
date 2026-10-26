@@ -56,6 +56,21 @@
   white-space: nowrap;
 }
 
+/* Keep both source panels in one grid cell. The hidden panel stays in flow
+   (visibility:hidden) so switching mic↔file does not move the spectrogram. */
+.at-source-panels {
+  display: grid;
+}
+
+.at-source-panels > [data-panel] {
+  grid-area: 1 / 1;
+}
+
+.at-source-panels > [data-panel].at-panel--inactive {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* File drop zone */
 .at-drop {
   display: grid;
@@ -104,4 +119,72 @@
   .at-drop {
     transition: none;
   }
+
+  [data-audio-translator] .toggle-ui,
+  [data-audio-translator] .toggle-ui::before {
+    transition: none !important;
+  }
+}
+
+/* Homepage toggle switch, scoped here because translator.css ties it to
+   [data-translator] and this page uses data-audio-translator. */
+[data-audio-translator] .toggle-row {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+[data-audio-translator] .toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+[data-audio-translator] .toggle-ui {
+  position: relative;
+  display: inline-block;
+  width: 2.75rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background-color: var(--track);
+  box-shadow: var(--inset);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+[data-audio-translator] .toggle-ui::before {
+  content: "";
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 9999px;
+  background-color: var(--surface);
+  box-shadow: 0 1px 2px rgba(28, 22, 18, 0.28), 0 0 0 1px rgba(28, 22, 18, 0.06);
+  transition: transform 0.15s ease;
+}
+
+[data-audio-translator] .toggle-input:checked + .toggle-ui {
+  background-color: var(--accent);
+  border-color: transparent;
+}
+
+[data-audio-translator] .toggle-input:checked + .toggle-ui::before {
+  transform: translateX(1.2rem);
+  background-color: var(--on-accent);
+}
+
+[data-audio-translator] .toggle-input:focus-visible + .toggle-ui {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }

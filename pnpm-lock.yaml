@@ -178,6 +178,9 @@ importers:
       astro:
         specifier: 7.3.5
         version: 7.3.5(@types/node@24.19.1)(jiti@2.7.0)
+      audiobox:
+        specifier: ^1.1.0
+        version: 1.1.0
       sharp:
         specifier: ^0.35.5
         version: 0.35.5(@types/node@24.19.1)
@@ -1377,6 +1380,10 @@ packages:
 
   atomically@2.1.1:
     resolution: {integrity: sha512-P4w9o2dqARji6P7MHprklbfiArZAWvo07yW7qs3pdljb3BWr12FIB7W+p0zJiuiVsUpRO0iZn1kFFcpPegg0tQ==}
+
+  audiobox@1.1.0:
+    resolution: {integrity: sha512-W+SxG7y/nm6Y0Pi04brs3c7vnrmKLpYT78GicRyCP3HNDzQts9jRnQap6Cpe7xHEVy06riU1V5iBJyQpvKR3IA==}
+    engines: {node: '>=20'}
 
   axe-core@4.13.0:
     resolution: {integrity: sha512-UzGt8zg7Ny8djbYMhxl2zuEevVa7r2gJjYY5Lwr1xM7+XU2nd6CkIWFTVcCIbAP63vSz71NaVyyuSk9lHKcy0A==}
@@ -3612,6 +3619,8 @@ snapshots:
     dependencies:
       stubborn-fs: 2.0.0
       when-exit: 2.1.5
+
+  audiobox@1.1.0: {}
 
   axe-core@4.13.0: {}
 

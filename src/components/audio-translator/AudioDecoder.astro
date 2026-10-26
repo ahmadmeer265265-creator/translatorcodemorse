@@ -31,8 +31,10 @@ const D = DECODER_CONFIG_DEFAULTS;
       </label>
     </div>
 
+    {/* Overlay both source panels so mic↔file does not shift the spectrogram. */}
+    <div class="at-source-panels">
     {/* Microphone panel */}
-    <div class="grid gap-2" data-panel="mic">
+    <div class="grid gap-2" data-panel="mic" aria-hidden="false">
       <div class="flex flex-wrap items-center gap-2">
         <button class="btn btn-primary" type="button" data-mic-toggle aria-pressed="false">
           Start listening
@@ -56,7 +58,7 @@ const D = DECODER_CONFIG_DEFAULTS;
     </div>
 
     {/* Audio File panel */}
-    <div class="grid gap-2" data-panel="file" hidden>
+    <div class="grid gap-2 at-panel--inactive" data-panel="file" inert aria-hidden="true">
       <button class="at-drop" type="button" data-drop>
         <span class="font-semibold">Drop an audio file here, or click to browse</span>
         <span class="text-sm text-muted">.wav, .mp3, or .ogg — decoding happens on your device</span>
@@ -69,6 +71,7 @@ const D = DECODER_CONFIG_DEFAULTS;
         <button class="btn btn-ghost" type="button" data-file-decode>Decode again</button>
       </div>
       <p class="hidden text-sm text-muted" data-file-error role="alert"></p>
+    </div>
     </div>
 
     {/* Decoder Configuration */}
@@ -207,8 +210,12 @@ const D = DECODER_CONFIG_DEFAULTS;
       radio.addEventListener('change', () => {
         if (!radio.checked) return;
         source = radio.value === 'file' ? 'file' : 'mic';
-        panels.mic.hidden = source !== 'mic';
-        panels.file.hidden = source !== 'file';
+        for (const key of ['mic', 'file'] as const) {
+          const on = key === source;
+          panels[key].classList.toggle('at-panel--inactive', !on);
+          panels[key].toggleAttribute('inert', !on);
+          panels[key].setAttribute('aria-hidden', on ? 'false' : 'true');
+        }
         stopAll();
       });
     });
