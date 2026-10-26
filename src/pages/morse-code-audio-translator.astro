@@ -38,7 +38,7 @@ const faqs = [
   {
     question: 'Which devices support this Morse code audio translator?',
     answer:
-      'File upload and decoding works in any modern browser on desktop or mobile. Live microphone decoding needs a secure connection (HTTPS) and a browser that supports microphone access — this works in all current major browsers, but may not work in older or restricted browsers, or over a non-HTTPS connection.',
+      'File upload and decoding works in any modern browser on desktop or mobile. Live microphone decoding needs a secure connection (HTTPS) and a browser that supports microphone access, this works in all current major browsers, but may not work in older or restricted browsers, or over a non-HTTPS connection.',
   },
   {
     question: 'Can I convert Morse Audio to text?',
@@ -100,7 +100,7 @@ const jsonLd = [
   </h1>
   <p class="mx-auto mt-1 max-w-2xl text-center text-sm text-muted sm:text-base">
     Upload an audio file or use your live microphone. The decoder finds the speed and the tone by itself and turns the
-    beeps into readable text — free, in your browser.
+    beeps into readable text, free, in your browser.
   </p>
 
   <div class="mt-2 sm:mt-4">
@@ -375,7 +375,7 @@ const jsonLd = [
         <li>
           <span class="font-semibold">Make Morse audio too.</span> Type a message, then play it or download the Morse
           code audio as a file. Before you do, you can set the speed, the Farnsworth spacing, and the pitch. This makes
-          it a handy Morse code sound generator — a text to Morse code audio generator for practice clips, puzzles, and
+          it a handy Morse code sound generator, a text to Morse code audio generator for practice clips, puzzles, and
           school projects. You can also
           upload the file you just made. The clip is good if you get your own message back. Many learners find a tone
           around 600 to 800 Hz which is easy to follow, and you can adjust the pitch to match. When you are satisfied
@@ -420,9 +420,9 @@ const jsonLd = [
           <tbody>
             <tr><td class={tdClass}>WPM Rate</td><td class={tdClass}>Overall speed of the Morse code</td></tr>
             <tr><td class={tdClass}>Farnsworth WPM</td><td class={tdClass}>Spacing speed, if different from WPM Rate</td></tr>
-            <tr><td class={tdClass}>Freq (Hz)</td><td class={tdClass}>The pitch of the tone — the most important setting to get right</td></tr>
-            <tr><td class={tdClass}>Filter Q</td><td class={tdClass}>How sharply the decoder focuses on the chosen frequency — leave at default unless there is interference</td></tr>
-            <tr><td class={tdClass}>Vol dB Min/Max</td><td class={tdClass}>Volume range the decoder listens to — defaults work for most audio</td></tr>
+            <tr><td class={tdClass}>Freq (Hz)</td><td class={tdClass}>The pitch of the tone, the most important setting to get right</td></tr>
+            <tr><td class={tdClass}>Filter Q</td><td class={tdClass}>How sharply the decoder focuses on the chosen frequency, leave at default unless there is interference</td></tr>
+            <tr><td class={tdClass}>Vol dB Min/Max</td><td class={tdClass}>Volume range the decoder listens to, defaults work for most audio</td></tr>
             <tr><td class={tdClass}>Automatic Frequency Tracking</td><td class={tdClass}>Detects the tone's pitch automatically when you don't know it</td></tr>
           </tbody>
         </table>
@@ -490,7 +490,7 @@ const jsonLd = [
         </table>
       </div>
       <p>
-        Practical note: Samuel Morse is said to have built this code around letter frequency, not randomness — the
+        Practical note: Samuel Morse is said to have built this code around letter frequency, not randomness, the
         story goes that he counted how many metal letters a printer kept in each tray slot and gave the most common
         ones, E and T, the shortest signals. That is why short, easy sounds map to the letters you will hear most. The
         <a class={link} href="/morse-code-alphabet/">Morse code alphabet chart</a> groups the same letters with
@@ -519,7 +519,7 @@ const jsonLd = [
         </table>
       </div>
       <p>
-        Practical note: 5 is all dots, 0 is all dashes — they sit at opposite ends of the pattern. Once you know this,
+        Practical note: 5 is all dots, 0 is all dashes, they sit at opposite ends of the pattern. Once you know this,
         you can often work out a number's code from its position instead of memorizing all ten separately. The
         <a class={link} href="/morse-code-numbers/">Morse code numbers chart</a> has the same pattern with audio tips.
       </p>
@@ -569,7 +569,7 @@ const jsonLd = [
             <tr>
               <td class={tdClass}><a class={link} href="/sos-in-morse-code/">SOS</a></td>
               <td class={`${tdClass} ${code}`}>... --- ...</td>
-              <td class={tdClass}>The universal starting rhythm — three short, three long, three short</td>
+              <td class={tdClass}>The universal starting rhythm, three short, three long, three short</td>
             </tr>
             <tr>
               <td class={tdClass}>PARIS</td>
@@ -589,14 +589,14 @@ const jsonLd = [
             <tr>
               <td class={tdClass}>HELLO WORLD</td>
               <td class={`${tdClass} ${code}`}>.... . .-.. .-.. --- / .-- --- .-. .-.. -..</td>
-              <td class={tdClass}>A full word-gap test — the 7-unit pause between the two words</td>
+              <td class={tdClass}>A full word-gap test, the 7-unit pause between the two words</td>
             </tr>
           </tbody>
         </table>
       </div>
       <p>
         How to use this table: Play or type SOS first, since its rhythm becomes your reference point for every other
-        letter's timing. Then try PARIS — if you can decode it correctly, your ear (or the tool) is reading the
+        letter's timing. Then try PARIS, if you can decode it correctly, your ear (or the tool) is reading the
         standard speed unit correctly. HELLO WORLD is the best last test because it checks whether word gaps are coming
         through clearly, which is where most decoding errors actually happen.
       </p>
