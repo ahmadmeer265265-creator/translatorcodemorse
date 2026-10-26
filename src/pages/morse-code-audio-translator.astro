@@ -1,10 +1,12 @@
 ---
+import { Image } from 'astro:assets';
 import RelatedPages from '../components/RelatedPages.astro';
 import AudioTranslator from '../components/audio-translator/AudioTranslator.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { lastUpdatedIso } from '../config/pages';
 import { absoluteUrl } from '../config/site';
 import { supportingJsonLd } from '../lib/schema';
+import featuredImage from '../assets/brand/morse-code-audio-translator.webp';
 
 const title = 'Morse Code Audio Translator: Decode Audio to Text';
 const description =
@@ -106,6 +108,19 @@ const jsonLd = [
   </div>
 
   <article class="mt-12 grid gap-10 rounded-2xl border border-line px-4 py-6 text-[1.0625rem] leading-7 sm:px-8 sm:py-8">
+    <figure class="overflow-hidden rounded-xl border border-line bg-surface">
+      <Image
+        src={featuredImage}
+        alt='Morse code audio translator decoding a Morse audio signal into the text "SOS", with a waveform, spectrogram and WAV, MP3, OGG and microphone input options'
+        width={1200}
+        height={630}
+        widths={[480, 768, 1200]}
+        sizes="(max-width: 640px) 100vw, 928px"
+        loading="lazy"
+        decoding="async"
+        class="block h-auto w-full"
+      />
+    </figure>
     <section class="cv grid gap-3">
       <h2 class={h2}>About Morse Code Audio Translator</h2>
       <p>
