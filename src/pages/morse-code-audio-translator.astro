@@ -1,0 +1,682 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import RelatedPages from '../components/RelatedPages.astro';
+import AudioTranslator from '../components/audio-translator/AudioTranslator.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedFor } from '../config/pages';
+
+// Stage 3: basic title/description so the page is not untitled (verify-dist
+// limits: title ≤60, description 140–155). Full SEO (final title, meta
+// description, JSON-LD, OG) is Stage 4. The visible H1 below is the exact
+// required wording and differs from this shorter <title>.
+const title = 'Morse Code Audio Translator: Decode Audio to Text';
+const description =
+  'Decode Morse code audio to text online. Upload a WAV, MP3, or OGG file or use your microphone — speed and tone detected automatically, free.';
+const lastUpdated = lastUpdatedFor('/morse-code-audio-translator/')!;
+
+const h2 = 'text-2xl font-semibold tracking-tight';
+const h3 = 'text-xl font-semibold tracking-tight';
+const tableClass = 'w-full border-collapse text-left text-base';
+const thClass = 'border-b border-line bg-surface px-3 py-2 font-semibold';
+const tdClass = 'border-b border-line px-3 py-2 align-top';
+const link = 'text-accent underline underline-offset-4';
+const code = 'font-mono tracking-wide';
+
+const faqs = [
+  {
+    question: 'Is Morse Code Audio Translator free?',
+    answer: "Yes, it's completely free, no sign-up or login required.",
+  },
+  {
+    question: 'Which audio format is best for Morse Code Audio Translation?',
+    answer:
+      'There are three supported audio formats: WAV (preferred, because it gives maximum accuracy), MP3, and OGG.',
+  },
+  {
+    question: 'Is Morse Code Audio downloadable?',
+    answer: 'Yes, you can download your generated audio by clicking the Download button.',
+  },
+  {
+    question: 'Which devices support this Morse code audio translator?',
+    answer:
+      'File upload and decoding works in any modern browser on desktop or mobile. Live microphone decoding needs a secure connection (HTTPS) and a browser that supports microphone access — this works in all current major browsers, but may not work in older or restricted browsers, or over a non-HTTPS connection.',
+  },
+  {
+    question: 'Can I convert Morse Audio to text?',
+    answer:
+      'Yes, the decoder reads the timing patterns, identifies dots (.) and dashes (-), and converts them into readable text, ready to review and copy.',
+  },
+  {
+    question: 'Can I decode morse code in real time?',
+    answer:
+      'Yes, click the Listen button and the decoder reads your microphone live, showing each letter as soon as its beeps finish. For a file, press Play and the text builds up alongside the audio.',
+  },
+  {
+    question: 'Does file length affect how long decoding takes?',
+    answer:
+      "Processing time depends mainly on the file's length and your device's speed. Most files decode in just a few seconds. Even an hour-long recording typically processes in well under a minute, since the tool only needs to scan for tone patterns, not play the audio in real time.",
+  },
+] as const;
+---
+
+<BaseLayout title={title} description={description} suffix={false}>
+  <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Morse Code Audio Translator' }]} />
+  <header class="mt-3 grid gap-3 text-center">
+    <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">
+      Morse Code Audio Translator: Decode Morse Audio to Text Online
+    </h1>
+    <p class="mx-auto max-w-2xl text-sm text-muted sm:text-base">
+      Upload an audio file or use your live microphone. The decoder finds the speed and the tone by itself and turns the
+      beeps into readable text — free, in your browser.
+    </p>
+    <p class="text-sm text-muted">Last updated: {lastUpdated}</p>
+  </header>
+
+  <div class="mt-2 sm:mt-4">
+    <AudioTranslator />
+  </div>
+
+  <article class="mt-12 grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <section class="cv grid gap-3">
+      <h2 class={h2}>About Morse Code Audio Translator</h2>
+      <p>
+        Morse Code Audio Translator listens sound &amp; transforms into readable text. You can upload an audio file
+        (.WAV or .MP3 or OGG file) or you can use your live microphone. The tool itself automatically evaluates &amp;
+        detects audio waveform &amp; measures the timing for you, so you do not need to enter the speed or the pitch.
+      </p>
+      <p>
+        Every Morse signal is made from one unit of time: the length of one dot. A dash (dahs) lasts three units. The
+        gap (quiet spaces that give Morse its structure) between letters is three dots (dits) long, and the gap between
+        words is seven. These ratios come from the ITU standard, ITU-R M.1677-1. They stay the same at any speed, in
+        this way the decoder can measure one dot in your audio and work out the rest. The best way to learn morse is by
+        ear, not by eye because it's all about timing.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>How to Use Morse Code Audio Translator?</h2>
+      <p>Using Morse Code Audio Translator is very easy &amp; simple. We'll guide you step by step below:</p>
+      <ol class="grid list-decimal gap-3 pl-5">
+        <li>
+          Upload your audio file in the form of (.WAV, .MP3 or OGG File) or you can use live Microphone by pressing the
+          Listen button.
+        </li>
+        <li>
+          Keep your audio background clear &amp; noiseless, either you are uploading audio files or using live
+          Microphone, so the tool can recognise your audio easily.
+        </li>
+        <li>
+          If you want to adjust the settings, try Minimum Volume, Maximum Volume, Volume threshold, Frequency (Hz),
+          WPM, Farnsworth WPM.
+        </li>
+      </ol>
+      <p>
+        Behind the scenes, the tool detects each tone, measures its length against the unit size, groups dots and
+        dashes into letters using the gaps, and reconstructs the full message in a few seconds.
+      </p>
+      <ol class="grid list-decimal gap-3 pl-5" start="4">
+        <li>Click on the Play button to listen to the Morse code audio or click on the Copy button to copy the decoded text.</li>
+      </ol>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>File or Mic: Which Should You Use?</h2>
+      <p>Both options work great, but use it according to your situation.</p>
+      <h3 class={h3}>File Upload</h3>
+      <p>
+        If you have an audio file in the form of saved recording, an old training file or a radio clip, then use a file
+        upload. Files are mostly clear, &amp; gives a clean signal to Morse code audio tools.
+      </p>
+      <h3 class={h3}>Mic</h3>
+      <p>
+        If sound is playing on a radio, phone or a speaker, &amp; you can't save it, use a microphone in that case.
+        Always keep your source near to the Microphone, because Microphone catches background noise also &amp; accuracy
+        will become low. You can also use a Microphone to test audio from another device. Your browser will ask for
+        microphone permission the first time you use it, you can allow access to start decoding live audio.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Why to Learn and Check Morse by Sound?</h2>
+      <p>
+        Morse code is a pattern of beeps and silences, and the chart is only a map. The code itself lives in sound.
+      </p>
+      <h3 class={h3}>Hear the letter, do not count it.</h3>
+      <p>
+        Take the letter L. On paper it is dot, dash, dot, dot. In sound it is one short rhythm: di-DAH-di-dit. Most of
+        the Morse teachers warn against learning from charts for this reason. A learner who turns dots into letters in
+        their head starts to fall behind as the speed rises. A learner who hears whole letters keeps up. The Koch and
+        Farnsworth methods both protect that skill. Letters are played fast, so they sound like letters. The pauses are
+        stretched, so you have some time to think.
+      </p>
+      <h3 class={h3}>Three times audio saves you work.</h3>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>
+          <span class="font-semibold">You are learning:</span> Train your ear with a few letters played as sound because
+          its better than a chart does.
+        </li>
+        <li>
+          <span class="font-semibold">You made a clip:</span> It might be a clue for a puzzle, an escape room, or a
+          school project. Playing it back is the fastest way to find out whether it sounds the way you meant.
+        </li>
+        <li>
+          <span class="font-semibold">You were given a recording:</span> Maybe you have saved a radio clip, an old
+          training file, or a puzzle which was sent by a friend. You need the text, not a lesson.
+        </li>
+      </ul>
+      <h3 class={h3}>Ear or decoder: which fits the job?</h3>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr>
+              <th class={thClass} scope="col">Job</th>
+              <th class={thClass} scope="col">By ear</th>
+              <th class={thClass} scope="col">With a decoder</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class={tdClass}>Learning the letters</td>
+              <td class={tdClass}>Best choice. It builds the skill you came for.</td>
+              <td class={tdClass}>Useful only to check your answers.</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>A short clip you made</td>
+              <td class={tdClass}>Quick, but easy to second-guess.</td>
+              <td class={tdClass}>Fast check. Hear it and read it.</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>A long recording</td>
+              <td class={tdClass}>Slow, tiring, easy to lose your place.</td>
+              <td class={tdClass}>Fast first draft.</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>Unknown speed or pitch</td>
+              <td class={tdClass}>You need time to get used to it.</td>
+              <td class={tdClass}>Detects both from the audio.</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>Noisy or hand-sent audio</td>
+              <td class={tdClass}>A trained ear can judge what was meant.</td>
+              <td class={tdClass}>May misread gaps. Check the result.</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>A puzzle with an answer</td>
+              <td class={tdClass}>Fun to solve yourself.</td>
+              <td class={tdClass}>Good for confirming your answer.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Advantages and disadvantages</h2>
+      <h3 class={h3}>Decoding by ear manually</h3>
+      <p>
+        <span class="font-semibold">Advantages:</span> Builds a lasting skill that works without any device. Handles
+        uneven, hand-sent code better once you are trained. Lets you understand the message, not just the timing.
+      </p>
+      <p>
+        <span class="font-semibold">Disadvantages:</span> Slow on long recordings. Tiring, and one missed beep can
+        throw off every letter after it. Takes real practice before it feels natural.
+      </p>
+      <h3 class={h3}>Using a decoder</h3>
+      <p>
+        <span class="font-semibold">Advantages:</span> Gives you a first draft in seconds. Finds the speed and the tone
+        on its own. Works from a file or your microphone, free, with no signup. Needs no Morse skill to use.
+      </p>
+      <p>
+        <span class="font-semibold">Disadvantages:</span> Can misread noisy, uneven, or overlapping signals. Measures
+        timing only. It does not understand the message. Does not teach you to hear Morse. Needs a clear tone to work
+        well.
+      </p>
+      <p>
+        <span class="font-semibold">The best way to use both:</span> Use the decoder for a first draft and your ear for
+        the final check.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Morse Code Timing Rules and Speed</h2>
+      <p>
+        Morse code is not only dots and dashes, the silence also matters a lot. Every length is a multiple of one unit,
+        and one unit is the length of a dot.
+      </p>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr>
+              <th class={thClass} scope="col">Part</th>
+              <th class={thClass} scope="col">Length</th>
+              <th class={thClass} scope="col">What you hear</th>
+              <th class={thClass} scope="col">At 12 WPM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>Dot</td><td class={tdClass}>1 unit</td><td class={tdClass}>A short beep</td><td class={tdClass}>100 ms</td></tr>
+            <tr><td class={tdClass}>Dash</td><td class={tdClass}>3 units</td><td class={tdClass}>A long beep</td><td class={tdClass}>300 ms</td></tr>
+            <tr><td class={tdClass}>Gap inside a letter</td><td class={tdClass}>1 unit</td><td class={tdClass}>A tiny pause</td><td class={tdClass}>100 ms</td></tr>
+            <tr><td class={tdClass}>Gap between letters</td><td class={tdClass}>3 units</td><td class={tdClass}>A short pause</td><td class={tdClass}>300 ms</td></tr>
+            <tr><td class={tdClass}>Gap between words</td><td class={tdClass}>7 units</td><td class={tdClass}>A long pause</td><td class={tdClass}>700 ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        These ratios come from the ITU standard, ITU-R M.1677-1. They stay the same at every speed. Only the size of
+        the unit changes.
+      </p>
+      <p><span class="font-semibold">What goes wrong when the spacing is off:</span></p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>
+          E then T is one dot, a pause, then one dash. If the pause is too short, it sounds like A (dot-dash).
+        </li>
+        <li>C is dash-dot-dash-dot. If the pause in the middle is stretched, it sounds like N N.</li>
+        <li>MEET AT NOON turns into MEETATNOON if the word gaps shrink.</li>
+      </ul>
+      <p>Hand-sent code does this often. Software has the same trouble.</p>
+      <p>
+        <span class="font-semibold">How speed is measured:</span> Speed is counted in words per minute (WPM). The
+        standard test word is PARIS, which takes exactly 50 units to send. To find the length of one unit, divide 1200
+        by the WPM. The answer is in milliseconds.
+      </p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>5 WPM: 240 ms</li>
+        <li>12 WPM: 100 ms</li>
+        <li>20 WPM: 60 ms</li>
+      </ul>
+      <p>Faster code is just the same pattern played with a shorter unit.</p>
+      <p>Note: These numbers translate into rough skill levels:</p>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr>
+              <th class={thClass} scope="col">Level</th>
+              <th class={thClass} scope="col">WPM</th>
+              <th class={thClass} scope="col">What it feels like</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>Beginner</td><td class={tdClass}>5–10</td><td class={tdClass}>Enough time to think; good for fundamentals</td></tr>
+            <tr><td class={tdClass}>Improving</td><td class={tdClass}>12–18</td><td class={tdClass}>Recognition starts replacing counting</td></tr>
+            <tr><td class={tdClass}>Comfortable</td><td class={tdClass}>20+</td><td class={tdClass}>Patterns heard as sounds, not dots and dashes</td></tr>
+            <tr><td class={tdClass}>Advanced</td><td class={tdClass}>30–40+</td><td class={tdClass}>Fast conversational CW for experienced operators</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Why Use This Free Morse Code Audio Decoder?</h2>
+      <p>
+        Most online tools don't give full functionality. Some convert text into beeps and stop there while others just
+        decode audio, but only if you already know the speed and the pitch. This online tool does both, and it works
+        without an account.
+      </p>
+      <ol class="grid list-decimal gap-3 pl-5">
+        <li>
+          <span class="font-semibold">Decode without knowing the settings.</span> Sometimes you get a clip having no
+          idea how fast it was sent or what pitch it uses. That is the normal case with a recording someone sent to
+          you. The tool detects the speed (WPM) and the tone frequency (Hz) from the audio itself. You can decode Morse
+          code audio online without setting anything first.
+        </li>
+        <li>
+          <span class="font-semibold">Use a file or your microphone.</span> If you have a saved clip, upload it. The
+          tool can decode Morse code from an MP3, WAV, or OGG file and give you the text, so it works as a simple Morse
+          code audio to text converter. If the sound is playing somewhere else, like a radio, a speaker, or another
+          phone, use the microphone instead. If you are not sure what to choose, the mic vs file section above covers
+          it.
+        </li>
+        <li>
+          <span class="font-semibold">Make Morse audio too.</span> Type a message, then play it or download the Morse
+          code audio as a file. Before you do, you can set the speed, the Farnsworth spacing, and the pitch. This makes
+          it a handy text to Morse code audio generator for practice clips, puzzles, and school projects. You can also
+          upload the file you just made. The clip is good if you get your own message back. Many learners find a tone
+          around 600 to 800 Hz which is easy to follow, and you can adjust the pitch to match. When you are satisfied
+          with a clip, download it as an MP3 to keep. The <a class={link} href="/">free online Morse code translator</a>
+          on the homepage does the same instant text-to-Morse conversion as you type.
+        </li>
+        <li>
+          <span class="font-semibold">Your audio stays in your browser.</span> Decoding only happens in your browser
+          locally, and your audio is never uploaded anywhere else. That matters most with the microphone, because it
+          hears the whole room, not only the beeps. There is nothing to sign up for or subscription needed and you have
+          nothing to pay. It runs directly in your browser, you don't need to install anything.
+        </li>
+      </ol>
+      <p>
+        <span class="font-semibold">Limitations:</span> Noisy recordings, uneven hand-sent code, and two signals at
+        once can produce mistakes. Treat the result as a first draft and check it against what you hear. The accuracy
+        limits section explains when to expect trouble.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Difference Between WPM vs Farnsworth</h2>
+      <p>WPM (words per minute) is the overall speed, explained in the timing section above.</p>
+      <p>
+        Farnsworth timing is great for beginners because they recognise letters at a real operating speed, it sends
+        each letter at full speed but stretches the gaps between letters and words. So the audio sounds slower overall,
+        even though each character is still sent at normal speed.
+      </p>
+      <p>
+        If your audio was made using Farnsworth mode, set the Farnsworth WPM to match the value it was generated with.
+        Otherwise, keep it equal to the WPM Rate.
+      </p>
+      <p>Other settings, explained simply:</p>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr>
+              <th class={thClass} scope="col">Setting</th>
+              <th class={thClass} scope="col">What it does</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>WPM Rate</td><td class={tdClass}>Overall speed of the Morse code</td></tr>
+            <tr><td class={tdClass}>Farnsworth WPM</td><td class={tdClass}>Spacing speed, if different from WPM Rate</td></tr>
+            <tr><td class={tdClass}>Freq (Hz)</td><td class={tdClass}>The pitch of the tone — the most important setting to get right</td></tr>
+            <tr><td class={tdClass}>Filter Q</td><td class={tdClass}>How sharply the decoder focuses on the chosen frequency — leave at default unless there is interference</td></tr>
+            <tr><td class={tdClass}>Vol dB Min/Max</td><td class={tdClass}>Volume range the decoder listens to — defaults work for most audio</td></tr>
+            <tr><td class={tdClass}>Automatic Frequency Tracking</td><td class={tdClass}>Detects the tone's pitch automatically when you don't know it</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Morse Code Alphabet (A to Z)</h2>
+      <p>
+        Letters are easier to learn when you group them by how many beeps they use, not alphabetically. Short letters
+        come first because they appear most often in real messages.
+      </p>
+      <h3 class={h3}>One element</h3>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr><th class={thClass} scope="col">Letter</th><th class={thClass} scope="col">Code</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>E</td><td class={`${tdClass} ${code}`}>.</td></tr>
+            <tr><td class={tdClass}>T</td><td class={`${tdClass} ${code}`}>-</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 class={h3}>Two elements</h3>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr><th class={thClass} scope="col">Letter</th><th class={thClass} scope="col">Code</th><th class={thClass} scope="col">Letter</th><th class={thClass} scope="col">Code</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>A</td><td class={`${tdClass} ${code}`}>.-</td><td class={tdClass}>N</td><td class={`${tdClass} ${code}`}>-.</td></tr>
+            <tr><td class={tdClass}>I</td><td class={`${tdClass} ${code}`}>..</td><td class={tdClass}>M</td><td class={`${tdClass} ${code}`}>--</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 class={h3}>Three elements</h3>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr><th class={thClass} scope="col">Letter</th><th class={thClass} scope="col">Code</th><th class={thClass} scope="col">Letter</th><th class={thClass} scope="col">Code</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>D</td><td class={`${tdClass} ${code}`}>-..</td><td class={tdClass}>S</td><td class={`${tdClass} ${code}`}>...</td></tr>
+            <tr><td class={tdClass}>G</td><td class={`${tdClass} ${code}`}>--.</td><td class={tdClass}>U</td><td class={`${tdClass} ${code}`}>..-</td></tr>
+            <tr><td class={tdClass}>K</td><td class={`${tdClass} ${code}`}>-.-</td><td class={tdClass}>W</td><td class={`${tdClass} ${code}`}>.--</td></tr>
+            <tr><td class={tdClass}>O</td><td class={`${tdClass} ${code}`}>---</td><td class={tdClass}>R</td><td class={`${tdClass} ${code}`}>.-.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 class={h3}>Four elements</h3>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr><th class={thClass} scope="col">Letter</th><th class={thClass} scope="col">Code</th><th class={thClass} scope="col">Letter</th><th class={thClass} scope="col">Code</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>B</td><td class={`${tdClass} ${code}`}>-...</td><td class={tdClass}>P</td><td class={`${tdClass} ${code}`}>.--.</td></tr>
+            <tr><td class={tdClass}>C</td><td class={`${tdClass} ${code}`}>-.-.</td><td class={tdClass}>Q</td><td class={`${tdClass} ${code}`}>--.-</td></tr>
+            <tr><td class={tdClass}>F</td><td class={`${tdClass} ${code}`}>..-.</td><td class={tdClass}>X</td><td class={`${tdClass} ${code}`}>-..-</td></tr>
+            <tr><td class={tdClass}>H</td><td class={`${tdClass} ${code}`}>....</td><td class={tdClass}>Y</td><td class={`${tdClass} ${code}`}>-.--</td></tr>
+            <tr><td class={tdClass}>J</td><td class={`${tdClass} ${code}`}>.---</td><td class={tdClass}>Z</td><td class={`${tdClass} ${code}`}>--..</td></tr>
+            <tr><td class={tdClass}>L</td><td class={`${tdClass} ${code}`}>.-..</td><td class={tdClass}>V</td><td class={`${tdClass} ${code}`}>...-</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Practical note: Samuel Morse is said to have built this code around letter frequency, not randomness — the
+        story goes that he counted how many metal letters a printer kept in each tray slot and gave the most common
+        ones, E and T, the shortest signals. That is why short, easy sounds map to the letters you will hear most. The
+        <a class={link} href="/morse-code-alphabet/">Morse code alphabet chart</a> groups the same letters with
+        listening practice tips.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Morse Code Numbers (0 to 9)</h2>
+      <p>
+        Numbers follow a clean pattern once you see it: as the digit rises from 1 to 5, dots are replaced by dashes one
+        at a time from the left. From 5 to 9, the pattern reverses.
+      </p>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr><th class={thClass} scope="col">Number</th><th class={thClass} scope="col">Code</th><th class={thClass} scope="col">Number</th><th class={thClass} scope="col">Code</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>1</td><td class={`${tdClass} ${code}`}>.----</td><td class={tdClass}>6</td><td class={`${tdClass} ${code}`}>-....</td></tr>
+            <tr><td class={tdClass}>2</td><td class={`${tdClass} ${code}`}>..---</td><td class={tdClass}>7</td><td class={`${tdClass} ${code}`}>--...</td></tr>
+            <tr><td class={tdClass}>3</td><td class={`${tdClass} ${code}`}>...--</td><td class={tdClass}>8</td><td class={`${tdClass} ${code}`}>---..</td></tr>
+            <tr><td class={tdClass}>4</td><td class={`${tdClass} ${code}`}>....-</td><td class={tdClass}>9</td><td class={`${tdClass} ${code}`}>----.</td></tr>
+            <tr><td class={tdClass}>5</td><td class={`${tdClass} ${code}`}>.....</td><td class={tdClass}>0</td><td class={`${tdClass} ${code}`}>-----</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Practical note: 5 is all dots, 0 is all dashes — they sit at opposite ends of the pattern. Once you know this,
+        you can often work out a number's code from its position instead of memorizing all ten separately. The
+        <a class={link} href="/morse-code-numbers/">Morse code numbers chart</a> has the same pattern with audio tips.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Common Punctuation in Morse Code</h2>
+      <p>
+        Punctuation codes are longer than letters because they are used less often. You rarely need more than the first
+        five in normal practice.
+      </p>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr><th class={thClass} scope="col">Symbol</th><th class={thClass} scope="col">Code</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>Period (.)</td><td class={`${tdClass} ${code}`}>.-.-.-</td></tr>
+            <tr><td class={tdClass}>Comma (,)</td><td class={`${tdClass} ${code}`}>--..--</td></tr>
+            <tr><td class={tdClass}>Question mark (?)</td><td class={`${tdClass} ${code}`}>..--..</td></tr>
+            <tr><td class={tdClass}>Hyphen (-)</td><td class={`${tdClass} ${code}`}>-....-</td></tr>
+            <tr><td class={tdClass}>Slash (/)</td><td class={`${tdClass} ${code}`}>-..-.</td></tr>
+            <tr><td class={tdClass}>Equals (=)</td><td class={`${tdClass} ${code}`}>-...-</td></tr>
+            <tr><td class={tdClass}>Apostrophe (')</td><td class={`${tdClass} ${code}`}>.----.</td></tr>
+            <tr><td class={tdClass}>Exclamation (!)</td><td class={`${tdClass} ${code}`}>-.-.--</td></tr>
+            <tr><td class={tdClass}>Colon (:)</td><td class={`${tdClass} ${code}`}>---...</td></tr>
+            <tr><td class={tdClass}>Semicolon (;)</td><td class={`${tdClass} ${code}`}>-.-.-.</td></tr>
+            <tr><td class={tdClass}>Parentheses ( )</td><td class={`${tdClass} ${code}`}>-.--.-</td></tr>
+            <tr><td class={tdClass}>Plus (+)</td><td class={`${tdClass} ${code}`}>.-.-.</td></tr>
+            <tr><td class={tdClass}>At (@)</td><td class={`${tdClass} ${code}`}>.--.-.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Morse Audio Examples You Can Decode Right Now</h2>
+      <p>
+        These examples we chose for a reason, not randomly and each one tests a different skill you will need later.
+      </p>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr><th class={thClass} scope="col">Text</th><th class={thClass} scope="col">Morse</th><th class={thClass} scope="col">What it tests</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class={tdClass}><a class={link} href="/sos-in-morse-code/">SOS</a></td>
+              <td class={`${tdClass} ${code}`}>... --- ...</td>
+              <td class={tdClass}>The universal starting rhythm — three short, three long, three short</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>PARIS</td>
+              <td class={`${tdClass} ${code}`}>.--. .- .-. .. ...</td>
+              <td class={tdClass}>The standard WPM test word, worth learning early</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>OK</td>
+              <td class={`${tdClass} ${code}`}>--- -.-</td>
+              <td class={tdClass}>Two letters with very different lengths side by side</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>73</td>
+              <td class={`${tdClass} ${code}`}>--... ...--</td>
+              <td class={tdClass}>Mixed-length numbers, common in radio sign-off</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>HELLO WORLD</td>
+              <td class={`${tdClass} ${code}`}>.... . .-.. .-.. --- / .-- --- .-. .-.. -..</td>
+              <td class={tdClass}>A full word-gap test — the 7-unit pause between the two words</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        How to use this table: Play or type SOS first, since its rhythm becomes your reference point for every other
+        letter's timing. Then try PARIS — if you can decode it correctly, your ear (or the tool) is reading the
+        standard speed unit correctly. HELLO WORLD is the best last test because it checks whether word gaps are coming
+        through clearly, which is where most decoding errors actually happen.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Who Can Use Morse Code Audio Translator?</h2>
+      <p>Morse Code Audio Decoder works for different kinds of people, not just for radio operators.</p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>
+          <span class="font-semibold">Amateur radio operators.</span> CW is still a core part of amateur radio, and many
+          operators copy code by ear during contests and regular contacts. When a signal is weak or sent faster than
+          usual, this tool gives a quick second opinion. Organisations such as the RSGB in the UK and the ARRL in the
+          US continue to support CW training, so the skill remains active across the amateur radio community.
+        </li>
+        <li>
+          <span class="font-semibold">Students and self-learners.</span> If you are training your ear, you can use the
+          decoder to check what you actually heard instead of guessing or waiting for someone else to confirm it.
+        </li>
+        <li>
+          <span class="font-semibold">Teachers and instructors.</span> Most classroom demos need extra equipment or
+          setup time. This one runs in a browser tab, so you can decode a signal in front of students with nothing to
+          install.
+        </li>
+        <li>
+          <span class="font-semibold">Archivists and researchers.</span> Old recordings, wartime broadcasts, ship logs,
+          personal tapes, sometimes include Morse segments that are too fast or too noisy to follow by ear alone.
+          Running them through the tool gives you a starting transcript.
+        </li>
+        <li>
+          <span class="font-semibold">Hobbyists and makers.</span> People building Arduino or signal based projects
+          often use Morse to test timing and tone output. Feeding that output back into the decoder confirms the signal
+          is clean.
+        </li>
+        <li>
+          <span class="font-semibold">Puzzle and escape room designers.</span> A clue is only good if people can
+          actually decode it. Testing your finished audio clue here first catches timing mistakes before players get
+          stuck.
+        </li>
+      </ul>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Tips for Learning and Decoding Morse by Ear</h2>
+      <p>Here are the few habits that make learning faster and decoding more easily.</p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>
+          <span class="font-semibold">Learn the sound, not the symbol:</span> Hear each letter as one rhythm, not as
+          counted dots and dashes. A is "di-DAH," not "dot then dash." Counting in your head is what makes people fall
+          behind as speed increases.
+        </li>
+        <li>
+          <span class="font-semibold">Start with the most common letters:</span> E, T, A, O, I, N, S, H, and R appear
+          most often in real messages, so learning these first gives you the fastest return.
+        </li>
+        <li>
+          <span class="font-semibold">Practise daily in short sessions:</span> Ten to fifteen minutes a day works
+          better than one long, tiring session. Consistency builds the skill faster than duration does.
+        </li>
+        <li>
+          <span class="font-semibold">Use real words, not random letters:</span> Your name, a callsign, or short words
+          like THE and AND give your ear something meaningful to hold onto, rather than abstract noise.
+        </li>
+      </ul>
+      <h3 class={h3}>A Simple Two-Week Starting Plan</h3>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr><th class={thClass} scope="col">Days</th><th class={thClass} scope="col">Focus</th><th class={thClass} scope="col">Practice words</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>1–3</td><td class={tdClass}>E, T, A, N</td><td class={tdClass}>TEN, ANT</td></tr>
+            <tr><td class={tdClass}>4–7</td><td class={tdClass}>I, M, S, O</td><td class={tdClass}>IS, SO, AIM, MOON</td></tr>
+            <tr><td class={tdClass}>8–10</td><td class={tdClass}>R, H, D, K</td><td class={tdClass}>HER, HARD, DARK</td></tr>
+            <tr><td class={tdClass}>11–14</td><td class={tdClass}>Numbers 1–5</td><td class={tdClass}>Simple number mixes</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Each stage builds on the last, so by day 14 you are reading short real words, not just single letters.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Getting the Cleanest Audio for Decoding</h2>
+      <p>
+        The accuracy of the result totally depends upon the cleanliness of the sound. The decoder reads the tone gaps
+        &amp; extra noise can confuse it, so always keep your tone clear &amp; don't mix extra noise with it. Mono works
+        better than stereo, since the tool only needs one steady channel. If you know the frequency and speed, put them
+        manually; if not, auto-detect will work it out for you.
+      </p>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr><th class={thClass} scope="col">Format</th><th class={thClass} scope="col">Accuracy</th><th class={thClass} scope="col">Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class={tdClass}>WAV</td><td class={tdClass}>Best</td><td class={tdClass}>Keeps full signal detail</td></tr>
+            <tr><td class={tdClass}>OGG</td><td class={tdClass}>Good</td><td class={tdClass}>Works well with clean recordings</td></tr>
+            <tr><td class={tdClass}>MP3</td><td class={tdClass}>Good</td><td class={tdClass}>Compression can affect accuracy slightly</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Frequently Asked Questions</h2>
+      <div class="grid gap-4">
+        {
+          faqs.map((item) => (
+            <details class="rounded-xl border border-line bg-surface px-3 py-2">
+              <summary class="flex min-h-11 cursor-pointer items-center font-semibold">{item.question}</summary>
+              <p class="pb-2 text-muted">{item.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+    <RelatedPages
+      links={[
+        { href: '/morse-code-alphabet/', label: 'Morse code alphabet chart' },
+        { href: '/morse-code-numbers/', label: 'Morse code numbers 0 to 9' },
+        { href: '/sos-in-morse-code/', label: 'SOS in Morse code' },
+        { href: '/', label: 'Text to Morse code translator' },
+      ]}
+    />
+  </article>
+</BaseLayout>

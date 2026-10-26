@@ -5,11 +5,12 @@
  */
 export const pageMeta = [
   { path: '/', lastUpdated: '2026-10-21' },
+  { path: '/morse-code-audio-translator/', lastUpdated: '2026-10-26' },
   { path: '/morse-code-alphabet/', lastUpdated: '2026-10-07' },
   { path: '/morse-code-numbers/', lastUpdated: '2026-10-07' },
   { path: '/sos-in-morse-code/', lastUpdated: '2026-10-07' },
   { path: '/about/', lastUpdated: '2026-10-19' },
-  { path: '/privacy/', lastUpdated: '2026-10-21' },
+  { path: '/privacy/', lastUpdated: '2026-10-26' },
   { path: '/terms/', lastUpdated: '2026-10-19' },
   { path: '/accessibility/', lastUpdated: '2026-10-19' },
   { path: '/contact/', lastUpdated: '2026-10-19' },
