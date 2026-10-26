@@ -98,14 +98,38 @@
 }
 
 /* Spectrogram strip: fixed dark panel in both themes (same approach as the
-   demo-video facade), so the amber heat palette reads everywhere. */
+   demo-video facade), so the amber heat palette reads everywhere. Height is
+   reserved so swapping source modes cannot shift layout (Stage 5). */
 .at-spectrogram {
   display: block;
   width: 100%;
-  height: 96px;
+  height: 64px;
   border: 1px solid var(--line);
   border-radius: 0.75rem;
   background: #14110e;
+}
+
+/* Mic input level — stacked under Start listening, homepage Listen-meter
+   language (full-width track, inset, accent fill) plus a visible label. */
+.at-level {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.at-level__track {
+  height: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: var(--canvas);
+  box-shadow: var(--inset);
+}
+
+.at-level__bar {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--accent);
 }
 
 /* Live decode readout: building text + current letter run. */
