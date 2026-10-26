@@ -157,6 +157,10 @@ if (jsFiles.length === 0) fail('No .js files in dist/_astro');
 
 for (const file of jsFiles) {
   await parseModule(file);
+  const code = fs.readFileSync(file, 'utf8');
+  if (/\bawait [$\w]+\(async\(\)=>\{let\{[^}]+\}=await import\(/.test(code)) {
+    fail(`${path.relative(root, file)} still has a Vite preload wrapper around a dynamic import`);
+  }
 }
 
 const homeHtml = fs.existsSync(homepage) ? fs.readFileSync(homepage, 'utf8') : '';

@@ -36,25 +36,35 @@ const indexablePaths = new Set(pageMeta.map((page) => page.path));
 const stripPreloadHelper: Plugin = {
   name: 'strip-preload-helper',
   apply: 'build',
-  generateBundle(_options, bundle) {
-    const helperFiles = Object.keys(bundle).filter((file) => file.includes('preload-helper'));
-    if (helperFiles.length === 0) return;
-    for (const item of Object.values(bundle)) {
-      if (item.type !== 'chunk') continue;
-      // e(()=>import(`./x.js`),[]) / e(()=>import(`./x.js`),__vite__mapDeps([0,1]))
-      //   → import(`./x.js`)   (backtick/quote forms, optional .then() chain,
-      //   deps array or __vite__mapDeps second arg dropped)
-      item.code = item.code.replace(
-        /[$\w]+\(\(\)=>(import\(`[^`]+`\)(?:\.then\([^)]*\))?|import\("[^"]+"\)(?:\.then\([^)]*\))?|import\('[^']+'\)(?:\.then\([^)]*\))?)(?:,(?:__vite__mapDeps\([^)]*\)|[^()])*)\)/g,
-        '$1',
-      );
-      // import{t as e}from"./preload-helper.HASH.js"; (alias now unused) → gone
-      item.code = item.code.replace(
-        /import\s*\{[^}]*\}\s*from\s*["']\.\/[^"']*preload-helper[^"']*["'];?/g,
-        '',
-      );
-    }
-    for (const file of helperFiles) delete bundle[file];
+  enforce: 'post',
+  generateBundle: {
+    order: 'post',
+    handler(_options, bundle) {
+      const helperFiles = Object.keys(bundle).filter((file) => file.includes('preload-helper'));
+      for (const item of Object.values(bundle)) {
+        if (item.type !== 'chunk') continue;
+        // e(()=>import(`./x.js`),[]) / e(()=>import(`./x.js`),__vite__mapDeps([0,1]))
+        //   → import(`./x.js`)   (backtick/quote forms, optional .then() chain,
+        //   deps array or __vite__mapDeps second arg dropped)
+        item.code = item.code.replace(
+          /[$\w]+\(\(\)=>(import\(`[^`]+`\)(?:\.then\([^)]*\))?|import\("[^"]+"\)(?:\.then\([^)]*\))?|import\('[^']+'\)(?:\.then\([^)]*\))?)(?:,(?:__vite__mapDeps\([^)]*\)|[^()])*)\)/g,
+          '$1',
+        );
+        // ?at dynamic imports often emit a re-export wrapper instead of ()=>import():
+        // e(async()=>{let{foo:e}=await import(`./x.js`);return{foo:e}},[])
+        // or the same with whitespace / const / optional semicolon before minify.
+        item.code = item.code.replace(
+          /[$\w]+\(\s*async\s*\(\s*\)\s*=>\s*\{\s*(?:let|const|var)\s*\{[^}]+\}=\s*await\s+(import\([^)]+\))\s*;\s*return\s*\{[^}]+\}\s*;?\s*\}\s*(?:,\s*(?:__vite__mapDeps\([^)]*\)|\[[^\]]*\]))?\s*\)/g,
+          '$1',
+        );
+        // import{t as e}from"./preload-helper.HASH.js"; (alias now unused) → gone
+        item.code = item.code.replace(
+          /import\s*\{[^}]*\}\s*from\s*["']\.\/[^"']*preload-helper[^"']*["'];?/g,
+          '',
+        );
+      }
+      for (const file of helperFiles) delete bundle[file];
+    },
   },
 };
 

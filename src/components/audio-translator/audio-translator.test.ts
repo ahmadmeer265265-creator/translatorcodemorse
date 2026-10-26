@@ -121,6 +121,8 @@ describe('ResultBox component', () => {
     expect(html).toContain('id="x-output"');
     expect(html).toContain('readonly');
     expect(html).toContain('data-output="decode"');
+    expect(html).toContain('data-copy="decode"');
+    expect(html).toContain('data-flash="Copied"');
     expect(html).toContain('aria-label="Copy translation"');
     expect(html).toContain('type="button"');
   });

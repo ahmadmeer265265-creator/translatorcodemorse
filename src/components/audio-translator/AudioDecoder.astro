@@ -141,9 +141,12 @@ const D = DECODER_CONFIG_DEFAULTS;
     type DecoderUiState,
     DECODER_CONFIG_DEFAULTS,
   } from '../../lib/audio-decoder-ui';
+  // ?at: cloned instance so homepage copy-feedback stays inlined in its chunk.
+  import { bindOutputCopy } from '../../lib/audio-copy?at';
   const root = document.querySelector('[data-audio-decoder]');
   if (root && !root.hasAttribute('data-bound')) {
     root.setAttribute('data-bound', '1');
+    bindOutputCopy(root);
 
     const $ = <T extends Element = HTMLElement>(sel: string) => root.querySelector(sel) as T;
     const panels = { mic: $('[data-panel="mic"]'), file: $('[data-panel="file"]') };
@@ -162,7 +165,6 @@ const D = DECODER_CONFIG_DEFAULTS;
     const statusEl = $('[data-status]');
     const marksEl = $('[data-marks]');
     const output = $<HTMLTextAreaElement>('[data-output="decode"]');
-    const copyBtn = $<HTMLButtonElement>('[data-copy="decode"]');
     const canvas = $<HTMLCanvasElement>('[data-spectrogram]');
     const aft = $<HTMLInputElement>('[data-cfg-aft]');
     const freqInput = $<HTMLInputElement>('[data-cfg-freq]');
@@ -485,36 +487,6 @@ const D = DECODER_CONFIG_DEFAULTS;
     filePlay.addEventListener('click', () => void playFile());
     fileStop.addEventListener('click', () => stopFilePlayback?.());
     fileDecodeAgain.addEventListener('click', () => void runFileDecode());
-
-    copyBtn.addEventListener('click', async () => {
-      const text = output.value;
-      if (!text) return;
-      // ?at: separate module instance (same source file, no duplication in
-      // src) so the homepage copy stays inlined in its own chunk.
-      const { copyWithFallback } = await import('../../lib/copy-feedback?at');
-      const label = copyBtn.querySelector('[data-t]');
-      const result = await copyWithFallback(
-        text,
-        navigator.clipboard?.writeText?.bind(navigator.clipboard),
-        (value) => {
-          const area = document.createElement('textarea');
-          area.value = value;
-          document.body.append(area);
-          area.select();
-          const ok = document.execCommand('copy');
-          area.remove();
-          return ok;
-        },
-      );
-      if (result === 'copied') {
-        copyBtn.setAttribute('data-state', 'copied');
-        if (label) label.textContent = 'Copied';
-        setTimeout(() => {
-          copyBtn.removeAttribute('data-state');
-          if (label) label.textContent = 'Copy';
-        }, 1500);
-      }
-    });
 
     void uiState;
   }

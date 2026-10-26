@@ -93,21 +93,19 @@ const jsonLd = [
 ---
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
-  <header class="grid gap-3 text-center">
-    <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">
-      Morse Code Audio Translator: Decode Morse Audio to Text Online
-    </h1>
-    <p class="mx-auto max-w-2xl text-sm text-muted sm:text-base">
-      Upload an audio file or use your live microphone. The decoder finds the speed and the tone by itself and turns the
-      beeps into readable text — free, in your browser.
-    </p>
-  </header>
+  <h1 class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">
+    Morse Code Audio Translator: Decode Morse Audio to Text Online
+  </h1>
+  <p class="mx-auto mt-1 max-w-2xl text-center text-sm text-muted sm:text-base">
+    Upload an audio file or use your live microphone. The decoder finds the speed and the tone by itself and turns the
+    beeps into readable text — free, in your browser.
+  </p>
 
   <div class="mt-2 sm:mt-4">
     <AudioTranslator />
   </div>
 
-  <article class="mt-12 grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+  <article class="mt-12 grid gap-10 rounded-2xl border border-line px-4 py-6 text-[1.0625rem] leading-7 sm:px-8 sm:py-8">
     <section class="cv grid gap-3">
       <h2 class={h2}>About Morse Code Audio Translator</h2>
       <p>
@@ -692,10 +690,10 @@ const jsonLd = [
       <div class="grid gap-4">
         {
           faqs.map((item) => (
-            <details class="rounded-xl border border-line bg-surface px-3 py-2">
-              <summary class="flex min-h-11 cursor-pointer items-center font-semibold">{item.question}</summary>
-              <p class="pb-2 text-muted">{item.answer}</p>
-            </details>
+            <div class="grid gap-2">
+              <h3 class={h3}>{item.question}</h3>
+              <p class="text-muted">{item.answer}</p>
+            </div>
           ))
         }
       </div>

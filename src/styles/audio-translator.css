@@ -7,6 +7,10 @@
   box-shadow: var(--shadow), 0 0 0 1px rgba(180, 83, 9, 0.04);
 }
 
+[data-audio-decoder] button[data-state='copied'] {
+  border-color: var(--accent);
+}
+
 /* Source segmented control (Microphone / Audio File) — same visual language
    as the translator's mode switch, but with an even 2-way split. */
 .at-seg {
