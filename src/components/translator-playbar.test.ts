@@ -29,9 +29,26 @@ describe('homepage Translator playbar', () => {
     expect(html.slice(flashAt, flashAt + 280)).toContain('aria-pressed="true"');
   });
 
-  it('captions the Repeat and Flash controls with actual behavior', async () => {
+  it('puts a one-word visible caption under Repeat and Flash with the full sentence as the accessible name', async () => {
     const html = await renderTranslator();
-    expect(html).toContain('Repeat loops the message until you stop it.');
-    expect(html).toContain('Flash pulses this dock with each beep.');
+    expect(html).not.toContain('playbar-captions');
+
+    const repeatBtnAt = html.indexOf('id="translator-repeat"');
+    const repeatCapAt = html.indexOf('data-repeat-caption');
+    expect(repeatBtnAt).toBeGreaterThan(-1);
+    expect(repeatCapAt).toBeGreaterThan(repeatBtnAt);
+    expect(html.slice(repeatBtnAt, repeatCapAt)).toContain(
+      'aria-label="Repeat loops the message until you stop it."',
+    );
+    expect(html.slice(repeatCapAt, repeatCapAt + 400)).toMatch(/>Loop</);
+
+    const flashBtnAt = html.indexOf('data-flash-toggle');
+    const flashCapAt = html.indexOf('data-flash-caption');
+    expect(flashBtnAt).toBeGreaterThan(-1);
+    expect(flashCapAt).toBeGreaterThan(flashBtnAt);
+    expect(html.slice(flashBtnAt, flashCapAt)).toContain(
+      'aria-label="Flash pulses this dock with each beep."',
+    );
+    expect(html.slice(flashCapAt, flashCapAt + 400)).toMatch(/>Flash</);
   });
 });

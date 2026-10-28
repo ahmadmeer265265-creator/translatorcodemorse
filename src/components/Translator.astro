@@ -260,16 +260,19 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
             >
               <Fragment set:html={icon('i-pause', 'dock-btn-icon')} />
             </button>
-            <button
-              id="translator-repeat"
-              class="dock-btn"
-              type="button"
-              data-repeat
-              aria-pressed="false"
-              aria-label="Repeat"
-            >
-              <Fragment set:html={icon('i-repeat', 'dock-btn-icon')} />
-            </button>
+            <span class="dock-control">
+              <button
+                id="translator-repeat"
+                class="dock-btn"
+                type="button"
+                data-repeat
+                aria-pressed="false"
+                aria-label="Repeat loops the message until you stop it."
+              >
+                <Fragment set:html={icon('i-repeat', 'dock-btn-icon')} />
+              </button>
+              <span class="dock-btn-caption" data-repeat-caption aria-hidden="true">Loop</span>
+            </span>
             <button
               id="translator-wav"
               class="dock-btn"
@@ -281,23 +284,22 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
             >
               <Fragment set:html={icon('i-download', 'dock-btn-icon')} />
             </button>
-            <button
-              id="translator-flash"
-              class="dock-btn"
-              type="button"
-              data-flash-toggle
-              aria-pressed="true"
-              aria-label="Flash: blink the playback dock in time with the Morse signal"
-              disabled
-            >
-              <Fragment set:html={icon('i-flash', 'dock-btn-icon')} />
-            </button>
+            <span class="dock-control">
+              <button
+                id="translator-flash"
+                class="dock-btn"
+                type="button"
+                data-flash-toggle
+                aria-pressed="true"
+                aria-label="Flash pulses this dock with each beep."
+                disabled
+              >
+                <Fragment set:html={icon('i-flash', 'dock-btn-icon')} />
+              </button>
+              <span class="dock-btn-caption" data-flash-caption aria-hidden="true">Flash</span>
+            </span>
           </div>
         </div>
-        <p class="playbar-captions">
-          <span data-repeat-caption>Repeat loops the message until you stop it.</span>
-          <span data-flash-caption>Flash pulses this dock with each beep.</span>
-        </p>
         <p class="playbar-flash-note hidden" data-flash-reduced>
           Flash is off because your system asks to reduce motion.
         </p>

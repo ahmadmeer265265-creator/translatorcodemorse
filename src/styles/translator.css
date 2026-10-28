@@ -366,11 +366,10 @@
     var(--inset);
 }
 
-/* Responsive rows: row 1 = Play + progress (primary), row 2 = secondary transport
-   icons. Wrapping (never scrolling) so the dock never overflows horizontally. */
+/* Single transport row: Play + progress + icon controls stay on one line. */
 [data-translator] .playbar-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 0.4rem 0.5rem;
   min-width: 0;
@@ -470,20 +469,30 @@
   color: var(--muted);
 }
 
-/* Compact icon transport buttons inside the dock (44px touch targets).
-   On narrow widths the group wraps onto its own row and stretches across. */
+/* Compact icon transport buttons inside the dock (44px touch targets). */
 [data-translator] .playbar-actions {
   display: flex;
-  flex: 0 1 auto;
-  align-items: center;
+  flex: 0 0 auto;
+  align-items: flex-start;
   gap: 0.3rem;
 }
 
-@media (max-width: 430px) {
-  [data-translator] .playbar-actions {
-    flex: 1 1 100%;
-    justify-content: flex-end;
-  }
+[data-translator] .dock-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  flex-shrink: 0;
+  width: 2.75rem;
+}
+
+[data-translator] .dock-btn-caption {
+  margin: 0;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
 }
 
 [data-translator] .dock-btn {
@@ -499,6 +508,26 @@
   color: var(--ink);
   box-shadow: var(--inset);
   transition: border-color 0.12s ease, box-shadow 0.12s ease, color 0.12s ease;
+}
+
+@media (max-width: 430px) {
+  [data-translator] .playbar-row {
+    gap: 0.3rem;
+  }
+
+  [data-translator] .play-btn {
+    padding: 0 0.65rem 0 0.55rem;
+    gap: 0.25rem;
+  }
+
+  [data-translator] .playbar-meter {
+    flex: 1 1 0;
+    min-width: 2.5rem;
+  }
+
+  [data-translator] .playbar-actions {
+    gap: 0.2rem;
+  }
 }
 
 [data-translator] .dock-btn:hover:not(:disabled) {
@@ -523,17 +552,6 @@
   width: 1.05rem;
   height: 1.05rem;
   flex-shrink: 0;
-}
-
-[data-translator] .playbar-captions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.15rem 0.3rem;
-  margin: 0.3rem 0 0;
-  font-size: 0.7rem;
-  line-height: 1.2;
-  color: var(--muted);
 }
 
 [data-translator] .playbar-flash-note {
