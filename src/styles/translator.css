@@ -525,6 +525,17 @@
   flex-shrink: 0;
 }
 
+[data-translator] .playbar-captions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.15rem 0.3rem;
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
 [data-translator] .playbar-flash-note {
   margin: 0.3rem 0 0;
   font-size: 0.7rem;

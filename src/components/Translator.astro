@@ -261,16 +261,6 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
               <Fragment set:html={icon('i-pause', 'dock-btn-icon')} />
             </button>
             <button
-              id="translator-stop"
-              class="dock-btn"
-              type="button"
-              data-stop
-              disabled
-              aria-label="Stop"
-            >
-              <Fragment set:html={icon('i-stop', 'dock-btn-icon')} />
-            </button>
-            <button
               id="translator-repeat"
               class="dock-btn"
               type="button"
@@ -296,7 +286,7 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
               class="dock-btn"
               type="button"
               data-flash-toggle
-              aria-pressed="false"
+              aria-pressed="true"
               aria-label="Flash: blink the playback dock in time with the Morse signal"
               disabled
             >
@@ -304,6 +294,10 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
             </button>
           </div>
         </div>
+        <p class="playbar-captions">
+          <span data-repeat-caption>Repeat loops the message until you stop it.</span>
+          <span data-flash-caption>Flash pulses this dock with each beep.</span>
+        </p>
         <p class="playbar-flash-note hidden" data-flash-reduced>
           Flash is off because your system asks to reduce motion.
         </p>
@@ -658,7 +652,6 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     const waveformSelect = root.querySelector('[data-waveform]');
     const waveformNote = root.querySelector('[data-waveform-note]');
     const pauseButton = root.querySelector('#translator-pause');
-    const stopButton = root.querySelector('#translator-stop');
     const repeatButton = root.querySelector('#translator-repeat');
     const flashToggleButton = root.querySelector('[data-flash-toggle]');
     const playbarEl = root.querySelector('[data-playbar]');
@@ -945,7 +938,11 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       const buttons = transportButtons(playbackState, canPlay);
       if (playButton instanceof HTMLButtonElement) {
         playButton.disabled = buttons.playDisabled;
-        playButton.dataset.playing = playbackState === 'playing' ? 'true' : 'false';
+        playButton.dataset.playing = buttons.playPlaying ? 'true' : 'false';
+        playButton.setAttribute('aria-label', buttons.playLabel);
+        const playLabel = playButton.querySelector('.play-btn-label');
+        if (playLabel) playLabel.textContent = buttons.playLabel;
+        playButton.querySelector('use')?.setAttribute('href', buttons.playIcon);
       }
       if (playbar instanceof HTMLElement) {
         playbar.dataset.active = playbackState === 'playing' || playbackState === 'paused' ? 'true' : 'false';
@@ -956,7 +953,6 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
         pauseButton.setAttribute('aria-label', resuming ? 'Resume' : 'Pause');
         pauseButton.dataset.label = buttons.pauseLabel;
       }
-      if (stopButton instanceof HTMLButtonElement) stopButton.disabled = buttons.stopDisabled;
       if (wavButton instanceof HTMLButtonElement && !preparingWav) wavButton.disabled = buttons.wavDisabled;
     };
 
@@ -1095,7 +1091,7 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       applyHide(false);
     });
 
-    for (const button of [playButton, wavButton, pauseButton, stopButton, repeatButton, flashToggleButton]) {
+    for (const button of [playButton, wavButton, pauseButton, repeatButton, flashToggleButton]) {
       if (!(button instanceof HTMLButtonElement)) continue;
       button.addEventListener('pointerenter', prime);
       button.addEventListener('focus', prime);
@@ -1104,6 +1100,15 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
     playButton?.addEventListener('click', () => {
       allowAutoplay = false;
       autoplay.cancel();
+      if (playbackState === 'playing' || playbackState === 'paused') {
+        void loadPlayer().then((mod) => {
+          mod.stopPlayback(true);
+          playbackState = 'idle';
+          clearHighlight();
+          refreshTransport();
+        });
+        return;
+      }
       const ctx = openAudio();
       const token = ++audioToken;
       void loadPlayer().then((mod) => {
@@ -1117,14 +1122,6 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       void loadPlayer().then((mod) => {
         if (playbackState === 'paused') mod.resumePlayback();
         else mod.pausePlayback();
-        refreshTransport();
-      });
-    });
-    stopButton?.addEventListener('click', () => {
-      void loadPlayer().then((mod) => {
-        mod.stopPlayback(true);
-        playbackState = 'idle';
-        clearHighlight();
         refreshTransport();
       });
     });
