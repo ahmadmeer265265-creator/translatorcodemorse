@@ -39,8 +39,25 @@ describe('homepage Translator playbar', () => {
     expect(actionsAt).toBeGreaterThan(meterAt);
     expect(playAt).toBeGreaterThan(actionsAt);
     expect(pauseAt).toBeGreaterThan(playAt);
-    expect(html).toContain('dock-btn--labeled');
+    expect(html).toContain('dock-btn--play');
+    expect(html).not.toContain('dock-btn--labeled');
     expect(html).not.toContain('class="play-btn"');
+  });
+
+  it('uses an icon-only Play circle with a Play/Stop caption below and aria-label on the button', async () => {
+    const html = await renderTranslator();
+    const playAt = html.indexOf('id="translator-play"');
+    const playEnd = html.indexOf('</button>', playAt);
+    const playBtn = html.slice(playAt, playEnd);
+    expect(playBtn).toContain('aria-label="Play"');
+    expect(playBtn).toContain('dock-btn--play');
+    expect(playBtn).not.toMatch(/>Play</);
+    expect(playBtn).toContain('href="#i-play"');
+
+    const capAt = html.indexOf('play-btn-label', playEnd);
+    expect(capAt).toBeGreaterThan(playEnd);
+    expect(html.slice(capAt, capAt + 400)).toMatch(/>Play</);
+    expect(html.slice(playEnd, capAt + 80)).toContain('aria-hidden="true"');
   });
 
   it('puts one-word captions under Repeat, Download, and Flash with full accessible names', async () => {

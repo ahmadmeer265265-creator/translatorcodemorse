@@ -443,38 +443,57 @@
   background: var(--surface);
   color: var(--ink);
   box-shadow: var(--inset);
-  transition: border-color 0.12s ease, box-shadow 0.12s ease, color 0.12s ease;
-}
-
-/* Play/Stop matches the other dock icons; caption sits under the glyph. */
-[data-translator] .dock-btn--labeled {
-  flex-direction: column;
-  width: 2.75rem;
-  height: auto;
-  min-height: 2.75rem;
-  padding: 0.35rem 0.15rem 0.2rem;
-  gap: 0.1rem;
-  border-radius: 0.85rem;
-}
-
-[data-translator] .dock-btn--labeled .dock-btn-caption {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: clip;
-}
-
-[data-translator] .dock-btn[data-play][data-playing='true'] {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
-  box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent),
-    var(--inset);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease, color 0.12s ease, transform 0.12s ease;
 }
 
 [data-translator] .dock-btn:hover:not(:disabled) {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+/* Primary Play/Stop: same 44px circle as the other dock icons, old pill fill. */
+[data-translator] .dock-btn--play {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: transparent;
+  box-shadow:
+    0 2px 0 rgba(28, 22, 18, 0.14),
+    0 6px 14px rgba(154, 63, 6, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+[data-translator] .dock-btn--play:hover:not(:disabled) {
+  color: var(--on-accent);
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow:
+    0 3px 0 rgba(28, 22, 18, 0.14),
+    0 8px 18px rgba(154, 63, 6, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+[data-translator] .dock-btn--play:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    0 1px 0 rgba(28, 22, 18, 0.14),
+    0 3px 8px rgba(154, 63, 6, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+[data-translator] .dock-btn--play:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+[data-translator] .dock-btn--play[data-playing='true'] {
+  opacity: 1;
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: transparent;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent),
+    0 4px 12px rgba(154, 63, 6, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 [data-translator] .dock-btn:disabled {

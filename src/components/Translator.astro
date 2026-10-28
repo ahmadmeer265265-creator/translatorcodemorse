@@ -236,29 +236,34 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
           <p class="playbar-time" data-play-time aria-hidden="true">0:00</p>
         </div>
         <div class="playbar-actions">
-          <button
-            id="translator-play"
-            class="dock-btn dock-btn--labeled"
-            type="button"
-            data-play
-            disabled
-            aria-label="Play"
-          >
-            <Fragment set:html={icon('i-play', 'dock-btn-icon')} />
+          <span class="dock-control">
+            <button
+              id="translator-play"
+              class="dock-btn dock-btn--play"
+              type="button"
+              data-play
+              disabled
+              aria-label="Play"
+            >
+              <Fragment set:html={icon('i-play', 'dock-btn-icon')} />
+            </button>
             <span class="dock-btn-caption play-btn-label" aria-hidden="true">Play</span>
-          </button>
-          <button
-            id="translator-pause"
-            class="dock-btn"
-            type="button"
-            data-pause
-            disabled
-            aria-label="Pause"
-            data-pause-label="Pause"
-            data-resume-label="Resume"
-          >
-            <Fragment set:html={icon('i-pause', 'dock-btn-icon')} />
-          </button>
+          </span>
+          <span class="dock-control">
+            <button
+              id="translator-pause"
+              class="dock-btn"
+              type="button"
+              data-pause
+              disabled
+              aria-label="Pause"
+              data-pause-label="Pause"
+              data-resume-label="Resume"
+            >
+              <Fragment set:html={icon('i-pause', 'dock-btn-icon')} />
+            </button>
+            <span class="dock-btn-caption" data-pause-caption aria-hidden="true">Pause</span>
+          </span>
           <span class="dock-control">
             <button
               id="translator-repeat"
@@ -943,7 +948,7 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
         playButton.disabled = buttons.playDisabled;
         playButton.dataset.playing = buttons.playPlaying ? 'true' : 'false';
         playButton.setAttribute('aria-label', buttons.playLabel);
-        const playLabel = playButton.querySelector('.play-btn-label');
+        const playLabel = playButton.parentElement?.querySelector('.play-btn-label');
         if (playLabel) playLabel.textContent = buttons.playLabel;
         playButton.querySelector('use')?.setAttribute('href', buttons.playIcon);
       }
@@ -955,6 +960,8 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
         const resuming = playbackState === 'paused';
         pauseButton.setAttribute('aria-label', resuming ? 'Resume' : 'Pause');
         pauseButton.dataset.label = buttons.pauseLabel;
+        const pauseCap = pauseButton.parentElement?.querySelector('[data-pause-caption]');
+        if (pauseCap) pauseCap.textContent = buttons.pauseLabel;
       }
       if (wavButton instanceof HTMLButtonElement && !preparingWav) wavButton.disabled = buttons.wavDisabled;
     };
