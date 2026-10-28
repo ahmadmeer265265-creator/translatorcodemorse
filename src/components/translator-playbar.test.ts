@@ -29,7 +29,21 @@ describe('homepage Translator playbar', () => {
     expect(html.slice(flashAt, flashAt + 280)).toContain('aria-pressed="true"');
   });
 
-  it('puts a one-word visible caption under Repeat and Flash with the full sentence as the accessible name', async () => {
+  it('puts progress/timer above the icon row, with Play grouped among the dock controls', async () => {
+    const html = await renderTranslator();
+    const meterAt = html.indexOf('class="playbar-meter"');
+    const actionsAt = html.indexOf('class="playbar-actions"');
+    const playAt = html.indexOf('id="translator-play"');
+    const pauseAt = html.indexOf('id="translator-pause"');
+    expect(meterAt).toBeGreaterThan(-1);
+    expect(actionsAt).toBeGreaterThan(meterAt);
+    expect(playAt).toBeGreaterThan(actionsAt);
+    expect(pauseAt).toBeGreaterThan(playAt);
+    expect(html).toContain('dock-btn--labeled');
+    expect(html).not.toContain('class="play-btn"');
+  });
+
+  it('puts one-word captions under Repeat, Download, and Flash with full accessible names', async () => {
     const html = await renderTranslator();
     expect(html).not.toContain('playbar-captions');
 
@@ -41,6 +55,15 @@ describe('homepage Translator playbar', () => {
       'aria-label="Repeat loops the message until you stop it."',
     );
     expect(html.slice(repeatCapAt, repeatCapAt + 400)).toMatch(/>Loop</);
+
+    const wavBtnAt = html.indexOf('id="translator-wav"');
+    const wavCapAt = html.indexOf('data-download-caption');
+    expect(wavBtnAt).toBeGreaterThan(-1);
+    expect(wavCapAt).toBeGreaterThan(wavBtnAt);
+    expect(html.slice(wavBtnAt, wavCapAt)).toContain(
+      'aria-label="Download the Morse audio as a WAV file"',
+    );
+    expect(html.slice(wavCapAt, wavCapAt + 400)).toMatch(/>Download</);
 
     const flashBtnAt = html.indexOf('data-flash-toggle');
     const flashCapAt = html.indexOf('data-flash-caption');

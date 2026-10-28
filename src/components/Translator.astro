@@ -221,84 +221,85 @@ const iconCheckFace = `<svg data-i class="hidden size-4 shrink-0" aria-hidden="t
       {/* Transport dock: below the textarea (never overlays content), above the signal counter.
           Play/Pause/Stop/Repeat/WAV all live here; Flash blink is contained to this dock's box only. */}
       <div class="playbar" data-playbar data-flash-lit="false">
-        <div class="playbar-row">
+        <div class="playbar-meter">
+          <div
+            class="playbar-track"
+            role="progressbar"
+            aria-label="Playback progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+            data-play-progress
+          >
+            <div class="playbar-fill" data-play-progress-fill></div>
+          </div>
+          <p class="playbar-time" data-play-time aria-hidden="true">0:00</p>
+        </div>
+        <div class="playbar-actions">
           <button
             id="translator-play"
-            class="play-btn"
+            class="dock-btn dock-btn--labeled"
             type="button"
             data-play
             disabled
             aria-label="Play"
           >
-            <Fragment set:html={icon('i-play', 'play-btn-icon')} />
-            <span class="play-btn-label">Play</span>
+            <Fragment set:html={icon('i-play', 'dock-btn-icon')} />
+            <span class="dock-btn-caption play-btn-label" aria-hidden="true">Play</span>
           </button>
-          <div class="playbar-meter">
-            <div
-              class="playbar-track"
-              role="progressbar"
-              aria-label="Playback progress"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              aria-valuenow="0"
-              data-play-progress
-            >
-              <div class="playbar-fill" data-play-progress-fill></div>
-            </div>
-            <p class="playbar-time" data-play-time aria-hidden="true">0:00</p>
-          </div>
-          <div class="playbar-actions">
+          <button
+            id="translator-pause"
+            class="dock-btn"
+            type="button"
+            data-pause
+            disabled
+            aria-label="Pause"
+            data-pause-label="Pause"
+            data-resume-label="Resume"
+          >
+            <Fragment set:html={icon('i-pause', 'dock-btn-icon')} />
+          </button>
+          <span class="dock-control">
             <button
-              id="translator-pause"
+              id="translator-repeat"
               class="dock-btn"
               type="button"
-              data-pause
-              disabled
-              aria-label="Pause"
-              data-pause-label="Pause"
-              data-resume-label="Resume"
+              data-repeat
+              aria-pressed="false"
+              aria-label="Repeat loops the message until you stop it."
             >
-              <Fragment set:html={icon('i-pause', 'dock-btn-icon')} />
+              <Fragment set:html={icon('i-repeat', 'dock-btn-icon')} />
             </button>
-            <span class="dock-control">
-              <button
-                id="translator-repeat"
-                class="dock-btn"
-                type="button"
-                data-repeat
-                aria-pressed="false"
-                aria-label="Repeat loops the message until you stop it."
-              >
-                <Fragment set:html={icon('i-repeat', 'dock-btn-icon')} />
-              </button>
-              <span class="dock-btn-caption" data-repeat-caption aria-hidden="true">Loop</span>
-            </span>
+            <span class="dock-btn-caption" data-repeat-caption aria-hidden="true">Loop</span>
+          </span>
+          <span class="dock-control">
             <button
               id="translator-wav"
               class="dock-btn"
               type="button"
               data-wav
               disabled
-              aria-label="Download WAV"
+              aria-label="Download the Morse audio as a WAV file"
               data-busy="Preparing WAV"
             >
               <Fragment set:html={icon('i-download', 'dock-btn-icon')} />
             </button>
-            <span class="dock-control">
-              <button
-                id="translator-flash"
-                class="dock-btn"
-                type="button"
-                data-flash-toggle
-                aria-pressed="true"
-                aria-label="Flash pulses this dock with each beep."
-                disabled
-              >
-                <Fragment set:html={icon('i-flash', 'dock-btn-icon')} />
-              </button>
-              <span class="dock-btn-caption" data-flash-caption aria-hidden="true">Flash</span>
-            </span>
-          </div>
+            <span class="dock-btn-caption" data-download-caption aria-hidden="true">Download</span>
+          </span>
+          <span class="dock-control">
+            <button
+              id="translator-flash"
+              class="dock-btn"
+              type="button"
+              data-flash-toggle
+              aria-pressed="true"
+              aria-label="Flash pulses this dock with each beep."
+              disabled
+            >
+              <Fragment set:html={icon('i-flash', 'dock-btn-icon')} />
+            </button>
+            <span class="dock-btn-caption" data-flash-caption aria-hidden="true">Flash</span>
+          </span>
         </div>
         <p class="playbar-flash-note hidden" data-flash-reduced>
           Flash is off because your system asks to reduce motion.
