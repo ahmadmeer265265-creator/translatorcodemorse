@@ -6,6 +6,7 @@
 import { Image } from 'astro:assets';
 import AmericanMorseBlock from './AmericanMorseBlock.astro';
 import DemoVideo from './DemoVideo.astro';
+import RelatedPages from './RelatedPages.astro';
 import TimingBlock from './TimingBlock.astro';
 import { homeFaqs } from '../data/faq';
 import featuredDark from '../assets/brand/featured-image-1200x630.png';
@@ -846,4 +847,18 @@ const caption = 'border-t border-line bg-canvas px-3 py-2 text-sm text-muted';
       }
     </div>
   </section>
+
+  <RelatedPages
+    heading="More Morse tools"
+    links={[
+      {
+        href: '/morse-code-audio-translator/',
+        label: 'Morse code audio translator',
+        description: 'Decode Morse audio from a file or your microphone into text.',
+      },
+      { href: '/morse-code-alphabet/', label: 'Morse code alphabet chart' },
+      { href: '/morse-code-numbers/', label: 'Morse code numbers from 0 to 9' },
+      { href: '/sos-in-morse-code/', label: 'How SOS is sent in Morse code' },
+    ]}
+  />
 </div>

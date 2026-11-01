@@ -1,20 +1,22 @@
 ---
 interface Props {
-  links: { href: string; label: string }[];
+  heading?: string;
+  links: { href: string; label: string; description?: string }[];
 }
 
-const { links } = Astro.props;
+const { links, heading = 'Related pages' } = Astro.props;
 ---
 
 <section class="grid gap-3">
-  <h2 class="text-2xl font-semibold tracking-tight">Related pages</h2>
+  <h2 class="text-2xl font-semibold tracking-tight">{heading}</h2>
   <ul class="grid gap-1">
     {
       links.map((link) => (
-        <li>
+        <li class={link.description ? 'grid gap-0.5' : undefined}>
           <a class="inline-flex min-h-11 items-center text-accent underline underline-offset-4" href={link.href}>
             {link.label}
           </a>
+          {link.description ? <p class="text-sm text-muted">{link.description}</p> : null}
         </li>
       ))
     }
