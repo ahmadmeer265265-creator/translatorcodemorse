@@ -23,25 +23,47 @@ const code = 'font-mono tracking-wide';
       aria-label="Illustration of a photograph with a row of Morse code dots and dashes being scanned and decoded into text"
     >
       <title>Illustration of a photograph with a row of Morse code dots and dashes being scanned and decoded into text</title>
-      <rect x="56" y="64" width="1088" height="502" rx="28" fill="var(--canvas)" stroke="var(--line)" stroke-width="6"></rect>
-      <rect x="96" y="112" width="640" height="406" rx="18" fill="var(--surface)" stroke="var(--ink)" stroke-width="8"></rect>
-      <rect x="132" y="164" width="568" height="302" rx="8" fill="var(--canvas)"></rect>
-      <g fill="var(--ink)">
-        <rect x="148" y="286" width="36" height="40" rx="6"></rect>
-        <rect x="200" y="286" width="36" height="40" rx="6"></rect>
-        <rect x="252" y="286" width="36" height="40" rx="6"></rect>
-        <rect x="328" y="286" width="104" height="40" rx="6"></rect>
-        <rect x="448" y="286" width="100" height="40" rx="6"></rect>
+      <defs>
+        <linearGradient id="image-illu-shade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--ink)" stop-opacity="0.1"></stop>
+          <stop offset="1" stop-color="var(--ink)" stop-opacity="0"></stop>
+        </linearGradient>
+      </defs>
+      <rect x="48" y="52" width="1104" height="526" rx="32" fill="var(--canvas)" stroke="var(--line)" stroke-width="4"></rect>
+      <rect x="92" y="122" width="676" height="404" rx="24" fill="var(--ink)" opacity="0.08"></rect>
+      <rect x="908" y="170" width="232" height="308" rx="24" fill="var(--ink)" opacity="0.08"></rect>
+      <rect x="80" y="108" width="676" height="404" rx="24" fill="var(--surface)" stroke="var(--ink)" stroke-width="8"></rect>
+      <rect x="112" y="148" width="612" height="324" rx="14" fill="var(--canvas)" stroke="var(--line)" stroke-width="3"></rect>
+      <rect x="115" y="151" width="606" height="72" rx="12" fill="url(#image-illu-shade)"></rect>
+      <g fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" opacity="0.45">
+        <path d="M138 174h20M138 174v20"></path>
+        <path d="M698 174h-20M698 174v20"></path>
+        <path d="M138 446h20M138 446v-20"></path>
+        <path d="M698 446h-20M698 446v-20"></path>
       </g>
-      <circle cx="618" cy="306" r="46" fill="var(--canvas)" stroke="var(--accent)" stroke-width="8"></circle>
-      <line x1="132" y1="306" x2="618" y2="306" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"></line>
-      <circle cx="618" cy="306" r="26" fill="none" stroke="var(--accent)" stroke-width="6"></circle>
-      <line x1="654" y1="342" x2="686" y2="374" stroke="var(--accent)" stroke-width="8" stroke-linecap="round"></line>
-      <line x1="672" y1="306" x2="828" y2="306" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"></line>
-      <path d="M824 294 L856 306 L824 318" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
-      <rect x="860" y="168" width="248" height="294" rx="18" fill="var(--surface)" stroke="var(--ink)" stroke-width="8"></rect>
-      <circle cx="984" cy="292" r="72" fill="none" stroke="var(--accent)" stroke-width="8"></circle>
-      <path d="M948 292 l24 26 52-58" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"></path>
+      <rect x="148" y="290" width="420" height="34" rx="8" fill="var(--accent)" opacity="0.14"></rect>
+      <g fill="var(--ink)">
+        <rect x="148" y="292" width="20" height="30" rx="5"></rect>
+        <rect x="178" y="292" width="20" height="30" rx="5"></rect>
+        <rect x="208" y="292" width="20" height="30" rx="5"></rect>
+        <rect x="246" y="292" width="60" height="30" rx="5"></rect>
+        <rect x="316" y="292" width="60" height="30" rx="5"></rect>
+        <rect x="386" y="292" width="60" height="30" rx="5"></rect>
+        <rect x="464" y="292" width="20" height="30" rx="5"></rect>
+        <rect x="494" y="292" width="20" height="30" rx="5"></rect>
+        <rect x="524" y="292" width="20" height="30" rx="5"></rect>
+      </g>
+      <circle cx="646" cy="307" r="46" fill="var(--canvas)" stroke="var(--accent)" stroke-width="8"></circle>
+      <line x1="132" y1="307" x2="646" y2="307" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"></line>
+      <circle cx="646" cy="307" r="26" fill="none" stroke="var(--accent)" stroke-width="6"></circle>
+      <line x1="679" y1="344" x2="701" y2="370" stroke="var(--accent)" stroke-width="8" stroke-linecap="round"></line>
+      <line x1="700" y1="307" x2="844" y2="307" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"></line>
+      <path d="M848 295 L892 307 L848 319" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+      <rect x="896" y="156" width="232" height="308" rx="24" fill="var(--surface)" stroke="var(--ink)" stroke-width="8"></rect>
+      <text x="1012" y="246" text-anchor="middle" fill="var(--ink)" opacity="0.55" font-family="var(--font-sans)" font-size="16" font-weight="700" letter-spacing="3">TEXT</text>
+      <text x="1012" y="332" text-anchor="middle" fill="var(--ink)" font-family="var(--font-sans)" font-size="76" font-weight="700">SOS</text>
+      <circle cx="1012" cy="392" r="26" fill="none" stroke="var(--accent)" stroke-width="7"></circle>
+      <path d="M994 392 l14 14 28-32" fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
     </svg>
   </figure>
   <section class="cv grid gap-3">
@@ -617,7 +639,12 @@ const code = 'font-mono tracking-wide';
 
   <section class="cv grid gap-3">
     <h2 class={h2}>Morse Code Chart (Letters, Numbers, and Punctuation)</h2>
-    <p>Use this chart to double-check anything the decoder gives you, or to read Morse yourself without the tool.</p>
+    <p>
+      Use this chart to double-check anything the decoder gives you, or to read Morse yourself without the tool. The
+      same letters and punctuation are on the
+      <a class={link} href="/morse-code-alphabet/">Morse code alphabet chart</a>, and the digits are on the
+      <a class={link} href="/morse-code-numbers/">Morse code numbers chart</a>.
+    </p>
     <h3 class={h3}>Letters</h3>
     <div class="overflow-x-auto">
       <table class={tableClass}>
