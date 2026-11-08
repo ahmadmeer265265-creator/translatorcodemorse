@@ -6,6 +6,7 @@
 export const pageMeta = [
   { path: '/', lastUpdated: '2026-10-21' },
   { path: '/morse-code-audio-translator/', lastUpdated: '2026-10-26' },
+  { path: '/morse-code-image-translator/', lastUpdated: '2026-11-08' },
   { path: '/morse-code-alphabet/', lastUpdated: '2026-10-07' },
   { path: '/morse-code-numbers/', lastUpdated: '2026-10-07' },
   { path: '/sos-in-morse-code/', lastUpdated: '2026-10-07' },
@@ -16,13 +17,8 @@ export const pageMeta = [
   { path: '/contact/', lastUpdated: '2026-10-19' },
 ] as const;
 
-/**
- * Registered, but not part of pageMeta. pageMeta is the sitemap allowlist.
- * This page stays noindex and unlisted until its article is ready.
- */
-export const draftPageMeta = [
-  { path: '/morse-code-image-translator/', lastUpdated: '2026-11-07' },
-] as const;
+/** Unpublished pages. Empty while every built page is in pageMeta. */
+export const draftPageMeta = [] as const;
 
 export type PagePath = (typeof pageMeta)[number]['path'] | (typeof draftPageMeta)[number]['path'];
 

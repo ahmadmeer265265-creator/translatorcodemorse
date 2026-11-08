@@ -1,14 +1,53 @@
 ---
 import ImageArticle from '../components/image-translator/ImageArticle.astro';
+import { imageTranslatorFaqs } from '../components/image-translator/image-faqs';
 import ImageTranslator from '../components/image-translator/ImageTranslator.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
 
-const title = 'Morse Code Image Translator';
+const title = 'Morse Code Image Translator - Decode Morse from Photos';
 const description =
-  'Read a photo of Morse code in your browser. The picture stays on your device, and the Morse shows up in the translator below.';
+  'Upload a photo or screenshot of Morse code and get instant text. Free, private, and runs entirely in your browser - your image never leaves your device.';
+const pageUrl = absoluteUrl('/morse-code-image-translator/');
+
+const jsonLd = [
+  ...supportingJsonLd({
+    name: 'Morse Code Image Translator',
+    description,
+    url: pageUrl,
+    crumbs: [
+      { name: 'Home', url: absoluteUrl('/') },
+      { name: 'Morse Code Image Translator', url: pageUrl },
+    ],
+    faqs: imageTranslatorFaqs,
+    dateModified: lastUpdatedIso('/morse-code-image-translator/'),
+  }),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Morse Code Image Translator',
+    url: pageUrl,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    description,
+    featureList: [
+      'Decode Morse from a photo, screenshot, or pasted image',
+      'Camera capture where the browser supports it',
+      'Editable Morse with text, playback, and WAV download',
+      'Free, no signup, image stays on the device',
+    ],
+  },
+];
 ---
 
-<BaseLayout title={title} description={description} robots="noindex,follow" suffix={false}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
   <h1 class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">Morse Code Image Translator</h1>
   <p class="mx-auto mt-1 max-w-2xl text-center text-sm text-muted sm:text-base">
     Drop a photo of one line of Morse code. It is read on this device, then the marks and the text show up below.

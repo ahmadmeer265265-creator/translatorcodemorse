@@ -157,14 +157,14 @@ describe('upload contract', () => {
     expect(IMAGE_READ_MESSAGE).toContain('Could not read');
   });
 
-  it('is absent from the nav, the sitemap allowlist, and the homepage article', () => {
-    expect(pageMeta.some((page) => page.path === '/morse-code-image-translator/')).toBe(false);
-    expect(draftPageMeta.some((page) => page.path === '/morse-code-image-translator/')).toBe(true);
-    expect(primaryNav.some((item) => item.href === '/morse-code-image-translator/')).toBe(false);
+  it('is in the nav, the sitemap allowlist, and the homepage article', () => {
+    expect(pageMeta.some((page) => page.path === '/morse-code-image-translator/')).toBe(true);
+    expect(draftPageMeta.some((page) => page.path === '/morse-code-image-translator/')).toBe(false);
+    expect(primaryNav.some((item) => item.href === '/morse-code-image-translator/')).toBe(true);
     const home = readFileSync(new URL('../components/HomeArticle.astro', import.meta.url), 'utf8');
     const nav = readFileSync(new URL('../config/nav.ts', import.meta.url), 'utf8');
-    expect(home).not.toContain('morse-code-image-translator');
-    expect(nav).not.toContain('morse-code-image-translator');
+    expect(home).toContain('morse-code-image-translator');
+    expect(nav).toContain('morse-code-image-translator');
   });
 
   it('makes no network request in the upload UI or the file wrapper', () => {

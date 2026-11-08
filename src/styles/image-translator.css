@@ -53,6 +53,11 @@
   font-size: 0.875rem;
 }
 
+/* Decided before the translator is parsed, so the button does not pop in later. */
+html[data-camera='no'] [data-image-translator] [data-camera] {
+  display: none;
+}
+
 .it-actions {
   display: flex;
   flex-wrap: wrap;

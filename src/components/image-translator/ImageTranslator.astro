@@ -9,6 +9,18 @@ import '../../styles/image-translator.css';
 ---
 
 <section class="grid gap-3" data-image-translator aria-label="Image to Morse">
+  <script is:inline>
+    (function () {
+      var media = navigator.mediaDevices;
+      var ok =
+        window.isSecureContext &&
+        media &&
+        typeof media.getUserMedia === 'function' &&
+        media.getSupportedConstraints &&
+        media.getSupportedConstraints().facingMode === true;
+      document.documentElement.setAttribute('data-camera', ok ? 'yes' : 'no');
+    })();
+  </script>
   <button
     class="it-drop"
     type="button"
@@ -32,7 +44,7 @@ import '../../styles/image-translator.css';
   />
 
   <div class="it-actions">
-    <button class="it-action" type="button" data-camera hidden>Use camera</button>
+    <button class="it-action" type="button" data-camera>Use camera</button>
     <button class="it-action" type="button" data-sample="sos">Try sample: SOS</button>
     <button class="it-action" type="button" data-sample="hello">Try sample: HELLO</button>
   </div>
@@ -260,7 +272,6 @@ import '../../styles/image-translator.css';
         facingMode: media.getSupportedConstraints?.().facingMode === true,
       })
     ) {
-      cameraButton.hidden = false;
       cameraButton.addEventListener('click', () => {
         void media
           .getUserMedia({ audio: false, video: { facingMode: { ideal: 'environment' } } })

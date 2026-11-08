@@ -47,9 +47,9 @@ describe('image translator markup', () => {
     expect(html).toContain('aria-label="Marks look"');
   });
 
-  it('stays noindex, links the three live pages, and shows plain Morse in the chart', async () => {
+  it('is indexable, links the three live pages, and shows plain Morse in the chart', async () => {
     const html = await render(ImagePage);
-    expect(html).toContain('content="noindex,follow"');
+    expect(html).toContain('content="index, follow"');
     expect(html).toContain('<h1');
     expect(html).toContain('Morse Code Image Translator');
     expect(html).toContain('Frequently Asked Questions');
@@ -63,6 +63,6 @@ describe('image translator markup', () => {
     expect(html).not.toContain('\\-');
     expect(html).not.toContain('\\.');
     const nav = html.slice(html.indexOf('<nav'), html.indexOf('</nav>'));
-    expect(nav).not.toContain('/morse-code-image-translator/');
+    expect(nav).toContain('/morse-code-image-translator/');
   });
 });
