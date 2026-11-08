@@ -16,10 +16,21 @@ export const pageMeta = [
   { path: '/contact/', lastUpdated: '2026-10-19' },
 ] as const;
 
-export type PagePath = (typeof pageMeta)[number]['path'];
+/**
+ * Registered, but not part of pageMeta. pageMeta is the sitemap allowlist.
+ * This page stays noindex and unlisted until its article is ready.
+ */
+export const draftPageMeta = [
+  { path: '/morse-code-image-translator/', lastUpdated: '2026-11-07' },
+] as const;
+
+export type PagePath = (typeof pageMeta)[number]['path'] | (typeof draftPageMeta)[number]['path'];
 
 export function lastUpdatedFor(path: string): string | undefined {
-  return pageMeta.find((page) => page.path === path)?.lastUpdated;
+  return (
+    pageMeta.find((page) => page.path === path)?.lastUpdated ??
+    draftPageMeta.find((page) => page.path === path)?.lastUpdated
+  );
 }
 
 export function lastUpdatedIso(path: string): string | undefined {

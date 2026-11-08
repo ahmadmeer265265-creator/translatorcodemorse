@@ -8,7 +8,13 @@
  * Network: this file never calls fetch, XHR, or a web socket. createImageBitmap
  * reads the blob's own bytes. The downscale is a local canvas drawImage.
  */
-import { decodeImage, IMAGE_MORSE_MAX_WIDTH, type DecodeImageOptions, type ImageMorseResult } from './image-morse';
+import {
+  decodeImage,
+  IMAGE_MORSE_MAX_WIDTH,
+  type DecodeImageOptions,
+  type ImageMorseResult,
+  type ImagePixels,
+} from './image-morse';
 
 export { IMAGE_MORSE_MAX_WIDTH };
 
@@ -39,12 +45,17 @@ export class UnsupportedImageTypeError extends Error {
   }
 }
 
-export async function decodeImageFile(file: Blob, options: DecodeImageOptions = {}): Promise<ImageMorseResult> {
+/**
+ * Decode a local image file to pixels, downscaling wide photos first.
+ * Returns the ImageData-shaped buffer so a later polarity change can call
+ * decodeImage again without reading the file a second time.
+ */
+export async function imageFileToPixels(file: Blob): Promise<ImagePixels> {
   const type = file.type.toLowerCase();
   if (!ALLOWED_TYPES.has(type)) throw new UnsupportedImageTypeError(file.type);
 
   if (typeof createImageBitmap !== 'function' || typeof document === 'undefined') {
-    throw new Error('decodeImageFile needs a browser canvas');
+    throw new Error('imageFileToPixels needs a browser canvas');
   }
 
   const bitmap = await createImageBitmap(file);
@@ -58,9 +69,12 @@ export async function decodeImageFile(file: Blob, options: DecodeImageOptions = 
     const context = canvas.getContext('2d', { willReadFrequently: true });
     if (!context) throw new Error('Could not read pixels from the image');
     context.drawImage(bitmap, 0, 0, width, height);
-    const pixels = context.getImageData(0, 0, width, height);
-    return decodeImage(pixels, options);
+    return context.getImageData(0, 0, width, height);
   } finally {
     bitmap.close();
   }
+}
+
+export async function decodeImageFile(file: Blob, options: DecodeImageOptions = {}): Promise<ImageMorseResult> {
+  return decodeImage(await imageFileToPixels(file), options);
 }

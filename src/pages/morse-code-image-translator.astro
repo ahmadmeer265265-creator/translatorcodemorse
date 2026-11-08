@@ -1,0 +1,18 @@
+---
+import ImageTranslator from '../components/image-translator/ImageTranslator.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'Morse Code Image Translator';
+const description =
+  'Read a photo of Morse code in your browser. The picture stays on your device, and the Morse shows up in the translator below.';
+---
+
+<BaseLayout title={title} description={description} robots="noindex,follow" suffix={false}>
+  <h1 class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">Morse Code Image Translator</h1>
+  <p class="mx-auto mt-1 max-w-2xl text-center text-sm text-muted sm:text-base">
+    Drop a photo of one line of Morse code. It is read on this device, then the marks and the text show up below.
+  </p>
+  <div class="mt-2 sm:mt-4">
+    <ImageTranslator />
+  </div>
+</BaseLayout>

@@ -1,0 +1,153 @@
+---
+/**
+ * Upload a photo of Morse code, decode it locally, and drop the Morse string
+ * into the existing Translator. No article, camera, paste, or sample button.
+ */
+import Translator from '../Translator.astro';
+import { IMAGE_FILE_ACCEPT } from '../../lib/image-translator-ui';
+import '../../styles/image-translator.css';
+---
+
+<section class="grid gap-3" data-image-translator aria-label="Image to Morse">
+  <button
+    class="it-drop"
+    type="button"
+    data-drop
+    aria-label="Upload a photo of Morse code"
+    aria-describedby="image-translator-hint"
+  >
+    <span class="font-semibold" data-drop-label>Drop an image here, or click to browse</span>
+    <span id="image-translator-hint" class="text-sm text-muted">
+      PNG, JPEG, WEBP, GIF, or BMP. The picture stays on this device.
+    </span>
+  </button>
+  <input
+    id="image-translator-file"
+    class="sr-only"
+    type="file"
+    accept={IMAGE_FILE_ACCEPT}
+    data-file
+    tabindex="-1"
+    aria-hidden="true"
+  />
+
+  <p class="min-h-6 text-sm text-muted" data-status aria-live="polite"></p>
+
+  <fieldset class="it-marks" data-marks-look hidden>
+    <legend>Marks look</legend>
+    <div class="it-marks__row" role="radiogroup" aria-label="Marks look">
+      <label>
+        <input type="radio" name="image-marks" value="auto" checked data-polarity />
+        Auto
+      </label>
+      <label>
+        <input type="radio" name="image-marks" value="dark-on-light" data-polarity />
+        Dark on light
+      </label>
+      <label>
+        <input type="radio" name="image-marks" value="light-on-dark" data-polarity />
+        Light on dark
+      </label>
+    </div>
+  </fieldset>
+
+  <Translator />
+</section>
+
+<script>
+  import { decodeImage } from '../../lib/image-morse?at';
+  import { imageFileToPixels } from '../../lib/image-morse-file?at';
+  import {
+    decodeStoredImage,
+    dropLabel,
+    imageResultMessage,
+    IMAGE_READ_MESSAGE,
+    IMAGE_TYPE_MESSAGE,
+    isSupportedImageType,
+    prefillTranslatorMorse,
+  } from '../../lib/image-translator-ui?at';
+  import type { ImagePixels, ImagePolarityMode } from '../../lib/image-morse';
+
+  const root = document.querySelector('[data-image-translator]');
+  if (root instanceof HTMLElement) {
+    const drop = root.querySelector('[data-drop]');
+    const label = root.querySelector('[data-drop-label]');
+    const fileInput = root.querySelector('[data-file]');
+    const status = root.querySelector('[data-status]');
+    const marksLook = root.querySelector('[data-marks-look]');
+    let pixels: ImagePixels | null = null;
+
+    const polarityOf = (): ImagePolarityMode => {
+      const selected = root.querySelector<HTMLInputElement>('input[data-polarity]:checked');
+      const value = selected?.value;
+      if (value === 'dark-on-light' || value === 'light-on-dark') return value;
+      return 'auto';
+    };
+
+    const resetPolarity = () => {
+      const auto = root.querySelector<HTMLInputElement>('input[data-polarity][value="auto"]');
+      if (auto) auto.checked = true;
+    };
+
+    const publish = (result: ReturnType<typeof decodeImage>) => {
+      if (!(status instanceof HTMLElement)) return;
+      status.textContent = imageResultMessage(result);
+      if (marksLook instanceof HTMLElement) marksLook.hidden = false;
+      if (label) label.textContent = dropLabel(true);
+      if (result.status === 'ok') prefillTranslatorMorse(root, result.morse);
+    };
+
+    const readFile = async (file: File) => {
+      if (!(fileInput instanceof HTMLInputElement)) return;
+      root.setAttribute('aria-busy', 'true');
+      try {
+        if (!isSupportedImageType(file.type)) {
+          pixels = null;
+          if (status instanceof HTMLElement) status.textContent = IMAGE_TYPE_MESSAGE;
+          if (marksLook instanceof HTMLElement) marksLook.hidden = true;
+          if (label) label.textContent = dropLabel(true);
+          return;
+        }
+        resetPolarity();
+        pixels = await imageFileToPixels(file);
+        publish(decodeStoredImage(pixels, 'auto', decodeImage));
+      } catch {
+        pixels = null;
+        if (status instanceof HTMLElement) status.textContent = IMAGE_READ_MESSAGE;
+        if (marksLook instanceof HTMLElement) marksLook.hidden = true;
+        if (label) label.textContent = dropLabel(true);
+      } finally {
+        root.removeAttribute('aria-busy');
+        fileInput.value = '';
+      }
+    };
+
+    if (drop instanceof HTMLButtonElement && fileInput instanceof HTMLInputElement) {
+      drop.addEventListener('click', () => fileInput.click());
+      drop.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        drop.dataset.dragging = 'true';
+      });
+      drop.addEventListener('dragleave', () => {
+        delete drop.dataset.dragging;
+      });
+      drop.addEventListener('drop', (event) => {
+        event.preventDefault();
+        delete drop.dataset.dragging;
+        const file = event.dataTransfer?.files?.[0];
+        if (file) void readFile(file);
+      });
+      fileInput.addEventListener('change', () => {
+        const file = fileInput.files?.[0];
+        if (file) void readFile(file);
+      });
+    }
+
+    root.querySelectorAll<HTMLInputElement>('input[data-polarity]').forEach((input) => {
+      input.addEventListener('change', () => {
+        if (!input.checked || !pixels) return;
+        publish(decodeStoredImage(pixels, polarityOf(), decodeImage));
+      });
+    });
+  }
+</script>

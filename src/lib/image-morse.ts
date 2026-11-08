@@ -2,8 +2,11 @@
  * Pure image → Morse-string decoder.
  *
  * Input is an ImageData-shaped buffer `{ data, width, height }`. No canvas,
- * no network, no text decode — the string is what the homepage translator
- * already accepts in Morse-to-Text mode.
+ * no network, no text decode. The Morse string is handed to the existing
+ * translator in Morse-to-Text mode.
+ *
+ * morse-runs is imported with a `?image` query so this page gets its own
+ * module id. Sharing the plain id pulled a chunk out of the homepage bundle.
  *
  * Result shapes (stable for later UI stages):
  *
@@ -31,7 +34,7 @@ import {
   collapseFlags,
   formatMorseTokens,
   type LengthRun,
-} from './morse-runs';
+} from './morse-runs?image';
 
 export { AMBIGUITY_BAND, DASH_RATIO };
 
