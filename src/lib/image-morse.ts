@@ -22,7 +22,9 @@
  *
  * Success, including an ambiguous mark
  * `{ status: 'ok', morse, polarity, band: { y0, y1 }, marks, reason: undefined }`
- * Each mark is `{ index, symbol, width, ratio, ambiguous }`.
+ * Each mark is `{ index, symbol, x, width, ratio, ambiguous }`.
+ * `x` is the mark's left edge in image pixels, so a later overlay can
+ * draw a box without guessing.
  * `ambiguous: true` means `ratio` is within AMBIGUITY_BAND (0.25) of the
  * dot/dash boundary at 2. `symbol` is still the nearest class (boundary → dash).
  */
@@ -31,7 +33,6 @@ import {
   DASH_RATIO,
   classifyGap,
   classifyMarkDetailed,
-  collapseFlags,
   formatMorseTokens,
   type LengthRun,
 } from './morse-runs?image';
@@ -89,6 +90,8 @@ export type ImageMorseMark = {
   /** Left-to-right index among marks that were kept. */
   index: number;
   symbol: '.' | '-';
+  /** Left edge of this mark, in image pixels. */
+  x: number;
   /** Run width in pixels. */
   width: number;
   /** width / estimated dot unit. */
@@ -269,7 +272,21 @@ function columnFlags(mask: Uint8Array, width: number, band: Band): boolean[] {
   return flags;
 }
 
-function trimSpaces(runs: LengthRun[]): LengthRun[] {
+type PositionedRun = LengthRun & { x: number };
+
+/** Column flags to runs. `x` is the run's left edge so later boxes line up. */
+function runsFromFlags(flags: readonly boolean[]): PositionedRun[] {
+  const runs: PositionedRun[] = [];
+  for (let x = 0; x < flags.length; x += 1) {
+    const type = flags[x] ? 'mark' : 'space';
+    const last = runs[runs.length - 1];
+    if (last && last.type === type) last.length += 1;
+    else runs.push({ type, length: 1, x });
+  }
+  return runs;
+}
+
+function trimSpaces<T extends LengthRun>(runs: readonly T[]): T[] {
   let start = 0;
   let end = runs.length;
   while (start < end && runs[start]!.type === 'space') start += 1;
@@ -340,19 +357,19 @@ function markCoherence(mask: Uint8Array, width: number, band: Band): number | nu
   return scores[Math.floor(scores.length / 2)] ?? null;
 }
 
-function foldCrumbs(runs: readonly LengthRun[], unit: number): LengthRun[] {
+function foldCrumbs(runs: readonly PositionedRun[], unit: number): PositionedRun[] {
   const floor = unit * CRUMB_RATIO;
-  const folded: LengthRun[] = [];
+  const folded: PositionedRun[] = [];
   for (const run of runs) {
     const type = run.type === 'mark' && run.length < floor ? 'space' : run.type;
     const last = folded[folded.length - 1];
     if (last && last.type === type) last.length += run.length;
-    else folded.push({ type, length: run.length });
+    else folded.push({ type, length: run.length, x: run.x });
   }
   return folded;
 }
 
-function assemble(runs: readonly LengthRun[], unit: number): { morse: string; marks: ImageMorseMark[] } {
+function assemble(runs: readonly PositionedRun[], unit: number): { morse: string; marks: ImageMorseMark[] } {
   const marks: ImageMorseMark[] = [];
   const words: string[][] = [[]];
   let letter = '';
@@ -363,6 +380,7 @@ function assemble(runs: readonly LengthRun[], unit: number): { morse: string; ma
       marks.push({
         index: marks.length,
         symbol: classified.symbol,
+        x: run.x,
         width: run.length,
         ratio: classified.ratio,
         ambiguous: classified.ambiguous,
@@ -410,7 +428,7 @@ export function decodeImage(image: ImagePixels, options: DecodeImageOptions = {}
   if (band === 'none') return emptyResult('nothing-detected', polarity, 'no-band');
   if (band === 'ambiguous') return emptyResult('nothing-detected', polarity, 'ambiguous-bands');
 
-  let runs = trimSpaces(collapseFlags(columnFlags(mask, width, band)));
+  let runs = trimSpaces(runsFromFlags(columnFlags(mask, width, band)));
   if (!runs.some((run) => run.type === 'mark')) {
     return emptyResult('nothing-detected', polarity, 'no-marks');
   }

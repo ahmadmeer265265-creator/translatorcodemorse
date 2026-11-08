@@ -1,7 +1,7 @@
 ---
 /**
- * Upload a photo of Morse code, decode it locally, and drop the Morse string
- * into the existing Translator. No article, camera, paste, or sample button.
+ * Upload, camera, paste, or a bundled sample. Decode stays on this device.
+ * No article yet.
  */
 import Translator from '../Translator.astro';
 import { IMAGE_FILE_ACCEPT } from '../../lib/image-translator-ui';
@@ -31,6 +31,36 @@ import '../../styles/image-translator.css';
     aria-hidden="true"
   />
 
+  <div class="it-actions">
+    <button class="it-action" type="button" data-camera hidden>Use camera</button>
+    <button class="it-action" type="button" data-sample="sos">Try sample: SOS</button>
+    <button class="it-action" type="button" data-sample="hello">Try sample: HELLO</button>
+  </div>
+
+  <div class="it-camera" data-camera-panel hidden>
+    <video data-camera-video autoplay playsinline muted aria-label="Camera preview"></video>
+    <div class="it-camera__row">
+      <button type="button" data-camera-shutter>Take photo</button>
+      <button type="button" data-camera-cancel>Cancel</button>
+    </div>
+  </div>
+
+  <div class="it-preview" data-preview hidden>
+    <div class="it-preview__frame">
+      <canvas data-preview-canvas aria-label="Your image"></canvas>
+      <div class="it-preview__layer" data-preview-layer aria-hidden="true"></div>
+    </div>
+    <label class="it-preview__toggle">
+      <input type="checkbox" data-overlay-toggle checked />
+      Show marks on the photo
+    </label>
+    <p class="it-preview__key" data-preview-key hidden>
+      <span><i class="it-swatch it-swatch--dot" aria-hidden="true"></i>Dot</span>
+      <span><i class="it-swatch it-swatch--dash" aria-hidden="true"></i>Dash</span>
+      <span><i class="it-swatch it-swatch--uncertain" aria-hidden="true"></i>Uncertain</span>
+    </p>
+  </div>
+
   <p class="min-h-6 text-sm text-muted" data-status aria-live="polite"></p>
 
   <fieldset class="it-marks" data-marks-look hidden>
@@ -57,16 +87,22 @@ import '../../styles/image-translator.css';
 <script>
   import { decodeImage } from '../../lib/image-morse?at';
   import { imageFileToPixels } from '../../lib/image-morse-file?at';
+  import { sampleFile } from '../../lib/image-translator-samples?at';
   import {
+    cameraButtonVisible,
+    cameraErrorMessage,
     decodeStoredImage,
     dropLabel,
+    imageFileFromPaste,
     imageResultMessage,
     IMAGE_READ_MESSAGE,
     IMAGE_TYPE_MESSAGE,
     isSupportedImageType,
+    overlayBoxes,
+    overlayClass,
     prefillTranslatorMorse,
   } from '../../lib/image-translator-ui?at';
-  import type { ImagePixels, ImagePolarityMode } from '../../lib/image-morse';
+  import type { ImageMorseResult, ImagePixels, ImagePolarityMode } from '../../lib/image-morse';
 
   const root = document.querySelector('[data-image-translator]');
   if (root instanceof HTMLElement) {
@@ -75,7 +111,16 @@ import '../../styles/image-translator.css';
     const fileInput = root.querySelector('[data-file]');
     const status = root.querySelector('[data-status]');
     const marksLook = root.querySelector('[data-marks-look]');
+    const preview = root.querySelector('[data-preview]');
+    const canvas = root.querySelector('[data-preview-canvas]');
+    const layer = root.querySelector('[data-preview-layer]');
+    const overlayToggle = root.querySelector('[data-overlay-toggle]');
+    const previewKey = root.querySelector('[data-preview-key]');
+    const cameraButton = root.querySelector('[data-camera]');
+    const cameraPanel = root.querySelector('[data-camera-panel]');
+    const cameraVideo = root.querySelector('[data-camera-video]');
     let pixels: ImagePixels | null = null;
+    let stream: MediaStream | null = null;
 
     const polarityOf = (): ImagePolarityMode => {
       const selected = root.querySelector<HTMLInputElement>('input[data-polarity]:checked');
@@ -89,33 +134,81 @@ import '../../styles/image-translator.css';
       if (auto) auto.checked = true;
     };
 
-    const publish = (result: ReturnType<typeof decodeImage>) => {
+    const stopCamera = () => {
+      stream?.getTracks().forEach((track) => track.stop());
+      stream = null;
+      if (cameraVideo instanceof HTMLVideoElement) cameraVideo.srcObject = null;
+      if (cameraPanel instanceof HTMLElement) cameraPanel.hidden = true;
+    };
+
+    const drawPreview = (result: ImageMorseResult) => {
+      if (!(preview instanceof HTMLElement) || !(canvas instanceof HTMLCanvasElement) || !(layer instanceof HTMLElement)) {
+        return;
+      }
+      if (!pixels) {
+        preview.hidden = true;
+        return;
+      }
+      canvas.width = pixels.width;
+      canvas.height = pixels.height;
+      const context = canvas.getContext('2d');
+      if (!context) return;
+      context.putImageData(new ImageData(new Uint8ClampedArray(pixels.data), pixels.width, pixels.height), 0, 0);
+      const boxes = overlayBoxes(result, pixels.width, pixels.height);
+      layer.replaceChildren();
+      if (boxes) {
+        for (const box of boxes) {
+          const mark = document.createElement('span');
+          mark.className = overlayClass(box.kind);
+          mark.style.left = box.left;
+          mark.style.top = box.top;
+          mark.style.width = box.width;
+          mark.style.height = box.height;
+          layer.append(mark);
+        }
+      }
+      const showBoxes = boxes !== null && overlayToggle instanceof HTMLInputElement && overlayToggle.checked;
+      layer.hidden = !showBoxes;
+      if (previewKey instanceof HTMLElement) previewKey.hidden = !showBoxes;
+      preview.hidden = false;
+    };
+
+    const hidePreview = () => {
+      if (preview instanceof HTMLElement) preview.hidden = true;
+      if (layer instanceof HTMLElement) layer.replaceChildren();
+    };
+
+    const publish = (result: ImageMorseResult) => {
       if (!(status instanceof HTMLElement)) return;
       status.textContent = imageResultMessage(result);
       if (marksLook instanceof HTMLElement) marksLook.hidden = false;
       if (label) label.textContent = dropLabel(true);
+      drawPreview(result);
       if (result.status === 'ok') prefillTranslatorMorse(root, result.morse);
+    };
+
+    const failRead = (message: string) => {
+      pixels = null;
+      hidePreview();
+      if (status instanceof HTMLElement) status.textContent = message;
+      if (marksLook instanceof HTMLElement) marksLook.hidden = true;
+      if (label) label.textContent = dropLabel(true);
     };
 
     const readFile = async (file: File) => {
       if (!(fileInput instanceof HTMLInputElement)) return;
+      stopCamera();
       root.setAttribute('aria-busy', 'true');
       try {
         if (!isSupportedImageType(file.type)) {
-          pixels = null;
-          if (status instanceof HTMLElement) status.textContent = IMAGE_TYPE_MESSAGE;
-          if (marksLook instanceof HTMLElement) marksLook.hidden = true;
-          if (label) label.textContent = dropLabel(true);
+          failRead(IMAGE_TYPE_MESSAGE);
           return;
         }
         resetPolarity();
         pixels = await imageFileToPixels(file);
         publish(decodeStoredImage(pixels, 'auto', decodeImage));
       } catch {
-        pixels = null;
-        if (status instanceof HTMLElement) status.textContent = IMAGE_READ_MESSAGE;
-        if (marksLook instanceof HTMLElement) marksLook.hidden = true;
-        if (label) label.textContent = dropLabel(true);
+        failRead(IMAGE_READ_MESSAGE);
       } finally {
         root.removeAttribute('aria-busy');
         fileInput.value = '';
@@ -147,6 +240,79 @@ import '../../styles/image-translator.css';
       input.addEventListener('change', () => {
         if (!input.checked || !pixels) return;
         publish(decodeStoredImage(pixels, polarityOf(), decodeImage));
+      });
+    });
+
+    if (overlayToggle instanceof HTMLInputElement) {
+      overlayToggle.addEventListener('change', () => {
+        if (!pixels) return;
+        drawPreview(decodeStoredImage(pixels, polarityOf(), decodeImage));
+      });
+    }
+
+    const media = navigator.mediaDevices;
+    if (
+      cameraButton instanceof HTMLButtonElement &&
+      media &&
+      cameraButtonVisible({
+        secure: window.isSecureContext,
+        getUserMedia: typeof media.getUserMedia === 'function',
+        facingMode: media.getSupportedConstraints?.().facingMode === true,
+      })
+    ) {
+      cameraButton.hidden = false;
+      cameraButton.addEventListener('click', () => {
+        void media
+          .getUserMedia({ audio: false, video: { facingMode: { ideal: 'environment' } } })
+          .then((next) => {
+            stopCamera();
+            stream = next;
+            if (cameraVideo instanceof HTMLVideoElement) cameraVideo.srcObject = next;
+            if (cameraPanel instanceof HTMLElement) cameraPanel.hidden = false;
+            root.querySelector<HTMLButtonElement>('[data-camera-cancel]')?.focus();
+          })
+          .catch((error: unknown) => {
+            const name = error instanceof DOMException ? error.name : '';
+            if (status instanceof HTMLElement) status.textContent = cameraErrorMessage(name);
+          });
+      });
+    }
+
+    root.querySelector('[data-camera-cancel]')?.addEventListener('click', () => {
+      stopCamera();
+      if (cameraButton instanceof HTMLButtonElement) cameraButton.focus();
+    });
+
+    root.querySelector('[data-camera-shutter]')?.addEventListener('click', () => {
+      if (!(cameraVideo instanceof HTMLVideoElement) || !cameraVideo.videoWidth) return;
+      const shot = document.createElement('canvas');
+      shot.width = cameraVideo.videoWidth;
+      shot.height = cameraVideo.videoHeight;
+      shot.getContext('2d')?.drawImage(cameraVideo, 0, 0);
+      shot.toBlob((blob) => {
+        if (!blob) return;
+        void readFile(new File([blob], 'camera.jpg', { type: 'image/jpeg' }));
+      }, 'image/jpeg', 0.92);
+    });
+
+    document.addEventListener('paste', (event) => {
+      const items = event.clipboardData
+        ? [...event.clipboardData.items].map((item) => ({
+            kind: item.kind,
+            type: item.type,
+            file: item.kind === 'file' && item.type.startsWith('image/') ? item.getAsFile() : null,
+          }))
+        : null;
+      const file = imageFileFromPaste(items, event.target instanceof Element ? event.target : null);
+      if (!file) return;
+      event.preventDefault();
+      void readFile(file);
+    });
+
+    root.querySelectorAll<HTMLButtonElement>('[data-sample]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const name = button.dataset.sample;
+        if (name === 'sos' || name === 'hello') void readFile(sampleFile(name));
       });
     });
   }

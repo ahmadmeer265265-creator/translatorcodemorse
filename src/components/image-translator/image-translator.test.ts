@@ -26,6 +26,12 @@ describe('image translator markup', () => {
     expect(html).toContain('id="translator-morse"');
     expect(html).toContain('<textarea');
     expect(html).not.toContain('contenteditable');
+    expect(html).toContain('Try sample: SOS');
+    expect(html).toContain('Try sample: HELLO');
+    expect(html).toContain('Use camera');
+    expect(html).toContain('data-camera-cancel');
+    expect(html).toContain('Take photo');
+    expect(html).toContain('Show marks on the photo');
   });
 
   it('keeps Marks look out of the way until a decode, with Auto selected', async () => {

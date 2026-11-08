@@ -1,19 +1,28 @@
 import { readFileSync } from 'node:fs';
+import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
+import { decodeImage } from './image-morse';
 import { draftPageMeta, pageMeta } from '../config/pages';
 import { primaryNav } from '../config/nav';
 import type { ImageMorseResult, ImagePixels, ImagePolarityMode } from './image-morse';
+import { sampleFile } from './image-translator-samples';
 import {
+  CAMERA_DENIED_MESSAGE,
   IMAGE_FILE_ACCEPT,
   IMAGE_READ_MESSAGE,
   IMAGE_TOO_SMALL_MESSAGE,
   IMAGE_TYPE_MESSAGE,
   ambiguousNote,
+  cameraButtonVisible,
+  cameraErrorMessage,
   decodeStoredImage,
   dropLabel,
+  imageFileFromPaste,
   imageResultMessage,
   isSupportedImageType,
   nothingDetectedMessage,
+  overlayBoxes,
+  overlayClass,
   prefillTranslatorMorse,
 } from './image-translator-ui';
 
@@ -47,12 +56,12 @@ describe('image result messages', () => {
   });
 
   it('names the uncertain-mark count because the Morse box is a plain textarea', () => {
-    const one = ok([{ index: 0, symbol: '-', width: 20, ratio: 2, ambiguous: true }]);
+    const one = ok([{ index: 0, symbol: '-', x: 4, width: 20, ratio: 2, ambiguous: true }]);
     const three = ok([
-      { index: 0, symbol: '.', width: 10, ratio: 1, ambiguous: false },
-      { index: 1, symbol: '-', width: 20, ratio: 2, ambiguous: true },
-      { index: 2, symbol: '-', width: 21, ratio: 2.1, ambiguous: true },
-      { index: 3, symbol: '-', width: 22, ratio: 2.2, ambiguous: true },
+      { index: 0, symbol: '.', x: 0, width: 10, ratio: 1, ambiguous: false },
+      { index: 1, symbol: '-', x: 14, width: 20, ratio: 2, ambiguous: true },
+      { index: 2, symbol: '-', x: 40, width: 21, ratio: 2.1, ambiguous: true },
+      { index: 3, symbol: '-', x: 66, width: 22, ratio: 2.2, ambiguous: true },
     ]);
     expect(imageResultMessage(one)).toBe(
       'Morse loaded. 1 mark was uncertain, so double-check the Morse below against your image.',
@@ -161,6 +170,7 @@ describe('upload contract', () => {
   it('makes no network request in the upload UI or the file wrapper', () => {
     const files = [
       '../lib/image-translator-ui.ts',
+      '../lib/image-translator-samples.ts',
       '../lib/image-morse-file.ts',
       '../lib/image-morse.ts',
       '../components/image-translator/ImageTranslator.astro',
@@ -173,5 +183,92 @@ describe('upload contract', () => {
     expect(source).not.toMatch(/XMLHttpRequest/);
     expect(source).not.toMatch(/\bnew WebSocket\b/);
     expect(source).not.toMatch(/\bWebSocket\s*\(/);
+    expect(source).not.toMatch(/getUserMedia\([^)]*audio:\s*true/);
+  });
+});
+
+describe('overlay boxes', () => {
+  it('places dot, dash, and uncertain marks as percentages of the image', () => {
+    const boxes = overlayBoxes(
+      {
+        status: 'ok',
+        morse: '.-',
+        polarity: 'dark-on-light',
+        band: { y0: 10, y1: 30 },
+        marks: [
+          { index: 0, symbol: '.', x: 20, width: 10, ratio: 1, ambiguous: false },
+          { index: 1, symbol: '-', x: 40, width: 30, ratio: 3, ambiguous: true },
+        ],
+      },
+      200,
+      100,
+    );
+    expect(boxes).toEqual([
+      { left: '10%', top: '10%', width: '5%', height: '20%', kind: 'dot' },
+      { left: '20%', top: '10%', width: '15%', height: '20%', kind: 'uncertain' },
+    ]);
+    expect(overlayClass('dot')).toBe('it-box it-box--dot');
+    expect(overlayClass('dash')).toBe('it-box it-box--dash');
+    expect(overlayClass('uncertain')).toBe('it-box it-box--uncertain');
+  });
+
+  it('draws nothing when the decode found no band', () => {
+    expect(
+      overlayBoxes(
+        { status: 'nothing-detected', morse: '', polarity: 'dark-on-light', band: null, marks: [], reason: 'noise' },
+        200,
+        100,
+      ),
+    ).toBeNull();
+    expect(
+      overlayBoxes(
+        { status: 'too-small', morse: '', polarity: null, band: null, marks: [], reason: 'too-small' },
+        2,
+        2,
+      ),
+    ).toBeNull();
+  });
+});
+
+describe('camera, paste, and samples', () => {
+  it('hides the camera button unless a secure camera API can ask for a facing mode', () => {
+    expect(cameraButtonVisible({ secure: true, getUserMedia: true, facingMode: true })).toBe(true);
+    expect(cameraButtonVisible({ secure: true, getUserMedia: false, facingMode: true })).toBe(false);
+    expect(cameraButtonVisible({ secure: false, getUserMedia: true, facingMode: true })).toBe(false);
+    expect(cameraButtonVisible({ secure: true, getUserMedia: true, facingMode: false })).toBe(false);
+    expect(cameraErrorMessage('NotAllowedError')).toBe(CAMERA_DENIED_MESSAGE);
+    expect(cameraErrorMessage('NotFoundError')).not.toBe(CAMERA_DENIED_MESSAGE);
+  });
+
+  it('decodes an image paste and ignores text or a paste aimed at a field', () => {
+    const photo = new File(['png'], 'clip.png', { type: 'image/png' });
+    expect(imageFileFromPaste([{ kind: 'file', type: 'image/png', file: photo }], null)).toBe(photo);
+    expect(imageFileFromPaste([{ kind: 'string', type: 'text/plain', file: null }], null)).toBeNull();
+    expect(
+      imageFileFromPaste([{ kind: 'file', type: 'image/png', file: photo }], { closest: () => ({}) }),
+    ).toBeNull();
+  });
+
+  it('loads the bundled SOS and HELLO samples as PNG files with the same bytes as the assets', async () => {
+    const sosAsset = readFileSync(new URL('../assets/image-translator/sample-sos.png', import.meta.url));
+    const helloAsset = readFileSync(new URL('../assets/image-translator/sample-hello.png', import.meta.url));
+    const sos = sampleFile('sos');
+    const hello = sampleFile('hello');
+    expect(sos.type).toBe('image/png');
+    expect(hello.type).toBe('image/png');
+    expect(sos.size).toBe(sosAsset.length);
+    expect(hello.size).toBe(helloAsset.length);
+    expect(Buffer.from(await sos.arrayBuffer())).toEqual(sosAsset);
+    expect(Buffer.from(await hello.arrayBuffer())).toEqual(helloAsset);
+    expect(sosAsset.length).toBeLessThan(2000);
+    expect(helloAsset.length).toBeLessThan(2000);
+    const decoded = async (file: File) => {
+      const { data, info } = await sharp(Buffer.from(await file.arrayBuffer())).ensureAlpha().raw().toBuffer({
+        resolveWithObject: true,
+      });
+      return decodeImage({ data: new Uint8ClampedArray(data), width: info.width, height: info.height });
+    };
+    expect((await decoded(sos)).morse).toBe('... --- ...');
+    expect((await decoded(hello)).morse).toBe('.... . .-.. .-.. ---');
   });
 });

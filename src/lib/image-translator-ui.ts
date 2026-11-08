@@ -106,3 +106,74 @@ export function decodeStoredImage(
 ): ImageMorseResult {
   return decode(pixels, { polarity });
 }
+
+export type OverlayKind = 'dot' | 'dash' | 'uncertain';
+
+export type OverlayBox = {
+  left: string;
+  top: string;
+  width: string;
+  height: string;
+  kind: OverlayKind;
+};
+
+/**
+ * Boxes as percentages of the image, so a CSS-scaled preview stays aligned.
+ * Nothing to draw when the decode did not find a band.
+ */
+export function overlayBoxes(
+  result: ImageMorseResult,
+  imageWidth: number,
+  imageHeight: number,
+): OverlayBox[] | null {
+  if (result.status !== 'ok' || !result.band || imageWidth <= 0 || imageHeight <= 0) return null;
+  const bandHeight = result.band.y1 - result.band.y0;
+  if (bandHeight <= 0) return null;
+  return result.marks.map((mark) => ({
+    left: `${(mark.x / imageWidth) * 100}%`,
+    top: `${(result.band!.y0 / imageHeight) * 100}%`,
+    width: `${(mark.width / imageWidth) * 100}%`,
+    height: `${(bandHeight / imageHeight) * 100}%`,
+    kind: mark.ambiguous ? 'uncertain' : mark.symbol === '-' ? 'dash' : 'dot',
+  }));
+}
+
+export function overlayClass(kind: OverlayKind): string {
+  return `it-box it-box--${kind}`;
+}
+
+export function cameraButtonVisible(support: {
+  secure: boolean;
+  getUserMedia: boolean;
+  facingMode: boolean;
+}): boolean {
+  return support.secure && support.getUserMedia && support.facingMode;
+}
+
+export const CAMERA_DENIED_MESSAGE =
+  'Camera access was denied. You can still drop a photo, paste one, or try a sample.';
+
+export const CAMERA_FAILED_MESSAGE =
+  'Could not open the camera. You can still drop a photo, paste one, or try a sample.';
+
+export function cameraErrorMessage(errorName: string): string {
+  if (errorName === 'NotAllowedError' || errorName === 'PermissionDeniedError') return CAMERA_DENIED_MESSAGE;
+  return CAMERA_FAILED_MESSAGE;
+}
+
+type PasteTarget = { closest?: (selector: string) => unknown } | null;
+
+/** Text fields keep their own paste. An image pasted anywhere else is a photo to read. */
+export function imageFileFromPaste(
+  items: ReadonlyArray<{ kind: string; type: string; file: File | null }> | null,
+  target: PasteTarget,
+): File | null {
+  if (target && typeof target.closest === 'function' && target.closest('input, textarea, select, [contenteditable="true"]')) {
+    return null;
+  }
+  if (!items) return null;
+  for (const item of items) {
+    if (item.kind === 'file' && item.type.startsWith('image/') && item.file) return item.file;
+  }
+  return null;
+}

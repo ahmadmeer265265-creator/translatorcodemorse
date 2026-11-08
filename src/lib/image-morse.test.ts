@@ -245,6 +245,17 @@ describe('ambiguity flag', () => {
     expect(result.marks[0]!.ambiguous).toBe(false);
     expect(result.marks[2]!.ambiguous).toBe(false);
   });
+
+  it('records each mark left edge in image pixels', () => {
+    const drawn = paintMorse(encode('SOS').output, 8);
+    const result = decodeImage(drawn);
+    expect(result.status).toBe('ok');
+    expect(result.marks[0]!.x).toBe(16);
+    for (let i = 1; i < result.marks.length; i += 1) {
+      const previous = result.marks[i - 1]!;
+      expect(result.marks[i]!.x).toBeGreaterThanOrEqual(previous.x + previous.width);
+    }
+  });
 });
 
 describe('printed glyphs and unimodal fallback', () => {
