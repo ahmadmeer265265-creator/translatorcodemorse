@@ -196,6 +196,10 @@ nav a[aria-current="page"] {
   color: var(--accent);
 }
 
+.site-footer a[href^='mailto:'] {
+  overflow-wrap: anywhere;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

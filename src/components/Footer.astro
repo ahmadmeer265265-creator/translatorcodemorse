@@ -18,9 +18,7 @@ const legalLinks = [
 ];
 
 const heading = 'mb-3 text-xs font-semibold uppercase tracking-wider text-muted';
-const item = 'inline-flex min-h-11 items-center text-sm leading-6 text-ink';
-const group =
-  'border-t border-line py-6 first:border-t-0 first:pt-0 last:pb-0 sm:border-t-0 sm:py-0';
+const item = 'block min-h-11 min-w-0 py-2 text-sm leading-6 text-ink';
 ---
 
 <footer class="site-footer">
@@ -29,8 +27,8 @@ const group =
       <span class="font-semibold text-ink">{SITE_NAME}</span> turns text into Morse code in your browser. Nothing you type
       is uploaded.
     </p>
-    <div class="grid border-t border-line pt-6 sm:grid-cols-3 sm:gap-10 sm:pt-8">
-      <nav class={group} aria-labelledby="footer-tools-heading">
+    <div class="grid grid-cols-2 border-t border-line pt-6 sm:grid-cols-3 sm:pt-8">
+      <nav class="min-w-0 pr-3 sm:pr-5" aria-labelledby="footer-tools-heading">
         <p id="footer-tools-heading" class={heading}>Tools</p>
         <ul class="grid">
           {
@@ -44,7 +42,7 @@ const group =
           }
         </ul>
       </nav>
-      <nav class={group} aria-labelledby="footer-legal-heading">
+      <nav class="min-w-0 border-l border-line pl-3 sm:pl-5" aria-labelledby="footer-legal-heading">
         <p id="footer-legal-heading" class={heading}>Legal</p>
         <ul class="grid">
           {
@@ -57,13 +55,19 @@ const group =
             ))
           }
           <li>
-            <a class="inline-flex min-h-11 items-center text-sm leading-6 text-muted" href={`mailto:${CONTACT_EMAIL}`}>
+            <a
+              class="block min-h-11 min-w-0 py-2 text-sm leading-6 break-words text-muted"
+              href={`mailto:${CONTACT_EMAIL}`}
+            >
               {CONTACT_EMAIL}
             </a>
           </li>
         </ul>
       </nav>
-      <nav class={group} aria-labelledby="footer-social-heading">
+      <nav
+        class="col-span-2 mt-6 border-t border-line pt-6 sm:col-span-1 sm:mt-0 sm:border-t-0 sm:pt-0 sm:pl-8"
+        aria-labelledby="footer-social-heading"
+      >
         <p id="footer-social-heading" class={heading}>Social</p>
         <div class="flex flex-wrap items-center">
           <SocialLinks />
