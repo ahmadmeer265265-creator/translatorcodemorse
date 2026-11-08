@@ -1,4 +1,16 @@
+import {
+  DASH_RATIO,
+  UNIT_WINDOW,
+  classifyGap,
+  classifyMark,
+  createLengthTracker,
+  formatMorseTokens,
+  type GapClass,
+} from './morse-runs';
 import { MORSE_ALPHABET } from './morse';
+
+export { DASH_RATIO, UNIT_WINDOW, classifyGap, classifyMark };
+export type { GapClass };
 
 /**
  * Pure, injectable Morse decoding logic for microphone input.
@@ -16,18 +28,9 @@ const MORSE_TO_CHAR = new Map(MORSE_ALPHABET.map((entry) => [entry.code, entry.c
 /** Marks shorter than this are treated as noise and ignored entirely. */
 export const MIN_MARK_MS = 20;
 /**
- * Rolling window of recent marks used to re-estimate the dot unit.
- * ~12 marks is roughly 3–4 letters, enough to adapt without overreacting.
- */
-export const UNIT_WINDOW = 12;
-/**
- * A mark is a dash when it lasts at least this multiple of the current dot
- * estimate (dot = 1, dash = 3, midpoint ≈ 2).
- */
-export const DASH_RATIO = 2;
-/**
  * Adaptive threshold for the very first marks, before any dot estimate
  * exists. 200ms is a common slow-sender dot; shorter sends are re-learned.
+ * This seed is audio-specific. The ratio tests themselves live in morse-runs.ts.
  */
 export const INITIAL_UNIT_MS = 200;
 
@@ -37,8 +40,6 @@ export type Segment = {
   type: SegmentKind;
   durationMs: number;
 };
-
-export type GapClass = 'intra' | 'letter' | 'word';
 
 /**
  * Absolute gap expectations in ms, used when the operator overrides speed
@@ -100,63 +101,6 @@ export function envelopeToSegments(
   return segments;
 }
 
-/**
- * Adaptive timing tracker. The dot unit is the shortest recent mark:
- * dashes only ever inflate an average, whereas the minimum tracks the true
- * dot. A bootstrap rule relates the very first mark to the seed so a first
- * dash is not mistaken for a dot. As marks arrive the estimate follows the
- * sender's speed up and down. Gaps are classified against this same unit
- * using the 1 / 3 / 7 CW ratios.
- */
-function createUnitTracker(initialMs: number = INITIAL_UNIT_MS, locked = false) {
-  const marks: number[] = [];
-  let markUnit = initialMs;
-
-  const min = (list: readonly number[]) => (list.length === 0 ? 0 : Math.min(...list));
-
-  const learnMark = (durationMs: number): number => {
-    // Locked unit (manual WPM override): never adapt to observed marks.
-    if (locked) return markUnit;
-    if (marks.length === 0) {
-      // Bootstrap: relate the first mark to the seed before deciding.
-      if (durationMs >= markUnit * DASH_RATIO) markUnit = durationMs / 3;
-      else if (durationMs * DASH_RATIO <= markUnit) markUnit = durationMs;
-    }
-    marks.push(durationMs);
-    if (marks.length > UNIT_WINDOW) marks.shift();
-    // Dot unit tracks the shortest recent mark (dashes only inflate).
-    markUnit = min(marks);
-    return markUnit;
-  };
-
-  return {
-    learnMark,
-    mark: () => markUnit,
-    reset: () => {
-      marks.length = 0;
-      markUnit = initialMs;
-    },
-  };
-}
-
-/** Classify one mark duration as dot or dash against the current unit. */
-export function classifyMark(durationMs: number, unitMs: number): '.' | '-' {
-  return durationMs >= unitMs * DASH_RATIO ? '-' : '.';
-}
-
-/**
- * Classify one space duration against the current unit. Nominal gaps are
- * 1 / 3 / 7 units; the intra/letter boundary sits at 2x (midpoint of 1 and 3)
- * and the letter/word boundary at 5x (midpoint of 3 and 7). A 2x letter floor
- * tolerates AnalyserNode / tone-ramp bleed that shortens measured gaps, which
- * a 2.5x floor mistook for intra-element spacing on real mic audio.
- */
-export function classifyGap(durationMs: number, unitMs: number): GapClass {
-  if (durationMs >= unitMs * 5) return 'word';
-  if (durationMs >= unitMs * 2) return 'letter';
-  return 'intra';
-}
-
 /** Classify a gap against absolute expectations instead of an adaptive unit. */
 export function classifyGapWithModel(durationMs: number, model: GapModel): GapClass {
   if (durationMs >= (model.letterMs + model.wordMs) / 2) return 'word';
@@ -206,7 +150,7 @@ export function createMicDecoder(
   const wordSep = showSlash ? ' / ' : '   ';
 
   let marks: Array<'.' | '-'> = [];
-  const unit = createUnitTracker(
+  const unit = createLengthTracker(
     options.lockUnitMs ?? options.initialUnitMs ?? INITIAL_UNIT_MS,
     options.lockUnitMs !== undefined,
   );
@@ -220,11 +164,7 @@ export function createMicDecoder(
   /** True once a word space was emitted since the last mark began. */
   let pendingWordBoundary = false;
 
-  const rebuildMorse = () =>
-    words
-      .map((word) => word.join(' '))
-      .filter((word) => word.length > 0)
-      .join(wordSep);
+  const rebuildMorse = () => formatMorseTokens(words, wordSep);
 
   const snap = (): MicDecoderState => ({
     marks: marks.join(''),
