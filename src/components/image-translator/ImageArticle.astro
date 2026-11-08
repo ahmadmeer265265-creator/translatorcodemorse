@@ -1,0 +1,760 @@
+---
+/**
+ * Article under the image translator. Wording follows the corrected source.
+ * Pandoc backslashes are not part of the Morse.
+ */
+const link = 'text-accent underline underline-offset-4';
+const h2 = 'text-2xl font-semibold tracking-tight';
+const h3 = 'text-xl font-semibold tracking-tight';
+const tableClass = 'w-full border-collapse text-left text-base';
+const thClass = 'border-b border-line bg-surface px-3 py-2 font-semibold';
+const tdClass = 'border-b border-line px-3 py-2 align-top';
+const code = 'font-mono tracking-wide';
+---
+
+<article class="mt-12 grid gap-10 rounded-2xl border border-line px-4 py-6 text-[1.0625rem] leading-7 sm:px-8 sm:py-8">
+  <section class="cv grid gap-3">
+    <h2 class={h2}>About Morse Code Image Translator</h2>
+    <p>
+      Morse code Image Translator is an online Morse code image decoder tool that analyze, recognize and extract the
+      pattern with accuracy from the Image you upload. Pictures can be from screenshots, flashcards, traditional
+      documents, and images of dots of dashes too instead of you type by your own hands manually. This tool looks and
+      reads the width of each mark in your image and figures out which ones are dots and which are dashes.
+    </p>
+    <p>
+      You might have Morse in a photo of an old telegram, a page from a radio handbook, a screenshot from a puzzle, or a
+      worksheet from a Morse class. All of these work the same way: the tool looks at each mark on its own, not at the
+      words around it. The whole process runs inside your browser locally, so your image never leaves your device. If
+      your Morse is sound instead of a picture, like a radio recording or a beep you captured on your phone, our
+      <a class={link} href="/morse-code-audio-translator/">Morse code audio translator</a> reads that the same way, right
+      in your browser.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>How to use Morse code Image Translator?</h2>
+    <p>
+      Using Morse Code Image Translator is very easy and simple because it's user friendly and fast, we will guide you
+      in four simple steps below.
+    </p>
+    <ol class="grid list-decimal gap-3 pl-5">
+      <li>
+        <span class="font-semibold">Upload your image:</span> Drag and drop it in, or click to browse. PNG, JPG, WEBP, GIF,
+        and BMP all work.
+      </li>
+      <li>
+        <span class="font-semibold">The tool will scan it:</span> It looks at the marks in your image and works out which
+        ones are dots and which are dashes.
+      </li>
+      <li>
+        <span class="font-semibold">Check the detected Morse:</span> You will see the dots and dashes it found, in a box
+        you can edit. If a mark was misread, fix it there and the text will update.
+      </li>
+      <li>
+        <span class="font-semibold">Read, copy, listen, or download.</span> The decoded text appears next to the Morse.
+        Copy it, play it as audio to hear it the way it would sound as a real signal, or download the result as a text
+        file or a WAV audio file.
+      </li>
+    </ol>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Why Image Decoding Is Trickier Than It Looks</h2>
+    <p>
+      Morse code was built for sound. Every dot and dash is a length of time, measured against one unit: the length of
+      a single dot. A dash is three units. The gap between letters is three units, and the gap between words is seven.
+      On a radio or a telegraph line, those lengths are real and steady, no matter how fast or slow someone sends.
+    </p>
+    <p>
+      A picture freezes that timing into space. A tone that lasts 100 milliseconds becomes a mark that is, say, 12
+      pixels wide. The tool now has to look at that width and guess whether it was a dot or a dash, based only on how
+      it compares to the marks around it.
+    </p>
+    <p>
+      This is where things get fragile. A blurry photo, bad lighting, or a low-resolution scan can all stretch or
+      shrink those widths. A dot that runs slightly wide in a blurry shot can look like a dash. Two dots sitting close
+      together can blur into what looks like one long mark. None of this happens with a clean audio signal, where the
+      timing is exact.
+    </p>
+    <p>
+      That is the real reason a clear, high-contrast image decodes so much better than a dim photo taken at an angle.
+      It is not about luck. It is about how reliably the tool can measure something that was never meant to sit still.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>What This Image Decoder Can Do</h2>
+    <p>
+      Every image tool makes trade-offs between formats, accuracy, and privacy. Here is what this one actually does,
+      with nothing added that the tool cannot back up.
+    </p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Feature</th>
+            <th class={thClass} scope="col">What it means</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class={tdClass}>Multiple formats</td>
+            <td class={tdClass}>
+              Upload PNG, JPG, WEBP, GIF, or BMP. PNG works best for clean screenshots because it keeps sharp edges on
+              each mark; JPG and WEBP are fine for photos.
+            </td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Editable detected Morse</td>
+            <td class={tdClass}>
+              If a mark gets misread, fix it directly in the Morse field. The decoded text updates as soon as you do,
+              so you never have to re-upload just to correct one dot.
+            </td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Listen to the result</td>
+            <td class={tdClass}>
+              Play the decoded message as audio, in the same rhythm it would have as a real signal. This is useful for
+              checking a result by ear, not just by eye.
+            </td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Download both ways</td>
+            <td class={tdClass}>
+              Save the decoded text as a TXT file, or save the audio as a WAV file. Use whichever one fits what you are
+              doing with the message next.
+            </td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Private by design</td>
+            <td class={tdClass}>
+              Decoding runs in your browser. Your image is never sent to a server, so nothing about it leaves your
+              device.
+            </td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Free, no signup</td>
+            <td class={tdClass}>No account, no payment, no limit on how many images you decode.</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Marks-look override</td>
+            <td class={tdClass}>
+              If automatic light/dark detection misreads your image, switch "Marks look" to Dark on light or Light on
+              dark to force the right reading.
+            </td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Visual mark overlay</td>
+            <td class={tdClass}>
+              See which marks were read as dots, dashes, or uncertain, highlighted directly on your photo.
+            </td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Camera, paste, and samples</td>
+            <td class={tdClass}>
+              Take a photo with your camera, paste an image from your clipboard, or try a built-in sample — no file of
+              your own required to see the tool work.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class={h3}>Why this matters more than it sounds</h3>
+    <p>
+      Two of these points are worth a closer look, because most Morse image tools get them wrong in one direction or
+      another.
+    </p>
+    <p>
+      <span class="font-semibold">The editable Morse field solves the biggest complaint with image decoding.</span> As
+      explained above, a blurry mark or a low-contrast photo can shift a dot into looking like a dash. Most tools just
+      hand you a wrong answer and leave you to re-upload a better photo and hope. Letting you fix the detected Morse
+      directly means one bad character does not force you to start over.
+    </p>
+    <p>
+      <span class="font-semibold">The privacy point is not the same for every tool on the market.</span> Some image
+      decoders send your photo to a cloud AI service to read it, which means the image leaves your device before you
+      ever see a result. That may be fine for a random puzzle screenshot, but it is worth knowing before you upload
+      something personal, like a photo of a handwritten note. This tool reads the image locally, so that question never
+      comes up.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Which Type of Image You Can Upload</h2>
+    <p>This tool works with most images that contain Morse, but the type of image changes how clean the result is. Below are the details:</p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Image type</th>
+            <th class={thClass} scope="col">Examples</th>
+            <th class={thClass} scope="col">How well it works</th>
+            <th class={thClass} scope="col">Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class={tdClass}>Screenshots</td>
+            <td class={tdClass}>Phone or computer screenshots of Morse text or a display</td>
+            <td class={tdClass}>Excellent</td>
+            <td class={tdClass}>Sharp edges and even spacing, since nothing was photographed through a lens</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Saved or downloaded images</td>
+            <td class={tdClass}>Files saved from a website, app, or chat</td>
+            <td class={tdClass}>Excellent</td>
+            <td class={tdClass}>Same reason as screenshots: no camera distortion to correct for</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Scanned documents</td>
+            <td class={tdClass}>Old telegrams, textbook pages, printed references</td>
+            <td class={tdClass}>Very good</td>
+            <td class={tdClass}>Flat and evenly lit, though old prints can lose contrast over time</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Photos</td>
+            <td class={tdClass}>Camera pictures of printed or displayed Morse</td>
+            <td class={tdClass}>Good</td>
+            <td class={tdClass}>Lighting, angle, and focus can all shift pixel widths, which is what the tool measures</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Handwritten Morse</td>
+            <td class={tdClass}>Notes with hand-drawn dots and dashes</td>
+            <td class={tdClass}>Varies</td>
+            <td class={tdClass}>Spacing depends on the person's hand, and that spacing is what tells a dot from a dash</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Decorative or stylized Morse</td>
+            <td class={tdClass}>Morse used as art, in unusual fonts, or as icons</td>
+            <td class={tdClass}>Poor</td>
+            <td class={tdClass}>These marks often do not follow the real 1:3 timing ratio, so there is nothing accurate to measure</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      The pattern above follows directly from how the tool reads an image: This tool measures every mark width. A
+      source with clean, computer-made edges gives it something exact to measure. Don't use blurry images or stylish
+      fonts. (The screenshot and saved-image rows above assume the marks were drawn with even, program-controlled
+      spacing — by the chart on this page, or a Morse-generating tool — not typed dot and dash characters in a text
+      editor, which the font note below covers.)
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Who Can Use Morse Code Image Translator</h2>
+    <p>
+      Our Morse Code Translator helps historians, teachers, and radio operators to decode Morse from old documents,
+      training sheets, and other real images. If you already have plain Morse text to convert, use the main
+      <a class={link} href="/">Morse code translator</a> instead.
+    </p>
+    <h3 class={h3}>For Historians and Archive Enthusiasts</h3>
+    <p>
+      Historical military messages, old telegraph material, early government documents and museum documents contain
+      hidden messages in their picture form. Morse code image translator is commonly used for all these purposes by
+      scanning documents in this tool.
+    </p>
+    <h3 class={h3}>For Educational Purposes</h3>
+    <p>
+      Students who are learning morse code, can take pictures of their practice sheet and upload in the Morse Code
+      image decoder. From this they can check their accuracy and learn morse code faster instead of comparing it with a
+      Morse Code chart. Quick feedback like this has long been part of Morse training, since confirming each answer
+      right away helps mistakes get corrected before they turn into a habit.
+    </p>
+    <h3 class={h3}>For HAM Radio Operators</h3>
+    <p>
+      HAM radio operators also use this Morse code image translator for various purposes, such as decoding QSL cards,
+      signal waveform diagrams, contest logs, and printed training sheets. These often exist only as scans or photos,
+      so reading them by hand takes time that this tool skips.
+    </p>
+    <h3 class={h3}>For Puzzle Solvers</h3>
+    <p>
+      Our Morse Code image decoder is beneficial for puzzle solvers. They can use this for decode Morse Code symbols
+      that appear in Room puzzles, online game riddles, ARG ( Alternate Reality games ) challenges. They can use this
+      tool as a secret weapon to get competitive advantage.
+    </p>
+    <h3 class={h3}>For Anyone Who's Curious</h3>
+    <p>
+      Whenever you see images, an old letter with Morse Code and you think about it, and can't decode it manually. In
+      this situation you can easily decode it with a single click, by using our Morse Code image decoder.
+    </p>
+    <h3 class={h3}>Emergency Basics</h3>
+    <p>
+      <a class={link} href="/sos-in-morse-code/">SOS</a> and a few other simple signals are still worth knowing by
+      sight. If you come across Morse in a photo of a training poster, a safety card, or an old emergency guide, you
+      can upload it here to check what it says.
+    </p>
+    <h3 class={h3}>For Everyday Screenshots</h3>
+    <p>
+      Not every Morse image comes from a puzzle or an archive. Sometimes it is a screenshot from a social media post,
+      an inbox chat, or someone's practice app, or a few dots and dashes drawn on a whiteboard or a flashcard. This
+      tool reads those the same way it reads any other image.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Tips for Best Results</h2>
+    <p>A few small changes to your photo can make a big difference in how clean the result is.</p>
+    <h3 class={h3}>Image Quality</h3>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Helps</th>
+            <th class={thClass} scope="col">Hurts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class={tdClass}>A steady, in-focus shot</td>
+            <td class={tdClass}>Camera shake or soft focus</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Even, bright light</td>
+            <td class={tdClass}>Deep shadows or harsh glare</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>The biggest resolution you have</td>
+            <td class={tdClass}>A tiny image where marks run together</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Tightly cropped to just the code</td>
+            <td class={tdClass}>Menus, borders, or clutter around it</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class={h3}>File Type</h3>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Helps</th>
+            <th class={thClass} scope="col">Hurts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class={tdClass}>PNG, for sharp, clean edges</td>
+            <td class={tdClass}>A JPG saved at low quality</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>A good-quality JPG</td>
+            <td class={tdClass}>A broken or half-downloaded file</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>A direct screenshot</td>
+            <td class={tdClass}>A screenshot of a screenshot</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class={h3}>What's in the Frame</h3>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Helps</th>
+            <th class={thClass} scope="col">Hurts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class={tdClass}>A plain, single-color background</td>
+            <td class={tdClass}>A busy or patterned background</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Even spacing between marks</td>
+            <td class={tdClass}>Marks that touch or overlap</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Strong contrast, dark on light or light on dark</td>
+            <td class={tdClass}>Grey-on-white or similar low-contrast tones</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Only real Morse marks</td>
+            <td class={tdClass}>Decorative symbols that are not standard Morse</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class={h3}>How the Image Was Made</h3>
+    <p>
+      In this list it matters more than anything else. A dot ( . ) and a dash ( - ) are only told apart by their width,
+      so anything that keeps that width consistent will decode better than anything that does not.
+    </p>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>Marks made by a program, with fixed and even spacing, read the most reliably.</li>
+      <li>
+        Morse typed out in a regular font often fails, because fonts space characters unevenly and the tool cannot
+        always tell a gap inside a letter from a gap between letters.
+      </li>
+      <li>
+        Always keep gaps clearly different in size: the smallest gap inside a letter, a wider one between letters, and
+        the widest between words.
+      </li>
+      <li>
+        Leave open space above and below the row. A line, a border, or an underline touching the marks will blend into
+        them and throw off the reading.
+      </li>
+      <li>Always keep the code on one straight line, without any overlap.</li>
+      <li>
+        If a word comes out wrong after decoding, it is usually one gap, too wide or too narrow. Fixing the detected
+        Morse manually, one space at a time, usually solves it.
+      </li>
+    </ul>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Some Examples</h2>
+    <p>Try these examples to see how the tool reads a clean image.</p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Image shows</th>
+            <th class={thClass} scope="col">Decoded text</th>
+            <th class={thClass} scope="col">What it shows</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class={`${tdClass} ${code}`}>.-- --- .-. .-.. -..</td>
+            <td class={tdClass}>WORLD</td>
+            <td class={tdClass}>A single word, no slashes needed</td>
+          </tr>
+          <tr>
+            <td class={`${tdClass} ${code}`}>... --- ...</td>
+            <td class={tdClass}>SOS</td>
+            <td class={tdClass}>The shortest, most recognizable signal in Morse</td>
+          </tr>
+          <tr>
+            <td class={`${tdClass} ${code}`}>.... .. / - .... . .-. .</td>
+            <td class={tdClass}>HI THERE</td>
+            <td class={tdClass}>A slash marking the gap between two words</td>
+          </tr>
+          <tr>
+            <td class={`${tdClass} ${code}`}>--. --- --- -.. / -- --- .-. -. .. -. --.</td>
+            <td class={tdClass}>GOOD MORNING</td>
+            <td class={tdClass}>A longer message across two words</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      <span class="font-semibold">A note on the slash:</span> In a printed or digital image, a forward slash ( / ) is
+      often used to mark a word gap, because a picture cannot show a pause in time. In a real, timed signal, there is
+      no slash. The word gap is just a longer silence. Both styles are common, and this tool reads either one correctly.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Image Decoder vs Decoding by Hand</h2>
+    <p>
+      Reading Morse by eye is a real skill, and a useful one. But when the source is a photo and you just need the
+      message, the decoder gets there faster.
+    </p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col"></th>
+            <th class={thClass} scope="col">Image decoder</th>
+            <th class={thClass} scope="col">Decoding by hand</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th class={thClass} scope="row">Time</th>
+            <td class={tdClass}>A few seconds</td>
+            <td class={tdClass}>Minutes for a short message, longer for anything bigger</td>
+          </tr>
+          <tr>
+            <th class={thClass} scope="row">Morse knowledge needed</th>
+            <td class={tdClass}>None</td>
+            <td class={tdClass}>You need to know the full alphabet</td>
+          </tr>
+          <tr>
+            <th class={thClass} scope="row">Accuracy</th>
+            <td class={tdClass}>Depends on how clean the image is</td>
+            <td class={tdClass}>Depends on how practiced you are</td>
+          </tr>
+          <tr>
+            <th class={thClass} scope="row">Common mistake</th>
+            <td class={tdClass}>A blurry mark misread as the wrong letter</td>
+            <td class={tdClass}>A gap miscounted, merging or splitting a letter</td>
+          </tr>
+          <tr>
+            <th class={thClass} scope="row">Best suited for</th>
+            <td class={tdClass}>A messy or unfamiliar image, or a quick check</td>
+            <td class={tdClass}>Building real fluency in Morse</td>
+          </tr>
+          <tr>
+            <th class={thClass} scope="row">Cost</th>
+            <td class={tdClass}>Free</td>
+            <td class={tdClass}>Free, but takes your time</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Use the decoder when the source is a picture and speed matters. Reach for your own eyes and ears when the goal is
+      learning Morse itself, since that skill only grows with practice, not with a shortcut.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Limitations of our Tool</h2>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>Our tool only decodes clear and clean images. A faint, blurry, or low-contrast mark can be misread, as explained above.</li>
+      <li>Handwritten and decorative Morse work only when each dot and dash is clearly separated; cursive or stylized marks often fail.</li>
+      <li>Our tool reads only International Morse code. It does not handle American Morse, or any made-up or proprietary pictogram system.</li>
+      <li>This tool does not replace checking critical or time-sensitive messages by another method. Always confirm anything important before acting on it.</li>
+      <li>This tool reads one single row of marks. It does not read Morse code split across multiple lines.</li>
+      <li>For an animated GIF, only the first frame is read. If your Morse is on a later frame, use a still screenshot of that frame instead.</li>
+    </ul>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Common Problems and How to Fix Them</h2>
+    <p>If something does not look right, the cause is almost always the image, not the tool. Start here before trying a different photo.</p>
+    <h3 class={h3}>Image Is Not Uploading</h3>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>Confirm the file is one of the formats this tool reads: PNG, JPG, WEBP, GIF, or BMP.</li>
+      <li>Check the file is not corrupted or only partly downloaded. Try opening it in your photo viewer first.</li>
+      <li>If it still fails, try a different browser or refresh the page and upload again.</li>
+    </ul>
+    <h3 class={h3}>The Decoded Text Looks Wrong</h3>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>Open the editable Morse field and compare it against what you can see in the image. Most wrong results come down to one or two misread marks, not the whole thing.</li>
+      <li>Fix any wrong dot or dash directly, and the text updates right away, no need to re-upload.</li>
+      <li>If many marks look wrong, the image itself is likely the problem. Check it against the tips above: low contrast, blur, and uneven spacing are the usual causes.</li>
+      <li>Confirm the source is actually standard Morse. Puzzle makers sometimes use lookalike symbols that are not real Morse code.</li>
+    </ul>
+    <h3 class={h3}>Only Part of the Message Decoded</h3>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>This is usually a lighting or contrast problem in one part of the image, not the whole thing.</li>
+      <li>Crop the image down to just the Morse code, removing borders, menus, or backgrounds around it.</li>
+      <li>Check the edges of the photo. Marks that are cut off or run outside the frame will not be read.</li>
+    </ul>
+    <h3 class={h3}>Nothing Decodes At All</h3>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>Confirm the image actually contains Morse code, not a drawing or icon that looks similar.</li>
+      <li>Faint, very low-contrast, or heavily stylized marks may not register as marks at all. Try a sharper or higher-contrast version if you have one.</li>
+      <li>A screenshot of the same content, instead of a photo, often works when a photo does not.</li>
+    </ul>
+    <h3 class={h3}>Decoding Is Slow</h3>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>Large image files take longer to process. A smaller file, or a tighter crop, speeds this up.</li>
+      <li>Crop out everything except the Morse code before uploading. Less image means less to scan.</li>
+    </ul>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Morse Code Timing Reference</h2>
+    <p>
+      This is the same timing that makes image decoding possible in the first place, from the "Why Image Decoding Is
+      Trickier Than It Looks" section above. Every length is a multiple of one unit, the length of a single dot.
+    </p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Part</th>
+            <th class={thClass} scope="col">Length</th>
+            <th class={thClass} scope="col">At 12 WPM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class={tdClass}>Dot</td><td class={tdClass}>1 unit</td><td class={tdClass}>100 ms</td></tr>
+          <tr><td class={tdClass}>Dash</td><td class={tdClass}>3 units</td><td class={tdClass}>300 ms</td></tr>
+          <tr><td class={tdClass}>Gap inside a letter</td><td class={tdClass}>1 unit</td><td class={tdClass}>100 ms</td></tr>
+          <tr><td class={tdClass}>Gap between letters</td><td class={tdClass}>3 units</td><td class={tdClass}>300 ms</td></tr>
+          <tr><td class={tdClass}>Gap between words</td><td class={tdClass}>7 units</td><td class={tdClass}>700 ms</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      These ratios come from the ITU standard, ITU-R M.1677-1. In an image, this timing becomes pixel width instead of
+      sound duration, but the math stays the same. A dash is always three times the width of a dot, no matter how large
+      or small the image is.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Morse Code Chart (Letters, Numbers, and Punctuation)</h2>
+    <p>Use this chart to double-check anything the decoder gives you, or to read Morse yourself without the tool.</p>
+    <h3 class={h3}>Letters</h3>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Letter</th>
+            <th class={thClass} scope="col">Morse</th>
+            <th class={thClass} scope="col">Letter</th>
+            <th class={thClass} scope="col">Morse</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class={tdClass}>A</td><td class={`${tdClass} ${code}`}>.-</td><td class={tdClass}>N</td><td class={`${tdClass} ${code}`}>-.</td></tr>
+          <tr><td class={tdClass}>B</td><td class={`${tdClass} ${code}`}>-...</td><td class={tdClass}>O</td><td class={`${tdClass} ${code}`}>---</td></tr>
+          <tr><td class={tdClass}>C</td><td class={`${tdClass} ${code}`}>-.-.</td><td class={tdClass}>P</td><td class={`${tdClass} ${code}`}>.--.</td></tr>
+          <tr><td class={tdClass}>D</td><td class={`${tdClass} ${code}`}>-..</td><td class={tdClass}>Q</td><td class={`${tdClass} ${code}`}>--.-</td></tr>
+          <tr><td class={tdClass}>E</td><td class={`${tdClass} ${code}`}>.</td><td class={tdClass}>R</td><td class={`${tdClass} ${code}`}>.-.</td></tr>
+          <tr><td class={tdClass}>F</td><td class={`${tdClass} ${code}`}>..-.</td><td class={tdClass}>S</td><td class={`${tdClass} ${code}`}>...</td></tr>
+          <tr><td class={tdClass}>G</td><td class={`${tdClass} ${code}`}>--.</td><td class={tdClass}>T</td><td class={`${tdClass} ${code}`}>-</td></tr>
+          <tr><td class={tdClass}>H</td><td class={`${tdClass} ${code}`}>....</td><td class={tdClass}>U</td><td class={`${tdClass} ${code}`}>..-</td></tr>
+          <tr><td class={tdClass}>I</td><td class={`${tdClass} ${code}`}>..</td><td class={tdClass}>V</td><td class={`${tdClass} ${code}`}>...-</td></tr>
+          <tr><td class={tdClass}>J</td><td class={`${tdClass} ${code}`}>.---</td><td class={tdClass}>W</td><td class={`${tdClass} ${code}`}>.--</td></tr>
+          <tr><td class={tdClass}>K</td><td class={`${tdClass} ${code}`}>-.-</td><td class={tdClass}>X</td><td class={`${tdClass} ${code}`}>-..-</td></tr>
+          <tr><td class={tdClass}>L</td><td class={`${tdClass} ${code}`}>.-..</td><td class={tdClass}>Y</td><td class={`${tdClass} ${code}`}>-.--</td></tr>
+          <tr><td class={tdClass}>M</td><td class={`${tdClass} ${code}`}>--</td><td class={tdClass}>Z</td><td class={`${tdClass} ${code}`}>--..</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class={h3}>Numbers</h3>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Number</th>
+            <th class={thClass} scope="col">Morse</th>
+            <th class={thClass} scope="col">Number</th>
+            <th class={thClass} scope="col">Morse</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class={tdClass}>0</td><td class={`${tdClass} ${code}`}>-----</td><td class={tdClass}>5</td><td class={`${tdClass} ${code}`}>.....</td></tr>
+          <tr><td class={tdClass}>1</td><td class={`${tdClass} ${code}`}>.----</td><td class={tdClass}>6</td><td class={`${tdClass} ${code}`}>-....</td></tr>
+          <tr><td class={tdClass}>2</td><td class={`${tdClass} ${code}`}>..---</td><td class={tdClass}>7</td><td class={`${tdClass} ${code}`}>--...</td></tr>
+          <tr><td class={tdClass}>3</td><td class={`${tdClass} ${code}`}>...--</td><td class={tdClass}>8</td><td class={`${tdClass} ${code}`}>---..</td></tr>
+          <tr><td class={tdClass}>4</td><td class={`${tdClass} ${code}`}>....-</td><td class={tdClass}>9</td><td class={`${tdClass} ${code}`}>----.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Notice the pattern: every digit's code is five marks long. For 1 through 5, the number of dots at the start
+      equals the digit, with dashes filling out the rest — 1 is one dot and four dashes, 5 is five dots. For 6 through
+      9, dashes lead instead: the count of leading dashes is five less than the digit, with dots filling out the rest —
+      6 is one dash and four dots, 9 is four dashes and one dot. 0 is five dashes, the mirror of 5's five dots.
+    </p>
+    <h3 class={h3}>Punctuation</h3>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Mark</th>
+            <th class={thClass} scope="col">Morse</th>
+            <th class={thClass} scope="col">Mark</th>
+            <th class={thClass} scope="col">Morse</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class={tdClass}>. (period)</td><td class={`${tdClass} ${code}`}>.-.-.-</td><td class={tdClass}>: (colon)</td><td class={`${tdClass} ${code}`}>---...</td></tr>
+          <tr><td class={tdClass}>, (comma)</td><td class={`${tdClass} ${code}`}>--..--</td><td class={tdClass}>; (semicolon)</td><td class={`${tdClass} ${code}`}>-.-.-.</td></tr>
+          <tr><td class={tdClass}>? (question mark)</td><td class={`${tdClass} ${code}`}>..--..</td><td class={tdClass}>= (equals)</td><td class={`${tdClass} ${code}`}>-...-</td></tr>
+          <tr><td class={tdClass}>' (apostrophe)</td><td class={`${tdClass} ${code}`}>.----.</td><td class={tdClass}>+ (plus)</td><td class={`${tdClass} ${code}`}>.-.-.</td></tr>
+          <tr><td class={tdClass}>! (exclamation)</td><td class={`${tdClass} ${code}`}>-.-.--</td><td class={tdClass}>- (hyphen)</td><td class={`${tdClass} ${code}`}>-....-</td></tr>
+          <tr><td class={tdClass}>/ (slash)</td><td class={`${tdClass} ${code}`}>-..-.</td><td class={tdClass}>_ (underscore)</td><td class={`${tdClass} ${code}`}>..--.-</td></tr>
+          <tr><td class={tdClass}>( (open parenthesis)</td><td class={`${tdClass} ${code}`}>-.--.</td><td class={tdClass}>" (quotation mark)</td><td class={`${tdClass} ${code}`}>.-..-.</td></tr>
+          <tr><td class={tdClass}>) (close parenthesis)</td><td class={`${tdClass} ${code}`}>-.--.-</td><td class={tdClass}>$ (dollar sign)</td><td class={`${tdClass} ${code}`}>...-..-</td></tr>
+          <tr><td class={tdClass}>&amp; (ampersand)</td><td class={`${tdClass} ${code}`}>.-...</td><td class={tdClass}>@ (at sign)</td><td class={`${tdClass} ${code}`}>.--.-.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      A few of these, like $ and the underscore, are rare outside amateur radio. If you only remember a handful, the
+      period, comma, and question mark cover almost everything you will actually run into.
+    </p>
+  </section>
+
+  <section class="cv cv-faq grid gap-3">
+    <h2 class={h2}>Frequently Asked Questions</h2>
+    <div class="grid gap-4">
+      <div class="grid gap-2">
+        <h3 class={h3}>My image has dots and dashes, but when I check it against a Morse chart, nothing makes sense. Why?</h3>
+        <p>
+          It is almost always a timing problem, not a reading problem. In real Morse, a dash is always three times as
+          long as a dot, and the gaps between letters and words follow their own fixed ratios. Puzzle makers and
+          hand-drawn images do not always stick to this. If the proportions in your image are inconsistent, even a
+          careful manual count will produce garbage. Let the decoder measure the widths for you, then check the result
+          in the editable field rather than counting by eye.
+        </p>
+      </div>
+      <div class="grid gap-2">
+        <h3 class={h3}>How do I tell a dot from a dash when they look almost the same length?</h3>
+        <p>
+          By eye, this is genuinely hard, especially in a blurry or low-resolution photo. The decoder does not guess
+          from a fixed ruler. It compares every mark in the image to the others and classifies the short ones as dots
+          and the long ones as dashes, relative to each other. That is also why a tightly cropped, high-contrast image
+          works better than a wide photo with lots of empty space around the code.
+        </p>
+      </div>
+      <div class="grid gap-2">
+        <h3 class={h3}>Is this actually Morse code, or could it be something else?</h3>
+        <p>
+          Not every dot-and-dash pattern in a puzzle is the real Morse. Semaphore, Braille, and invented ciphers can
+          look similar at a glance. If this tool returns nothing readable, or only a string of single letters with no
+          real words, that is a sign the source may not follow International Morse rules at all. Compare a few
+          characters against the chart above as a quick sanity check.
+        </p>
+      </div>
+      <div class="grid gap-2">
+        <h3 class={h3}>I see a forward slash ( / ) in my Morse. Is that a real part of the code?</h3>
+        <p>
+          No. A slash is a printed convention to show a word gap, since a still image cannot show a pause in time. In
+          an actual transmitted signal, there is no symbol at all, just a longer silence. This tool reads both styles
+          correctly, so you do not need to remove or add slashes yourself.
+        </p>
+      </div>
+      <div class="grid gap-2">
+        <h3 class={h3}>Why does my result have extra or missing letters?</h3>
+        <p>
+          This almost always comes down to one gap being measured as slightly too wide or too narrow. A gap that
+          should separate two letters can get read as a letter-internal gap, or the other way around. Open the
+          editable Morse field, compare it to the image, and adjust the spacing around the character that looks wrong.
+          You do not need to re-upload anything.
+        </p>
+      </div>
+      <div class="grid gap-2">
+        <h3 class={h3}>Can I upload a photo I took with my phone, or does it need to be a clean screenshot?</h3>
+        <p>
+          Both work, but not equally well. A screenshot or a saved image usually decodes better, because there is no
+          camera angle, blur, or lighting to correct for. A phone photo can still work well if it is sharp, evenly
+          lit, and shot straight on rather than at an angle.
+        </p>
+      </div>
+      <div class="grid gap-2">
+        <h3 class={h3}>Is my image uploaded anywhere, or does it stay on my device?</h3>
+        <p>
+          Everything runs in your browser. Your image is never sent to a server, so nothing about it leaves your
+          device at any point.
+        </p>
+      </div>
+      <div class="grid gap-2">
+        <h3 class={h3}>Does this work for handwritten Morse, like dots and dashes drawn by hand?</h3>
+        <p>
+          It can, but results vary more than with printed or digital marks. A hand-drawn gap is rarely as consistent
+          as a computer-generated one, and that inconsistency is exactly what the tool uses to tell a letter apart
+          from another. Clear, evenly spaced handwriting works better than quick or cramped writing.
+        </p>
+      </div>
+      <div class="grid gap-2">
+        <h3 class={h3}>What if only part of my image decodes and the rest is blank?</h3>
+        <p>
+          This usually means one section of the image has worse lighting or contrast than the rest, not that the tool
+          stopped partway through. Crop the image down to just the row of Morse code, and check that nothing is cut
+          off at the edges of the photo.
+        </p>
+      </div>
+      <div class="grid gap-2">
+        <h3 class={h3}>Can this tool decode something that is not real Morse code, like a made-up puzzle cipher?</h3>
+        <p>
+          No, and it should not try to. It is built to recognize the timing and spacing rules of International Morse
+          code specifically. A cipher that reuses the look of dots and dashes but follows its own invented rules needs
+          to be solved by hand, or decoded against whatever system the puzzle itself defines.
+        </p>
+      </div>
+    </div>
+  </section>
+</article>

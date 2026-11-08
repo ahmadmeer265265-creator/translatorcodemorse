@@ -47,12 +47,21 @@ describe('image translator markup', () => {
     expect(html).toContain('aria-label="Marks look"');
   });
 
-  it('is noindex and does not add a second homepage-style article', async () => {
+  it('stays noindex, links the three live pages, and shows plain Morse in the chart', async () => {
     const html = await render(ImagePage);
     expect(html).toContain('content="noindex,follow"');
     expect(html).toContain('<h1');
     expect(html).toContain('Morse Code Image Translator');
-    expect(html).not.toContain('Frequently Asked Questions');
+    expect(html).toContain('Frequently Asked Questions');
+    expect(html).toContain('href="/morse-code-audio-translator/"');
+    expect(html).toContain('href="/sos-in-morse-code/"');
+    expect(html).toContain('>Morse code translator</a>');
+    expect(html).toContain('>O</td>');
+    expect(html).toContain('>---</td>');
+    expect(html).toContain('>.....</td>');
+    expect(html).toContain('>-...</td>');
+    expect(html).not.toContain('\\-');
+    expect(html).not.toContain('\\.');
     const nav = html.slice(html.indexOf('<nav'), html.indexOf('</nav>'));
     expect(nav).not.toContain('/morse-code-image-translator/');
   });
