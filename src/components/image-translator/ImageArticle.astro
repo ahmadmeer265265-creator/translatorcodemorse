@@ -152,8 +152,8 @@ const code = 'font-mono tracking-wide';
           <tr>
             <td class={tdClass}>Camera, paste, and samples</td>
             <td class={tdClass}>
-              Take a photo with your camera, paste an image from your clipboard, or try a built-in sample — no file of
-              your own required to see the tool work.
+              Paste an image from your clipboard or try a built-in sample instantly - no file of your own required. On
+              devices and browsers that support it, you can also take a photo directly with your camera.
             </td>
           </tr>
         </tbody>
@@ -444,7 +444,10 @@ const code = 'font-mono tracking-wide';
     <p>
       <span class="font-semibold">A note on the slash:</span> In a printed or digital image, a forward slash ( / ) is
       often used to mark a word gap, because a picture cannot show a pause in time. In a real, timed signal, there is
-      no slash. The word gap is just a longer silence. Both styles are common, and this tool reads either one correctly.
+      no slash - the word gap is just a longer silence, and that silence (a wide empty gap) is what this tool actually
+      looks for. If your image shows the word gap as plain empty space, the tool finds it correctly on its own. If
+      your image instead has an actual slash character drawn between words, the tool reads it as a stray mark, not as
+      a separator - crop it out or replace it with a wider gap before uploading.
     </p>
   </section>
 
@@ -703,8 +706,10 @@ const code = 'font-mono tracking-wide';
         <h3 class={h3}>I see a forward slash ( / ) in my Morse. Is that a real part of the code?</h3>
         <p>
           No. A slash is a printed convention to show a word gap, since a still image cannot show a pause in time. In
-          an actual transmitted signal, there is no symbol at all, just a longer silence. This tool reads both styles
-          correctly, so you do not need to remove or add slashes yourself.
+          an actual transmitted signal, there is no symbol at all, just a longer silence - and that longer silence is
+          what this tool looks for. If your image shows the word gap as plain empty space, the tool finds it on its
+          own. If your image shows an actual slash character drawn between the words, the tool reads it as a stray
+          mark rather than a separator, so it is best to crop it out or widen the gap in its place before uploading.
         </p>
       </div>
       <div class="grid gap-2">
