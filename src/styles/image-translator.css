@@ -64,9 +64,27 @@ html[data-camera='no'] [data-image-translator] [data-camera] {
   gap: 0.5rem;
 }
 
-@media (max-width: 30rem) {
+@media (max-width: 28.75rem) {
+  .it-actions {
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+  }
+
   .it-actions > .it-action {
-    flex: 1 1 9rem;
+    padding-inline: 0.45rem;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 22.5rem) {
+  .it-actions {
+    gap: 0.25rem;
+  }
+
+  .it-actions > .it-action {
+    padding-inline: 0.3rem;
+    font-size: 0.75rem;
   }
 }
 
