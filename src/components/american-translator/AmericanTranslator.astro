@@ -65,7 +65,7 @@ import '../../styles/american-translator.css';
         <span>/ next letter. // next word.</span>
       </p>
 
-      <div class="am-playbar">
+      <div class="am-playbar" data-playbar data-flash-lit="false">
         <div class="am-sound" role="radiogroup" aria-label="Playback sound">
           <label class="am-tab">
             <input class="sr-only" type="radio" name="am-mode" value="sounder" data-mode checked />
@@ -79,11 +79,17 @@ import '../../styles/american-translator.css';
         <div class="am-audio-row">
           <button class="am-btn am-btn--primary" type="button" data-play>Play</button>
           <button class="am-btn" type="button" data-stop>Stop</button>
-          <span class="am-lamp" data-lamp data-mode="sounder" data-on="false" aria-hidden="true"></span>
-          <span class="am-legend">The light follows CW tone only.</span>
         </div>
+        <p class="am-legend am-flash-note">The dock border pulses with the CW tone only, never the page. Not suitable for people sensitive to flashing lights.</p>
       </div>
       <p class="am-note" data-play-note aria-live="polite"></p>
+      <div class="am-tools">
+        <button class="am-btn" type="button" data-copy="text" data-label="Copy text" data-flash="Copied">Copy text</button>
+        <button class="am-btn" type="button" data-copy="morse" data-label="Copy Morse" data-flash="Copied">Copy Morse</button>
+        <button class="am-btn" type="button" data-clear>Clear</button>
+        <button class="am-btn" type="button" data-random>Random example</button>
+        <a class="am-chart-link" href="#american-morse-chart">Full character chart</a>
+      </div>
 
       <details class="am-settings">
         <summary>Playback settings</summary>
@@ -104,6 +110,15 @@ import '../../styles/american-translator.css';
             <input type="checkbox" data-vibrate checked />
             Vibrate with the marks
           </label>
+          <label class="am-slider" for="am-waveform" data-waveform-wrap data-disabled="true">
+            <span>Waveform</span>
+            <select id="am-waveform" class="am-select" data-waveform disabled>
+              <option value="sine" selected>Sine</option>
+              <option value="square">Square</option>
+            </select>
+          </label>
+          <p class="am-legend" data-waveform-note>Waveform applies to CW tone only.</p>
+          <p class="am-legend">No sound on iPhone? Turn off silent mode.</p>
         </div>
       </details>
     </div>
@@ -171,7 +186,6 @@ import '../../styles/american-translator.css';
     clampSpeed,
     clampVolume,
     cuesFor,
-    lampOn,
     pitchEnabled,
     startVibration,
     stopVibration,
@@ -193,6 +207,14 @@ import '../../styles/american-translator.css';
     notationWarning,
     unsupportedWarning,
   } from '../../lib/american-translator-ui';
+  import {
+    clearedPair,
+    cwWaveformFor,
+    dockFlashOn,
+    examplePair,
+    pickAmericanExample,
+    textToCopy,
+  } from './polish';
 
   const root = document.querySelector<HTMLElement>('[data-american-translator]');
   const textEl = root?.querySelector<HTMLTextAreaElement>('[data-text]');
@@ -211,11 +233,14 @@ import '../../styles/american-translator.css';
   const audioMorse = root?.querySelector<HTMLElement>('[data-audio-morse]');
   const playButton = root?.querySelector<HTMLButtonElement>('[data-play]');
   const stopButton = root?.querySelector<HTMLButtonElement>('[data-stop]');
-  const lamp = root?.querySelector<HTMLElement>('[data-lamp]');
+  const playbar = root?.querySelector<HTMLElement>('[data-playbar]');
   const speedInput = root?.querySelector<HTMLInputElement>('[data-speed]');
   const volumeInput = root?.querySelector<HTMLInputElement>('[data-volume]');
   const pitchInput = root?.querySelector<HTMLInputElement>('[data-pitch]');
   const pitchWrap = root?.querySelector<HTMLElement>('[data-pitch-wrap]');
+  const waveformInput = root?.querySelector<HTMLSelectElement>('[data-waveform]');
+  const waveformWrap = root?.querySelector<HTMLElement>('[data-waveform-wrap]');
+  const waveformNote = root?.querySelector<HTMLElement>('[data-waveform-note]');
   const vibrateInput = root?.querySelector<HTMLInputElement>('[data-vibrate]');
   const playNote = root?.querySelector<HTMLElement>('[data-play-note]');
   const sensitivityInput = root?.querySelector<HTMLInputElement>('[data-sensitivity]');
@@ -239,11 +264,14 @@ import '../../styles/american-translator.css';
     audioMorse &&
     playButton &&
     stopButton &&
-    lamp &&
+    playbar &&
     speedInput &&
     volumeInput &&
     pitchInput &&
     pitchWrap &&
+    waveformInput &&
+    waveformWrap &&
+    waveformNote &&
     vibrateInput &&
     playNote &&
     sensitivityInput &&
@@ -504,15 +532,19 @@ import '../../styles/american-translator.css';
 
     const selectedMode = (): PlaybackMode => (modeInputs.some((input) => input.checked && input.value === 'cw') ? 'cw' : 'sounder');
 
-    const syncPitchControl = () => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const syncToneControls = () => {
       const enabled = pitchEnabled(selectedMode());
       pitchInput.disabled = !enabled;
       pitchWrap.dataset.disabled = enabled ? 'false' : 'true';
-      lamp.dataset.mode = selectedMode();
+      waveformInput.disabled = !enabled;
+      waveformWrap.dataset.disabled = enabled ? 'false' : 'true';
+      waveformNote.hidden = enabled;
     };
 
-    const setLamp = (on: boolean) => {
-      lamp.dataset.on = on ? 'true' : 'false';
+    const setFlash = (on: boolean) => {
+      playbar.dataset.flashLit = on && !reduceMotion.matches ? 'true' : 'false';
     };
 
     const clickBuffer = (audio: AudioContext, ms: number) => {
@@ -531,7 +563,7 @@ import '../../styles/american-translator.css';
       if (lampRaf) cancelAnimationFrame(lampRaf);
       lampRaf = 0;
       playing = false;
-      setLamp(false);
+      setFlash(false);
       if (graph) {
         const { ctx, osc, sources } = graph;
         if (osc) {
@@ -557,7 +589,7 @@ import '../../styles/american-translator.css';
     const paintLamp = (now: number) => {
       if (!playing) return;
       const elapsed = now - playOrigin;
-      setLamp(lampOn(activeMode, activeTimeline, elapsed));
+      setFlash(dockFlashOn(activeMode, activeTimeline, elapsed));
       if (elapsed < timelineDuration(activeTimeline) + 40) lampRaf = requestAnimationFrame(paintLamp);
       else stopPlayback();
     };
@@ -595,7 +627,7 @@ import '../../styles/american-translator.css';
         if (mode === 'cw') {
           osc = ctx.createOscillator();
           const env = ctx.createGain();
-          osc.type = 'sine';
+          osc.type = cwWaveformFor(mode, waveformInput.value) ?? 'sine';
           osc.frequency.value = clampPitch(Number(pitchInput.value));
           env.gain.value = 0;
           osc.connect(env);
@@ -633,7 +665,7 @@ import '../../styles/american-translator.css';
         playing = true;
         playOrigin = performance.now() + 50;
         if (vibrateInput.checked) startVibration(timeline, vibrate, vibrationSupported);
-        setLamp(false);
+        setFlash(false);
         lampRaf = requestAnimationFrame(paintLamp);
       } finally {
         starting = false;
@@ -652,6 +684,10 @@ import '../../styles/american-translator.css';
       if (!graph?.osc) return;
       graph.osc.frequency.setTargetAtTime(clampPitch(Number(pitchInput.value)), graph.ctx.currentTime, 0.01);
     });
+    waveformInput.addEventListener('change', () => {
+      const type = cwWaveformFor(selectedMode(), waveformInput.value);
+      if (graph?.osc && type) graph.osc.type = type;
+    });
     speedInput.addEventListener('input', () => {
       if (playing) stopPlayback();
     });
@@ -660,11 +696,57 @@ import '../../styles/american-translator.css';
     });
     for (const input of modeInputs) {
       input.addEventListener('change', () => {
-        syncPitchControl();
+        syncToneControls();
         if (playing) stopPlayback();
       });
     }
-    syncPitchControl();
+    syncToneControls();
+
+    let lastExample: string | null = null;
+    const copyButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-copy]')];
+    for (const button of copyButtons) {
+      button.addEventListener('click', () => {
+        const target = button.dataset.copy === 'morse' ? 'morse' : 'text';
+        const value = textToCopy(target, { text: textEl.value, morse: morseEl.value });
+        const write = navigator.clipboard?.writeText?.bind(navigator.clipboard);
+        const finish = (ok: boolean) => {
+          if (!ok) {
+            playNote.textContent = "Couldn't copy automatically. Select the text and press Ctrl+C.";
+            return;
+          }
+          const label = button.dataset.label ?? button.textContent ?? '';
+          button.textContent = button.dataset.flash ?? 'Copied';
+          button.dataset.state = 'copied';
+          window.setTimeout(() => {
+            button.textContent = label;
+            delete button.dataset.state;
+          }, 1500);
+        };
+        if (!write) {
+          finish(false);
+          return;
+        }
+        void write(value).then(() => finish(true)).catch(() => finish(false));
+      });
+    }
+    root.querySelector<HTMLButtonElement>('[data-clear]')?.addEventListener('click', () => {
+      stopPlayback();
+      const cleared = clearedPair();
+      textEl.value = cleared.text;
+      morseEl.value = cleared.morse;
+      textNote.textContent = '';
+      morseNote.textContent = '';
+    });
+    root.querySelector<HTMLButtonElement>('[data-random]')?.addEventListener('click', () => {
+      stopPlayback();
+      const phrase = pickAmericanExample(() => Math.random(), lastExample);
+      lastExample = phrase;
+      const pair = examplePair(phrase);
+      textEl.value = pair.text;
+      morseEl.value = pair.morse;
+      textNote.textContent = '';
+      morseNote.textContent = '';
+    });
 
     window.addEventListener('pagehide', () => {
       stopPlayback();

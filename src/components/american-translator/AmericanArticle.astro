@@ -119,8 +119,9 @@ const overlaps: readonly (readonly [string, string, string])[] = [
     <h3 class={h3}>Sound, Light, and Vibration</h3>
     <p>
       Play the message as sound, with a choice between two listening styles: the old click of a telegraph sounder, or a
-      smoother CW tone closer to what you’d hear on radio. The flashing light follows the CW tone only. Vibration works
-      with the sounder or the tone, so you can see or feel the signal as well as hear it.
+      smoother CW tone closer to what you’d hear on radio. The dock border pulses with the CW tone only, and it never
+      flashes the whole page. Vibration works with the sounder or the tone, so you can see or feel the signal as well as
+      hear it.
     </p>
     <h3 class={h3}>Speed, Volume, and Pitch</h3>
     <p>
@@ -156,7 +157,7 @@ const overlaps: readonly (readonly [string, string, string])[] = [
   </section>
 
   <section class="cv grid gap-3">
-    <h2 class={h2}>American Morse Code Chart: Letters, Digits, and Punctuation</h2>
+    <h2 class={h2} id="american-morse-chart">American Morse Code Chart: Letters, Digits, and Punctuation</h2>
     <p>
       Here is the full chart: all 26 letters, the ten digits, and the punctuation marks this translator uses. A dot is
       “.”, a dash is “-”, “=” is the long dash for L, and “_” is the extra-long dash for 0. A space inside a code is a
@@ -548,8 +549,9 @@ const overlaps: readonly (readonly [string, string, string])[] = [
       Pasted ⸺ and ⸻ are accepted as L and 0, then shown as = and _.
     </p>
     <p>
-      The flashing light works with the CW tone setting, not the telegraph sounder. A sounder’s click and clack don’t
-      map cleanly onto a single flash the way a steady tone does. Vibration works with either sound setting.
+      The dock border pulses with the CW tone, not the telegraph sounder, and it never flashes the whole page. A
+      sounder’s click and clack don’t map cleanly onto a single flash the way a steady tone does. Vibration works with
+      either sound setting.
     </p>
     <p>
       The “#” symbol stands in for any character this tool doesn’t have a code for. If you see one in your output, check
