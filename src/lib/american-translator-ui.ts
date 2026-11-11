@@ -15,8 +15,17 @@ export const EXTRA_LONG_DASH_TOKEN = '_';
 export const LONG_DASH_LABEL = 'L long dash';
 export const EXTRA_LONG_DASH_LABEL = '0 extra-long dash';
 
-/** Fixed mic gate. Midpoint of the audio translator's 0.02–0.12 sensitivity range. */
-export const MIC_RMS_THRESHOLD = 0.05;
+/**
+ * Live-mic gate. Sensitivity 100 is the most sensitive (0.02 RMS) and
+ * 0 is the strictest (0.12). 70 matches the old fixed 0.05 gate.
+ */
+export function micThresholdFor(sensitivity: number): number {
+  const value = Number.isFinite(sensitivity) ? Math.min(100, Math.max(0, sensitivity)) : 70;
+  return 0.02 + ((100 - value) / 100) * 0.1;
+}
+
+/** Default gate at sensitivity 70. */
+export const MIC_RMS_THRESHOLD = micThresholdFor(70);
 
 export const AUDIO_FILE_EXTENSIONS = ['.wav', '.mp3', '.ogg'] as const;
 export const AUDIO_FILE_ACCEPT = '.wav,.mp3,.ogg,audio/wav,audio/mpeg,audio/ogg';

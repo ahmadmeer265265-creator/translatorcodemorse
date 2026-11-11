@@ -1,7 +1,7 @@
 ---
 /**
- * Typed American Morse converter plus mic/file decode.
- * Sound output, article, and schema are later stages.
+ * Typed American Morse converter, playback, and mic/file decode.
+ * Article content and schema stay later stages.
  */
 import {
   AUDIO_FILE_ACCEPT,
@@ -52,6 +52,43 @@ import '../../styles/american-translator.css';
   </div>
 
   <div class="am-panel">
+    <p class="am-label" id="am-play-label">Play the Morse</p>
+    <div class="am-modes" role="radiogroup" aria-labelledby="am-play-label">
+      <label class="am-choice">
+        <input type="radio" name="am-mode" value="sounder" data-mode checked />
+        Telegraph sounder
+      </label>
+      <label class="am-choice">
+        <input type="radio" name="am-mode" value="cw" data-mode />
+        CW tone
+      </label>
+    </div>
+    <div class="am-audio-row">
+      <button class="am-btn am-btn--primary" type="button" data-play>Play</button>
+      <button class="am-btn" type="button" data-stop>Stop</button>
+      <span class="am-lamp" data-lamp data-mode="sounder" data-on="false" aria-hidden="true"></span>
+    </div>
+    <p class="am-legend">The light follows CW tone only.</p>
+    <label class="am-slider" for="am-speed">
+      <span>Speed</span>
+      <input id="am-speed" type="range" min="5" max="40" value="15" step="1" data-speed />
+    </label>
+    <label class="am-slider" for="am-volume">
+      <span>Volume</span>
+      <input id="am-volume" type="range" min="0" max="100" value="70" step="1" data-volume />
+    </label>
+    <label class="am-slider" for="am-pitch" data-pitch-wrap data-disabled="true">
+      <span>Pitch</span>
+      <input id="am-pitch" type="range" min="200" max="1200" value="700" step="10" data-pitch disabled />
+    </label>
+    <label class="am-choice">
+      <input type="checkbox" data-vibrate checked />
+      Vibrate with the marks
+    </label>
+    <p class="am-note" data-play-note aria-live="polite"></p>
+  </div>
+
+  <div class="am-panel">
     <p class="am-label" id="am-audio-label">Decode from sound</p>
     <p class="am-legend">
       Listening and file decoding stay on this device. The audio is not recorded or uploaded.
@@ -70,6 +107,22 @@ import '../../styles/american-translator.css';
     >
       <div class="am-meter__bar" data-mic-bar></div>
     </div>
+    <label class="am-slider" for="am-sensitivity">
+      <span>Microphone pickup</span>
+      <input
+        id="am-sensitivity"
+        type="range"
+        min="0"
+        max="100"
+        value="70"
+        step="1"
+        data-sensitivity
+        aria-describedby="am-sensitivity-note"
+      />
+    </label>
+    <p class="am-legend" id="am-sensitivity-note">
+      Higher pickup hears quieter signals. Lower pickup ignores more room noise.
+    </p>
     <p class="am-note" data-mic-error role="alert" hidden></p>
 
     <button class="am-drop" type="button" data-drop>
@@ -88,18 +141,32 @@ import '../../styles/american-translator.css';
 
 <script>
   import { createAmericanMicDecoder } from '../../lib/american-mic-decode';
+  import { decodeFilteredPcm } from '../../lib/american-file-decode';
+  import {
+    buildAmericanTimeline,
+    clampPitch,
+    clampSpeed,
+    clampVolume,
+    cuesFor,
+    lampOn,
+    pitchEnabled,
+    startVibration,
+    stopVibration,
+    timelineDuration,
+    type PlaybackMode,
+    type TimedSpan,
+  } from '../../lib/american-playback';
   import {
     EXTRA_LONG_DASH_TOKEN,
     LONG_DASH_TOKEN,
-    MIC_RMS_THRESHOLD,
     convertMorse,
     convertText,
-    decodePcm,
     fileErrorMessage,
     insertToken,
     isAudioFileName,
     micErrorKind,
     micErrorMessage,
+    micThresholdFor,
     notationWarning,
     unsupportedWarning,
   } from '../../lib/american-translator-ui';
@@ -119,6 +186,17 @@ import '../../styles/american-translator.css';
   const fileError = root?.querySelector<HTMLElement>('[data-file-error]');
   const fileName = root?.querySelector<HTMLElement>('[data-file-name]');
   const audioMorse = root?.querySelector<HTMLElement>('[data-audio-morse]');
+  const playButton = root?.querySelector<HTMLButtonElement>('[data-play]');
+  const stopButton = root?.querySelector<HTMLButtonElement>('[data-stop]');
+  const lamp = root?.querySelector<HTMLElement>('[data-lamp]');
+  const speedInput = root?.querySelector<HTMLInputElement>('[data-speed]');
+  const volumeInput = root?.querySelector<HTMLInputElement>('[data-volume]');
+  const pitchInput = root?.querySelector<HTMLInputElement>('[data-pitch]');
+  const pitchWrap = root?.querySelector<HTMLElement>('[data-pitch-wrap]');
+  const vibrateInput = root?.querySelector<HTMLInputElement>('[data-vibrate]');
+  const playNote = root?.querySelector<HTMLElement>('[data-play-note]');
+  const sensitivityInput = root?.querySelector<HTMLInputElement>('[data-sensitivity]');
+  const modeInputs = [...(root?.querySelectorAll<HTMLInputElement>('input[data-mode]') ?? [])];
 
   if (
     root &&
@@ -135,7 +213,18 @@ import '../../styles/american-translator.css';
     fileInput &&
     fileError &&
     fileName &&
-    audioMorse
+    audioMorse &&
+    playButton &&
+    stopButton &&
+    lamp &&
+    speedInput &&
+    volumeInput &&
+    pitchInput &&
+    pitchWrap &&
+    vibrateInput &&
+    playNote &&
+    sensitivityInput &&
+    modeInputs.length === 2
   ) {
     const showAlert = (el: HTMLElement, message: string) => {
       el.textContent = message;
@@ -192,6 +281,7 @@ import '../../styles/american-translator.css';
     let markStart: number | null = null;
     let spaceStart: number | null = null;
     let sampleBuf: Float32Array<ArrayBuffer> | null = null;
+    let stopPlayback = () => {};
 
     const applyHeard = (text: string, morse: string) => {
       heardEl.value = text;
@@ -238,7 +328,7 @@ import '../../styles/american-translator.css';
       const pct = Math.min(100, Math.round((level / 0.25) * 100));
       meterBar.style.width = `${pct}%`;
       meter.setAttribute('aria-valuenow', String(pct));
-      const isMark = level >= MIC_RMS_THRESHOLD;
+      const isMark = level >= micThresholdFor(Number(sensitivityInput.value));
       if (isMark) {
         if (spaceStart !== null) {
           decoder.push({ type: 'space', durationMs: now - spaceStart });
@@ -260,6 +350,7 @@ import '../../styles/american-translator.css';
 
     const startMic = async () => {
       showAlert(micError, '');
+      stopPlayback();
       stopMic();
       if (!navigator.mediaDevices?.getUserMedia) {
         showAlert(micError, micErrorMessage('unsupported'));
@@ -310,6 +401,7 @@ import '../../styles/american-translator.css';
 
     const readFile = async (file: File) => {
       showAlert(fileError, '');
+      stopPlayback();
       if (running) stopMic();
       if (!isAudioFileName(file.name)) {
         showAlert(fileError, fileErrorMessage('type', file.name));
@@ -332,7 +424,7 @@ import '../../styles/american-translator.css';
           const data = buffer.getChannelData(channel);
           for (let i = 0; i < buffer.length; i += 1) mono[i] = (mono[i] ?? 0) + data[i]! / channels;
         }
-        const state = decodePcm(mono, buffer.sampleRate);
+        const state = decodeFilteredPcm(mono, buffer.sampleRate);
         applyHeard(state.text, state.morse);
         fileName.textContent = file.name;
         if (!state.text) showAlert(fileError, 'No Morse was found in that audio.');
@@ -363,7 +455,196 @@ import '../../styles/american-translator.css';
       if (file) void readFile(file);
     });
 
+    type PlayGraph = {
+      ctx: AudioContext;
+      master: GainNode;
+      osc: OscillatorNode | null;
+      sources: AudioBufferSourceNode[];
+    };
+
+    let graph: PlayGraph | null = null;
+    let lampRaf = 0;
+    let playing = false;
+    let starting = false;
+    let activeTimeline: TimedSpan[] = [];
+    let activeMode: PlaybackMode = 'sounder';
+    let playOrigin = 0;
+
+    const vibrationSupported = typeof navigator.vibrate === 'function';
+    if (!vibrationSupported) {
+      vibrateInput.checked = false;
+      vibrateInput.disabled = true;
+      playNote.textContent = 'This device does not vibrate.';
+    }
+
+    const vibrate = (pattern: number[]) => navigator.vibrate?.(pattern) ?? false;
+
+    const selectedMode = (): PlaybackMode => (modeInputs.some((input) => input.checked && input.value === 'cw') ? 'cw' : 'sounder');
+
+    const syncPitchControl = () => {
+      const enabled = pitchEnabled(selectedMode());
+      pitchInput.disabled = !enabled;
+      pitchWrap.dataset.disabled = enabled ? 'false' : 'true';
+      lamp.dataset.mode = selectedMode();
+    };
+
+    const setLamp = (on: boolean) => {
+      lamp.dataset.on = on ? 'true' : 'false';
+    };
+
+    const clickBuffer = (audio: AudioContext, ms: number) => {
+      const length = Math.max(1, Math.round(audio.sampleRate * (ms / 1000)));
+      const buffer = audio.createBuffer(1, length, audio.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < length; i += 1) {
+        const env = Math.sin((Math.PI * i) / Math.max(1, length - 1));
+        data[i] = (Math.random() * 2 - 1) * env * env;
+      }
+      return buffer;
+    };
+
+    stopPlayback = () => {
+      const wasPlaying = playing || graph !== null;
+      if (lampRaf) cancelAnimationFrame(lampRaf);
+      lampRaf = 0;
+      playing = false;
+      setLamp(false);
+      if (graph) {
+        const { ctx, osc, sources } = graph;
+        if (osc) {
+          try {
+            osc.stop();
+          } catch {
+            /* already stopped */
+          }
+        }
+        for (const source of sources) {
+          try {
+            source.stop();
+          } catch {
+            /* already stopped */
+          }
+        }
+        void ctx.close().catch(() => {});
+        graph = null;
+      }
+      if (wasPlaying) stopVibration(vibrate, vibrationSupported);
+    };
+
+    const paintLamp = (now: number) => {
+      if (!playing) return;
+      const elapsed = now - playOrigin;
+      setLamp(lampOn(activeMode, activeTimeline, elapsed));
+      if (elapsed < timelineDuration(activeTimeline) + 40) lampRaf = requestAnimationFrame(paintLamp);
+      else stopPlayback();
+    };
+
+    const startPlayback = async () => {
+      if (starting) return;
+      starting = true;
+      try {
+        if (running) stopMic();
+        stopPlayback();
+        const timeline = buildAmericanTimeline(morseEl.value, clampSpeed(Number(speedInput.value)));
+        if (!timeline.some((span) => span.on)) {
+          if (!vibrationSupported) playNote.textContent = 'This device does not vibrate.';
+          else playNote.textContent = 'Type Morse above, then play it.';
+          return;
+        }
+        if (vibrationSupported) playNote.textContent = '';
+        const mode = selectedMode();
+        const AudioCtx =
+          window.AudioContext ??
+          (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (!AudioCtx) {
+          playNote.textContent = 'This browser cannot play audio.';
+          return;
+        }
+        const ctx = new AudioCtx();
+        await ctx.resume().catch(() => {});
+        const master = ctx.createGain();
+        master.gain.value = clampVolume(Number(volumeInput.value)) / 100;
+        master.connect(ctx.destination);
+        const cues = cuesFor(mode, timeline);
+        const t0 = ctx.currentTime + 0.05;
+        let osc: OscillatorNode | null = null;
+        const sources: AudioBufferSourceNode[] = [];
+        if (mode === 'cw') {
+          osc = ctx.createOscillator();
+          const env = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = clampPitch(Number(pitchInput.value));
+          env.gain.value = 0;
+          osc.connect(env);
+          env.connect(master);
+          for (const tone of cues.tones) {
+            const start = t0 + tone.startMs / 1000;
+            const end = start + Math.max(0.001, tone.durationMs / 1000);
+            const attack = Math.min(0.005, Math.max(0.001, (end - start) / 3));
+            const hold = Math.max(start + attack, end - attack);
+            env.gain.setValueAtTime(0, start);
+            env.gain.linearRampToValueAtTime(1, start + attack);
+            if (hold > start + attack) env.gain.setValueAtTime(1, hold);
+            env.gain.linearRampToValueAtTime(0, Math.max(hold, end));
+          }
+          const finish = t0 + timelineDuration(timeline) / 1000 + 0.02;
+          osc.start(t0);
+          osc.stop(Math.max(finish, t0 + 0.03));
+        } else {
+          const down = clickBuffer(ctx, 8);
+          const up = clickBuffer(ctx, 6);
+          for (const click of cues.clicks) {
+            const source = ctx.createBufferSource();
+            const gain = ctx.createGain();
+            source.buffer = click.edge === 'down' ? down : up;
+            gain.gain.value = click.edge === 'down' ? 0.9 : 0.45;
+            source.connect(gain);
+            gain.connect(master);
+            source.start(t0 + click.atMs / 1000);
+            sources.push(source);
+          }
+        }
+        graph = { ctx, master, osc, sources };
+        activeTimeline = timeline;
+        activeMode = mode;
+        playing = true;
+        playOrigin = performance.now() + 50;
+        if (vibrateInput.checked) startVibration(timeline, vibrate, vibrationSupported);
+        setLamp(false);
+        lampRaf = requestAnimationFrame(paintLamp);
+      } finally {
+        starting = false;
+      }
+    };
+
+    playButton.addEventListener('click', () => {
+      void startPlayback();
+    });
+    stopButton.addEventListener('click', stopPlayback);
+    volumeInput.addEventListener('input', () => {
+      if (!graph) return;
+      graph.master.gain.setValueAtTime(clampVolume(Number(volumeInput.value)) / 100, graph.ctx.currentTime);
+    });
+    pitchInput.addEventListener('input', () => {
+      if (!graph?.osc) return;
+      graph.osc.frequency.setTargetAtTime(clampPitch(Number(pitchInput.value)), graph.ctx.currentTime, 0.01);
+    });
+    speedInput.addEventListener('input', () => {
+      if (playing) stopPlayback();
+    });
+    vibrateInput.addEventListener('change', () => {
+      if (!vibrateInput.checked && playing) stopVibration(vibrate, vibrationSupported);
+    });
+    for (const input of modeInputs) {
+      input.addEventListener('change', () => {
+        syncPitchControl();
+        if (playing) stopPlayback();
+      });
+    }
+    syncPitchControl();
+
     window.addEventListener('pagehide', () => {
+      stopPlayback();
       if (running) stopMic();
     });
   }

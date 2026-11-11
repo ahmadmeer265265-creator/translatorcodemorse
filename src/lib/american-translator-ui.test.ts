@@ -5,6 +5,7 @@ import { pageMeta } from '../config/pages';
 import { primaryNav } from '../config/nav';
 import {
   AMERICAN_PAGE_PATH,
+  MIC_RMS_THRESHOLD,
   EXTRA_LONG_DASH_TOKEN,
   LONG_DASH_TOKEN,
   convertMorse,
@@ -14,6 +15,7 @@ import {
   illegalNotationChars,
   insertToken,
   isAudioFileName,
+  micThresholdFor,
   micErrorKind,
   micErrorMessage,
   notationWarning,
@@ -80,6 +82,13 @@ describe('on-screen keyboard insertion', () => {
 });
 
 describe('microphone and file helpers', () => {
+  it('maps pickup sensitivity onto the 0.02–0.12 gate', () => {
+    expect(micThresholdFor(100)).toBeCloseTo(0.02, 5);
+    expect(micThresholdFor(0)).toBeCloseTo(0.12, 5);
+    expect(micThresholdFor(70)).toBeCloseTo(MIC_RMS_THRESHOLD, 5);
+    expect(micThresholdFor(70)).toBeCloseTo(0.05, 5);
+  });
+
   it('maps permission failures to a denial message', () => {
     expect(micErrorKind('NotAllowedError')).toBe('denied');
     expect(micErrorMessage('denied')).toContain('denied');

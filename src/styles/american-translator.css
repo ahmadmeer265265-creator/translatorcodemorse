@@ -137,6 +137,58 @@
   gap: 0.5rem;
 }
 
+.am-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+
+.am-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.am-slider {
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.am-slider input[type='range'] {
+  width: 100%;
+  min-height: 2.75rem;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.am-slider[data-disabled='true'] {
+  opacity: 0.45;
+}
+
+.am-lamp {
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: 0 0 auto;
+  border: 2px solid var(--line);
+  border-radius: 9999px;
+  background: var(--canvas);
+}
+
+.am-lamp[data-on='true'] {
+  border-color: transparent;
+  background: var(--accent);
+  box-shadow: 0 0 0.75rem var(--accent);
+}
+
+.am-lamp[data-mode='sounder'] {
+  opacity: 0.4;
+}
+
 @media (min-width: 640px) {
   [data-american-translator] {
     gap: 1rem;
