@@ -58,18 +58,28 @@ describe('American Morse translator markup', () => {
 });
 
 describe('American Morse page', () => {
-  it('is a titled page with one heading and no schema block', async () => {
+  it('is a titled page with schema, one heading, and a nav link', async () => {
     const html = await render(AmericanPage);
     expect(html).toContain('<title>American Morse Code Translator</title>');
     expect(html).toContain('content="index, follow"');
+    expect(html).not.toContain('name="keywords"');
     expect(html.match(/<h1\b/g)?.length).toBe(1);
     expect(html).toContain('>American Morse Code Translator</h1>');
     const description = html.match(/name="description" content="([^"]*)"/)?.[1] ?? '';
     expect([...description].length).toBeGreaterThanOrEqual(140);
     expect([...description].length).toBeLessThanOrEqual(155);
-    expect(html).not.toContain('application/ld+json');
+    expect(html).toContain('application/ld+json');
+    expect(html).toContain('"@type":"FAQPage"');
+    expect(html).toContain('"@type":"WebApplication"');
+    expect(html).toContain('"@type":"BreadcrumbList"');
+    expect(html).toContain('"@type":"WebPage"');
+    expect(html).toContain('og-default.jpg');
+    expect(html).toContain('href="/"');
+    expect(html).toContain('.......-..');
+    expect(html).toContain('. ...');
+    expect(html).toContain('... ..');
     const nav = html.slice(html.indexOf('<nav'), html.indexOf('</nav>'));
-    expect(nav).not.toContain(AMERICAN_PAGE_PATH);
+    expect(nav).toContain(AMERICAN_PAGE_PATH);
     for (const item of primaryNav) expect(nav).toContain(item.href);
   });
 });

@@ -114,9 +114,9 @@ describe('microphone and file helpers', () => {
 });
 
 describe('page registration', () => {
-  it('is an indexable page and is not linked from the header nav yet', () => {
+  it('is an indexable page and is linked from the header nav', () => {
     expect(pageMeta.some((page) => page.path === AMERICAN_PAGE_PATH)).toBe(true);
     const navHrefs: readonly string[] = primaryNav.map((item) => item.href);
-    expect(navHrefs.includes(AMERICAN_PAGE_PATH)).toBe(false);
+    expect(navHrefs.includes(AMERICAN_PAGE_PATH)).toBe(true);
   });
 });

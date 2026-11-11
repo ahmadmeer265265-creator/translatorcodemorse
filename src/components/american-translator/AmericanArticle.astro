@@ -1,0 +1,582 @@
+---
+import { AMERICAN_MORSE_ALPHABET, CLOSE_QUOTE } from '../../lib/american-morse';
+import { americanTranslatorFaqs } from './american-faqs';
+
+const link = 'text-accent underline underline-offset-4';
+const h2 = 'text-2xl font-semibold tracking-tight';
+const h3 = 'text-xl font-semibold tracking-tight';
+const tableClass = 'w-full border-collapse text-left text-base';
+const thClass = 'border-b border-line bg-surface px-3 py-2 font-semibold';
+const tdClass = 'border-b border-line px-3 py-2 align-top';
+const codeClass = 'font-mono tracking-wide';
+
+const codeFor = (char: string) => {
+  const entry = AMERICAN_MORSE_ALPHABET.find((item) => item.char === char);
+  if (!entry) throw new Error(`Missing American Morse entry for ${char}`);
+  return entry.code;
+};
+
+const letters = AMERICAN_MORSE_ALPHABET.filter((entry) => entry.group === 'letter');
+const letterRows = letters.slice(0, 13).map((entry, index) => [entry, letters[index + 13]]);
+const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].map((char) => ({
+  char,
+  code: codeFor(char),
+}));
+const digitRows = digits.slice(0, 5).map((entry, index) => [entry, digits[index + 5]]);
+
+const markPairs: readonly (readonly [string, string, string, string])[] = [
+  ['Period', '.', 'Colon', ':'],
+  ['Comma', ',', 'Semicolon', ';'],
+  ['Question mark', '?', 'Apostrophe', "'"],
+  ['Exclamation mark', '!', 'Slash', '/'],
+  ['Hyphen', '-', 'Ampersand', '&'],
+  ['Open parenthesis', '(', 'Close parenthesis', ')'],
+  ['Open quotation mark', '"', 'Close quotation mark', CLOSE_QUOTE],
+];
+
+const changedLetters: readonly (readonly [string, string])[] = [
+  ['C', '-.-.'],
+  ['F', '..-.'],
+  ['J', '.---'],
+  ['L', '.-..'],
+  ['O', '---'],
+  ['P', '.--.'],
+  ['Q', '--.-'],
+  ['R', '.-.'],
+  ['X', '-..-'],
+  ['Y', '-.--'],
+  ['Z', '--..'],
+];
+
+const overlaps: readonly (readonly [string, string, string])[] = [
+  ['-.-.', 'C', 'J'],
+  ['.-..', 'L', 'X'],
+  ['.--.', 'P', '1'],
+  ['..-.', 'F', 'Q'],
+  ['.-.', 'R', 'F'],
+];
+---
+
+<article class="mt-12 grid gap-10 rounded-2xl border border-line px-4 py-6 text-[1.0625rem] leading-7 sm:px-8 sm:py-8">
+  <section class="cv grid gap-3">
+    <h2 class={h2}>What Is American Morse Code?</h2>
+    <p>
+      American Morse code is the original dots-and-dashes alphabet that Samuel Morse and his partner Alfred Vail built
+      for the telegraph in the late 1830s. To work out which letters needed the shortest signals, Alfred Vail reportedly
+      walked into a local newspaper’s print shop and counted how much metal type the printers kept on hand for each
+      letter. The most common ones, like E, got the simplest codes. The code went into real public use on May 24, 1844,
+      the day Morse sent his first long-distance message over the Washington-to-Baltimore line.
+    </p>
+    <p>
+      It stayed the standard on American and Canadian telegraph lines and railroads for nearly a century, which is why
+      most people today call it Railroad Morse. Trains, newspapers, and stock prices all moved through it long before
+      radio existed. Railroad telegraphy, and with it everyday use of the code, was fading out by the 1970s.
+    </p>
+    <p>
+      It is a separate Morse code from the one most people picture when they hear the word “Morse” now. Ships, the
+      military, and radio operators today use a later European redesign known as International Morse. This page covers
+      the older American Morse code, with its own alphabet, its own timing, and its own translator above.
+    </p>
+    <h3 class={h3}>Why Is It Called Railroad Morse?</h3>
+    <p>
+      It wasn’t called Railroad Morse in 1844. It was just Morse code, because there was no other kind. The “American”
+      label showed up later, once Europe had its own version and people needed a way to tell the two apart. “Railroad”
+      came after that, most likely because the railroads were where the code kept working the longest.
+    </p>
+    <p>
+      The link to trains goes back to the very first message. Morse sent it from Washington on May 24, 1844, and Vail
+      received it in the Baltimore and Ohio Railroad depot in Baltimore. Even so, trains weren’t run by telegraph yet.
+      That changed on September 22, 1851, when Charles Minot, a superintendent on the Erie Railroad, got stuck waiting
+      for another train at Turner, New York, and used the line to tell the next station to hold it. It is generally
+      counted as the first train order ever sent by telegraph.
+    </p>
+    <p>
+      Within a few decades, depots up and down the line had a telegrapher on staff. They took orders from a dispatcher
+      somewhere down the line and reported back as trains went by. At first, those orders were sent in American Morse.
+      The person tapping at the station window was a railroad employee, and it’s easy to see why the name stuck.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>What Is an American Morse Code Translator Tool?</h2>
+    <p>
+      This translator takes a message and converts it into American Morse, or reads American Morse and turns it back
+      into plain text. The difference from an ordinary Morse translator is the alphabet underneath. Letters, numbers,
+      and the timing between them follow the older Railroad Morse rules, not the International code most tools default
+      to.
+    </p>
+    <h3 class={h3}>Text to Morse</h3>
+    <p>
+      Type or paste a message, and it converts into American Morse as you go. Characters that don’t exist in American
+      Morse, or symbols the system can’t represent, show up as “#” instead of silently dropping them.
+    </p>
+    <h3 class={h3}>Morse to Text</h3>
+    <p>
+      Paste American Morse in, and it reads back out as plain text. Some letters use a pause inside a single character,
+      like C or O. The tool needs a clear way to tell that short internal gap apart from the gap between two letters, or
+      it will misread one letter as two.
+    </p>
+    <h3 class={h3}>Sound, Light, and Vibration</h3>
+    <p>
+      Play the message as sound, with a choice between two listening styles: the old click of a telegraph sounder, or a
+      smoother CW tone closer to what you’d hear on radio. The flashing light follows the CW tone only. Vibration works
+      with the sounder or the tone, so you can see or feel the signal as well as hear it.
+    </p>
+    <h3 class={h3}>Speed, Volume, and Pitch</h3>
+    <p>
+      Adjust how fast the code plays, how loud it is, and the pitch of the tone. American Morse uses more than one dash
+      length, not a single fixed dash like International Morse, so speed changes the full shape of the signal, not only
+      how quickly one dash follows another. Pitch applies to the CW tone. It stays visible, and does nothing, while the
+      telegraph sounder is selected.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>How the American Morse Code Tool Works</h2>
+    <h3 class={h3}>Matching a Letter to Its Code</h3>
+    <p>
+      Type a letter, and the tool checks it against a table and sends back the matching code. International Morse only
+      needs two shapes, a dot and a dash. American Morse needs four: the dot, a regular dash, a longer dash for L, and
+      an even longer dash for the number 0. The tool has to pick which of those four it is looking at and build it
+      correctly.
+    </p>
+    <h3 class={h3}>Reading the Code Back</h3>
+    <p>
+      Reading the code back is harder. C and O each have a pause inside the character, not between two characters. If
+      the tool treats that pause as a letter break, it reads C as two letters instead of one, and the rest of the
+      message falls apart from that point on. It keeps three pause lengths straight at once: the one inside a letter,
+      the one between letters, and the one between words.
+    </p>
+    <h3 class={h3}>Why Speed Changes Everything at Once</h3>
+    <p>
+      Slide the speed up or down and the tool isn’t just speeding up one dash. It stretches or shrinks the dot, each
+      dash length, and all three pauses together, in the same ratio. A dot stays shorter than a dash, which stays
+      shorter than L, which stays shorter than 0. Get that ratio off and the output stops sounding like American Morse.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>American Morse Code Chart: Letters, Digits, and Punctuation</h2>
+    <p>
+      Here is the full chart: all 26 letters, the ten digits, and the punctuation marks this translator uses. A dot is
+      “.”, a dash is “-”, “=” is the long dash for L, and “_” is the extra-long dash for 0. A space inside a code is a
+      real pause, longer than the normal gap between dots and dashes, so “. .” is the letter O and “..” is I. Operators
+      did vary, so treat this as the form this page encodes and decodes, not the only form ever printed.
+    </p>
+    <p>
+      Type a dot as <code class={codeClass}>.</code>, a dash as <code class={codeClass}>-</code>, L as
+      <code class={codeClass}>=</code>, and 0 as <code class={codeClass}>_</code>. A single space is the pause inside a
+      letter. One slash (<code class={codeClass}>/</code>) is the next letter, and two slashes
+      (<code class={codeClass}>//</code>) are the next word. That is the same notation as the Morse box above. Some
+      charts print L as ⸺ and 0 as ⸻. You can paste those symbols. This page reads them, then shows = and _.
+    </p>
+    <h3 class={h3}>Letters (A to Z)</h3>
+    <p>
+      Five letters hide a pause inside them: C, O, R, Y, and Z. The easiest way to remember them is to treat each one
+      as two small letters stuck together. C is I then E, O is E then E, R is E then I, Y is I then I, and Z is S then
+      E. L is the other odd one out, a single long dash. The remaining twenty letters use only ordinary dots and dashes,
+      and fifteen of those twenty are identical to International Morse.
+    </p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Letter</th>
+            <th class={thClass} scope="col">Code</th>
+            <th class={thClass} scope="col">Letter</th>
+            <th class={thClass} scope="col">Code</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            letterRows.map(([left, right]) => (
+              <tr>
+                <td class={tdClass}>{left.char}</td>
+                <td class={`${tdClass} ${codeClass}`}>{left.code}</td>
+                <td class={tdClass}>{right.char}</td>
+                <td class={`${tdClass} ${codeClass}`}>{right.code}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <h3 class={h3}>Digits (0 to 9)</h3>
+    <p>
+      International digits always run to five marks, which makes them easy to learn. American digits follow no such
+      rule. 0 is one mark, 5 is three dashes, and 6 is six dots, so each digit has to be learned on its own. Only 4
+      matches the International version.
+    </p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Digit</th>
+            <th class={thClass} scope="col">Code</th>
+            <th class={thClass} scope="col">Digit</th>
+            <th class={thClass} scope="col">Code</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            digitRows.map(([left, right]) => (
+              <tr>
+                <td class={tdClass}>{left.char}</td>
+                <td class={`${tdClass} ${codeClass}`}>{left.code}</td>
+                <td class={tdClass}>{right.char}</td>
+                <td class={`${tdClass} ${codeClass}`}>{right.code}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <h3 class={h3}>Punctuation</h3>
+    <p>
+      Punctuation is where American Morse gets odd. Several marks are letter patterns joined into one token, with no
+      pause inside: the slash is U then T (<code class={codeClass}>..--</code>), the hyphen is H then X
+      (<code class={codeClass}>.......-..</code>), and the colon is K, E, then E (<code class={codeClass}>-.-..</code>).
+      Some manuals put a space between those letter groups. This translator does not. Type the code exactly as the
+      table shows. In this punctuation table, a space belongs only in the ampersand and the semicolon. These codes are the hardest to hear and the
+      easiest to misread, since every pause has to be the right length.
+    </p>
+    <p>
+      There’s also a trap for anyone who knows International Morse. <code class={codeClass}>..--..</code> is a question
+      mark there, but in American Morse it is a period. And <code class={codeClass}>-..-.</code>, a slash in
+      International Morse, is the question mark here.
+    </p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Mark</th>
+            <th class={thClass} scope="col">Code</th>
+            <th class={thClass} scope="col">Mark</th>
+            <th class={thClass} scope="col">Code</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            markPairs.map(([leftLabel, leftChar, rightLabel, rightChar]) => (
+              <tr>
+                <td class={tdClass}>{leftLabel}</td>
+                <td class={`${tdClass} ${codeClass}`}>{codeFor(leftChar)}</td>
+                <td class={tdClass}>
+                  {rightLabel}
+                  {rightChar === CLOSE_QUOTE ? ' (”)' : ''}
+                </td>
+                <td class={`${tdClass} ${codeClass}`}>{codeFor(rightChar)}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p>
+      The close quotation mark is the curly quote ”, not the straight quote used for the open quotation mark. That is
+      how the two can round-trip as different characters. Nine dots is the close parenthesis. Five dots is the letter P.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>How to Read American Morse: Gaps, Long Dashes, and Sounder Clicks</h2>
+    <p>
+      Reading American Morse by ear works nothing like reading a chart. A trained operator doesn’t count dots and dashes
+      while a message comes in. They hear a letter as one shape, the same way you hear a spoken word instead of spelling
+      it out. That’s the point of hearing the code live instead of only looking at it on a page.
+    </p>
+    <p>
+      Every operator also had their own rhythm, and other operators could tell who was sending just by the feel of it.
+      Telegraphers called this a person’s “fist.” One might rush the last dot in R just slightly, another might leave a
+      touch more air inside C than the textbook says. Shipboard operators used this same trick to guess whether someone
+      on the other end was sending from a boat getting tossed around in rough weather. It’s one more reason a live
+      sounder, and not a chart, was the real way to learn this code.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Why Does American Morse Sound Like Clicks Instead of Beeps?</h2>
+    <p>
+      A telegraph sounder doesn’t hum a tone the way a radio does. It has a metal arm that snaps down against a contact
+      when the circuit closes, making a click, then snaps back up when the circuit opens, making a clack. A dot is a
+      quick click-clack. A dash is a click, a pause, then a clack, and the pause is what you’re actually measuring.
+    </p>
+    <p>
+      That’s a different skill from listening for a steady beep. Instead of one continuous sound changing length, you’re
+      timing the gap between two short mechanical snaps. Early operators got good enough at this to read entire
+      sentences without thinking about it, the same way a fluent reader doesn’t sound out each letter of a word.
+    </p>
+    <p>
+      There’s an odd theory tied to this timing. Some researchers think the QWERTY keyboard layout was shaped partly by
+      how American Morse operators typed up incoming messages, since a few letter pairs sound so close that a typist
+      needed certain keys kept apart to avoid mixing them up while copying fast. Nobody treats this as settled fact, but
+      it’s a reminder of how deeply this code’s timing shaped the tools around it.
+    </p>
+    <p>
+      A CW tone, the smooth radio-style beep most people now associate with Morse, carries the same dots and dashes
+      without the clicking mechanism. The translator above lets you switch between the two, so you can hear the code the
+      way a 19th-century operator did, or the way a modern radio operator would.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>How American Morse Differs From International Morse</h2>
+    <p>
+      Both codes are built from dots and dashes, which is exactly why people mix them up. The same pattern can mean a
+      different letter in each one. Send dash, dot, dash, dot and an International operator writes C, while an American
+      operator writes J. Read a message with the wrong code and you won’t get a slightly wrong answer. You’ll get
+      gibberish.
+    </p>
+    <h3 class={h3}>The Differences at a Glance</h3>
+    <p>
+      The split wasn’t a clean upgrade. Gerke’s German code cut out the long internal pauses and the two long dashes,
+      and it changed eleven letters and most of the numbers along the way. That simpler version handled undersea cables
+      better, because American Morse packs in lots of closely spaced dots that blur together on a long cable. Europe
+      made it the standard in 1865, and radio followed once ships needed one shared code, which a London conference
+      settled in 1912. US landline companies kept American Morse anyway, partly because it sent faster and they didn’t
+      want to retrain their operators.
+    </p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col"></th>
+            <th class={thClass} scope="col">American Morse</th>
+            <th class={thClass} scope="col">International Morse</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th class={thClass} scope="row">Dash lengths</th>
+            <td class={tdClass}>Three kinds: regular, long (L), and longer (0)</td>
+            <td class={tdClass}>One</td>
+          </tr>
+          <tr>
+            <th class={thClass} scope="row">Pauses inside a letter</th>
+            <td class={tdClass}>Yes, in C, O, R, Y, and Z</td>
+            <td class={tdClass}>None</td>
+          </tr>
+          <tr>
+            <th class={thClass} scope="row">Who designed it</th>
+            <td class={tdClass}>Samuel Morse and Alfred Vail, in use from 1844</td>
+            <td class={tdClass}>Friedrich Gerke, Germany, 1848</td>
+          </tr>
+          <tr>
+            <th class={thClass} scope="row">Works best over</th>
+            <td class={tdClass}>Overhead land wires</td>
+            <td class={tdClass}>Undersea cables, then radio</td>
+          </tr>
+          <tr>
+            <th class={thClass} scope="row">Speed</th>
+            <td class={tdClass}>Faster to send, thanks to shorter dashes</td>
+            <td class={tdClass}>Slower, but holds up better over long distances</td>
+          </tr>
+          <tr>
+            <th class={thClass} scope="row">Where you’ll see it now</th>
+            <td class={tdClass}>Telegraph clubs, railroad museums, Civil War reenactments</td>
+            <td class={tdClass}>Almost all Morse use today, ham radio included</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class={h3}>Which Letters Are Different?</h3>
+    <p>
+      Eleven letters change between the two codes: C, F, J, L, O, P, Q, R, X, Y, and Z. The other fifteen are identical,
+      so a message made only of A, B, D, E, G, H, I, K, M, N, S, T, U, V, and W reads the same in both. Among the digits,
+      only 4 matches.
+    </p>
+    <p>
+      In the table below, = is the long dash for L, and a gap inside a code is a real pause. So . . (O) is two dots with
+      a pause between them, not the letter I (..).
+    </p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Letter</th>
+            <th class={thClass} scope="col">International</th>
+            <th class={thClass} scope="col">American</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            changedLetters.map(([letter, international]) => (
+              <tr>
+                <td class={tdClass}>{letter}</td>
+                <td class={`${tdClass} ${codeClass}`}>{international}</td>
+                <td class={`${tdClass} ${codeClass}`}>{codeFor(letter)}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p>The real danger is overlap. These five patterns exist in both codes, but they point to different characters.</p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Pattern</th>
+            <th class={thClass} scope="col">International</th>
+            <th class={thClass} scope="col">American</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            overlaps.map(([pattern, international, american]) => (
+              <tr>
+                <td class={`${tdClass} ${codeClass}`}>{pattern}</td>
+                <td class={tdClass}>{international}</td>
+                <td class={tdClass}>{american}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <h3 class={h3}>Can I Convert International Morse Directly Into American Morse?</h3>
+    <p>
+      Not by swapping symbols one for one, because the same pattern often means a different character. Eleven letters
+      and nine of the ten digits change between the two codes, and most punctuation does too. Read the International
+      code for CAT with the American chart and you get JAT. OX comes out as the number 59.
+    </p>
+    <p>
+      Go through plain text instead, because a letter is the same letter in both codes. Only the dots and dashes differ.
+      It takes two steps:
+    </p>
+    <ol class="grid list-decimal gap-3 pl-5">
+      <li>
+        Decode the International Morse into text with the
+        <a class={link} href="/">main Morse code translator</a>.
+      </li>
+      <li>Paste that text into the translator on this page to get American Morse.</li>
+    </ol>
+    <p>
+      The same path works the other way around. Decode American Morse here, then paste the text into the
+      <a class={link} href="/">main Morse code translator</a> for International Morse. Check numbers and punctuation
+      afterwards, since those are where the two codes disagree the most.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Who Should Use an American Morse Code Converter?</h2>
+    <p>
+      Most people don’t need American Morse. If you want Morse for radio, ships, or a standard chart, International
+      Morse is the one you’re after. This page is for the smaller group who need the older code on purpose, usually
+      because of a piece of history, a hobby, or a project that has to get the details right.
+    </p>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>
+        <strong>Railroad and telegraph history fans.</strong> You can check or write messages in the code that actually
+        ran on the railroads.
+      </li>
+      <li>
+        <strong>Reenactors and museum volunteers.</strong> It helps anyone staging a historical demonstration who wants
+        the sound of a real telegraph office.
+      </li>
+      <li>
+        <strong>Writers, game makers, and prop designers.</strong> A period story needs the right dots and dashes, and
+        International Morse would be wrong for a US railroad scene.
+      </li>
+      <li>
+        <strong>Ham radio operators.</strong> It’s a way to hear the old landline code and the clicks of a sounder
+        without owning one.
+      </li>
+      <li>
+        <strong>Teachers and students.</strong> A telegraph history lesson works better when students can hear the real
+        code, not just read about it.
+      </li>
+    </ul>
+    <h3 class={h3}>Is American Morse Code Still Used Today?</h3>
+    <p>
+      Not for real work. Railroads moved on to the telephone, and later to radio and electronic signals. The last train
+      order ever copied in Morse is said to have come in at Whitehall, Montana, on May 6, 1982. Ham radio followed a
+      similar path: American operators once used both codes on the air, and now almost all of them use International.
+    </p>
+    <p>
+      What’s left is mostly a hobby. The Morse Telegraph Club is a non-profit that works to preserve American Morse, and
+      its members include retired railroad telegraphers, ham operators who got pulled toward landline telegraphy, and
+      people who just like the history. Some chapters meet in old railroad stations and send messages to other chapters
+      on real sounders. Back in the 1990s, members of one Illinois club converted old modems so they could send Morse
+      over phone lines.
+    </p>
+    <p>
+      It isn’t growing quickly. A British Columbia chapter closed in 2018, and one member called them a dying breed. But
+      a club at Heritage Park in Calgary started in 2019 with help from retired telegraphers, and its junior members are
+      keeping the code going. You’ll also still hear American Morse in railroad museums and Civil War reenactments. If
+      you want to hear it without owning a sounder, the telegraph sounder setting in the translator above does the job.
+    </p>
+    <h3 class={h3}>Is American Morse Harder to Learn Than International Morse?</h3>
+    <p>
+      A little harder to hear, yes, and the cause is timing. International Morse has one dash length and one size of
+      pause inside a letter. American Morse has three dash lengths and two sizes of pause. That pause is the only thing
+      that tells C from IE and R from EI, and old learning guides warned that run-together letters were easy to misread.
+      Telegraphers had a word for the resulting slips, hog-Morse, from the classic example of HOME arriving as HOG.
+    </p>
+    <p>
+      For someone who already knows International Morse, the bigger problem is interference. Fifteen letters and the
+      digit 4 are the same in both codes, but everything else clashes, so your memory keeps offering the wrong answer. A
+      ham radio training book with a chapter on learning the old code gives one rule: keep the two codes in separate
+      boxes. Never think “that’s C in International, so it must be J.” It also says to hear the code properly sent first,
+      because the rhythm is different.
+    </p>
+    <p>
+      The same book is encouraging about the rest. Reading by sounder, it says, is no harder than reading by tone, and
+      anyone who has learned one code already knows how to learn another. So if you’re starting from zero, International
+      Morse is the more practical first code, because far more people use it. Come to American Morse after that, and use
+      the sounder setting at a slow speed to get the rhythm of the pauses in C, O, R, Y, and Z.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Notes</h2>
+    <p>
+      This translator follows one standard version of American Morse, the one most commonly taught by Morse history
+      groups today. Real operators varied quite a bit in their timing, and some old manuals disagree on a few marks,
+      especially in punctuation. If a message you’re checking against an old document doesn’t match exactly, that’s
+      likely why.
+    </p>
+    <p>
+      Typing American Morse by hand needs a way to mark the pause inside a letter separately from the pause between
+      letters. This tool uses <code class={codeClass}>.</code> for a dot, <code class={codeClass}>-</code> for a dash,
+      <code class={codeClass}>=</code> for the long dash (L), and <code class={codeClass}>_</code> for the extra-long
+      dash (0). A single space is the pause inside a letter, such as C or O. A forward slash marks the gap between
+      letters, and a double slash marks the gap between words. The Morse box says the same thing: “.- for A, space
+      inside C O R Y Z, / between letters, // between words.” The Type tab keys are labeled “L long dash” and “0
+      extra-long dash.” If you paste Morse copied from somewhere else, you may need to adjust it to this format first.
+      Pasted ⸺ and ⸻ are accepted as L and 0, then shown as = and _.
+    </p>
+    <p>
+      The flashing light works with the CW tone setting, not the telegraph sounder. A sounder’s click and clack don’t
+      map cleanly onto a single flash the way a steady tone does. Vibration works with either sound setting.
+    </p>
+    <p>
+      The “#” symbol stands in for any character this tool doesn’t have a code for. If you see one in your output, check
+      the text you typed for a symbol outside the chart above.
+    </p>
+  </section>
+
+  <section class="cv cv-faq grid gap-3">
+    <h2 class={h2}>Frequently Asked Questions</h2>
+    <div class="grid gap-4">
+      {
+        americanTranslatorFaqs.map((item) => (
+          <div class="grid gap-2">
+            <h3 class={h3}>{item.question}</h3>
+            <p>{item.answer}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Conclusion</h2>
+    <p>
+      American Morse isn’t the Morse code most people picture, and that’s exactly why it still has fans. It belonged to
+      railroads and landlines, had its own rhythm of clicks, and stayed in daily use decades after the rest of the world
+      moved to something simpler. This page exists so that history, a hobby, or a project doesn’t have to stop at “I
+      wish I could read this.”
+    </p>
+  </section>
+</article>

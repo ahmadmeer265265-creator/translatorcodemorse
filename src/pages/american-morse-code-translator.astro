@@ -1,13 +1,53 @@
 ---
+import AmericanArticle from '../components/american-translator/AmericanArticle.astro';
+import { americanTranslatorFaqs } from '../components/american-translator/american-faqs';
 import AmericanTranslator from '../components/american-translator/AmericanTranslator.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
 
 const title = 'American Morse Code Translator';
 const description =
   'Convert text to American Morse, or type railroad Morse and read it as text. Decode from a microphone or an audio file. Free and private in your browser.';
+const pageUrl = absoluteUrl('/american-morse-code-translator/');
+
+const jsonLd = [
+  ...supportingJsonLd({
+    name: title,
+    description,
+    url: pageUrl,
+    crumbs: [
+      { name: 'Home', url: absoluteUrl('/') },
+      { name: title, url: pageUrl },
+    ],
+    faqs: americanTranslatorFaqs,
+    dateModified: lastUpdatedIso('/american-morse-code-translator/'),
+  }),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: title,
+    url: pageUrl,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    description,
+    featureList: [
+      'Convert text to American Morse and American Morse back to text',
+      'Telegraph sounder and CW tone playback',
+      'Flashing light with the CW tone, vibration with either sound',
+      'Decode a microphone or an audio file in the browser',
+    ],
+  },
+];
 ---
 
-<BaseLayout title={title} description={description} suffix={false}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
   <h1 class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">American Morse Code Translator</h1>
   <p class="mx-auto mt-1 max-w-2xl text-center text-sm text-muted sm:text-base">
     Type text or railroad Morse and play it back on this device. A microphone or an audio file can be decoded here too.
@@ -15,4 +55,5 @@ const description =
   <div class="mt-2 sm:mt-4">
     <AmericanTranslator />
   </div>
+  <AmericanArticle />
 </BaseLayout>
