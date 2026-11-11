@@ -1,0 +1,154 @@
+[data-american-translator] {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.am-panel {
+  display: grid;
+  gap: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface);
+  padding: 0.75rem;
+}
+
+.am-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.am-field {
+  width: 100%;
+  min-height: 6.5rem;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--canvas);
+  color: var(--ink);
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.am-field--mono,
+.am-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+
+.am-note {
+  min-height: 1.25rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.am-legend {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.am-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.am-key,
+.am-btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 2px solid var(--line);
+  background: var(--canvas);
+  color: var(--ink);
+  padding: 0.35rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.am-btn--primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.am-drop {
+  display: grid;
+  gap: 0.25rem;
+  place-items: center;
+  width: 100%;
+  min-height: 5.5rem;
+  border: 2px dashed var(--line);
+  border-radius: 0.85rem;
+  background: var(--canvas);
+  color: var(--ink);
+  padding: 0.9rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.am-drop[data-dragging='true'] {
+  border-color: var(--accent);
+}
+
+.am-drop__hint {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.am-meter {
+  height: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: var(--canvas);
+}
+
+.am-meter__bar {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.am-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.am-audio-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  [data-american-translator] {
+    gap: 1rem;
+  }
+
+  .am-panel {
+    padding: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .am-meter__bar {
+    transition: none;
+  }
+}

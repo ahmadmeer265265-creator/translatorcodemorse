@@ -1,0 +1,18 @@
+---
+import AmericanTranslator from '../components/american-translator/AmericanTranslator.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'American Morse Code Translator';
+const description =
+  'Convert text to American Morse, or type railroad Morse and read it as text. Decode from a microphone or an audio file. Free and private in your browser.';
+---
+
+<BaseLayout title={title} description={description} suffix={false}>
+  <h1 class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">American Morse Code Translator</h1>
+  <p class="mx-auto mt-1 max-w-2xl text-center text-sm text-muted sm:text-base">
+    Type text or railroad Morse. A microphone or an audio file can be decoded on this device too.
+  </p>
+  <div class="mt-2 sm:mt-4">
+    <AmericanTranslator />
+  </div>
+</BaseLayout>

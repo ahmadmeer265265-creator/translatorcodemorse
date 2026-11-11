@@ -1,0 +1,370 @@
+---
+/**
+ * Typed American Morse converter plus mic/file decode.
+ * Sound output, article, and schema are later stages.
+ */
+import {
+  AUDIO_FILE_ACCEPT,
+  EXTRA_LONG_DASH_LABEL,
+  EXTRA_LONG_DASH_TOKEN,
+  LONG_DASH_LABEL,
+  LONG_DASH_TOKEN,
+} from '../../lib/american-translator-ui';
+import '../../styles/american-translator.css';
+---
+
+<section class="am-tool" data-american-translator aria-label="American Morse translator">
+  <div class="am-panel">
+    <label class="am-label" for="am-text">Plain text</label>
+    <textarea
+      id="am-text"
+      class="am-field"
+      data-text
+      rows="4"
+      autocomplete="off"
+      placeholder="Type letters, numbers, or punctuation"
+    ></textarea>
+    <p class="am-note" data-text-note aria-live="polite"></p>
+  </div>
+
+  <div class="am-panel">
+    <label class="am-label" for="am-morse">American Morse</label>
+    <textarea
+      id="am-morse"
+      class="am-field am-field--mono"
+      data-morse
+      rows="4"
+      autocomplete="off"
+      autocapitalize="off"
+      autocorrect="off"
+      spellcheck="false"
+      placeholder=".- for A, space inside C O R Y Z, / between letters, // between words"
+    ></textarea>
+    <div class="am-keys" role="group" aria-label="Insert a dash that is not on the keyboard">
+      <button class="am-key" type="button" data-insert={LONG_DASH_TOKEN}>{LONG_DASH_LABEL}</button>
+      <button class="am-key" type="button" data-insert={EXTRA_LONG_DASH_TOKEN}>{EXTRA_LONG_DASH_LABEL}</button>
+    </div>
+    <p class="am-legend">
+      A space is the pause inside one letter. One slash starts the next letter. Two slashes start the next word.
+      = is L’s long dash. _ is 0’s extra-long dash.
+    </p>
+    <p class="am-note" data-morse-note aria-live="polite"></p>
+  </div>
+
+  <div class="am-panel">
+    <p class="am-label" id="am-audio-label">Decode from sound</p>
+    <p class="am-legend">
+      Listening and file decoding stay on this device. The audio is not recorded or uploaded.
+    </p>
+    <div class="am-audio-row">
+      <button class="am-btn am-btn--primary" type="button" data-mic aria-pressed="false">Start listening</button>
+    </div>
+    <div
+      class="am-meter"
+      role="meter"
+      aria-label="Microphone level"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+      data-mic-meter
+    >
+      <div class="am-meter__bar" data-mic-bar></div>
+    </div>
+    <p class="am-note" data-mic-error role="alert" hidden></p>
+
+    <button class="am-drop" type="button" data-drop>
+      <span>Drop an audio file here, or click to browse</span>
+      <span class="am-drop__hint">WAV, MP3, or OGG. Decoded on this device.</span>
+    </button>
+    <input class="am-file" type="file" accept={AUDIO_FILE_ACCEPT} data-file aria-label="Choose an audio file" />
+    <p class="am-note" data-file-error role="alert" hidden></p>
+    <p class="am-note" data-file-name></p>
+    <p class="am-note am-mono" data-audio-morse></p>
+
+    <label class="am-label" for="am-heard">Heard as text</label>
+    <textarea id="am-heard" class="am-field" data-heard rows="3" readonly aria-live="polite"></textarea>
+  </div>
+</section>
+
+<script>
+  import { createAmericanMicDecoder } from '../../lib/american-mic-decode';
+  import {
+    EXTRA_LONG_DASH_TOKEN,
+    LONG_DASH_TOKEN,
+    MIC_RMS_THRESHOLD,
+    convertMorse,
+    convertText,
+    decodePcm,
+    fileErrorMessage,
+    insertToken,
+    isAudioFileName,
+    micErrorKind,
+    micErrorMessage,
+    notationWarning,
+    unsupportedWarning,
+  } from '../../lib/american-translator-ui';
+
+  const root = document.querySelector<HTMLElement>('[data-american-translator]');
+  const textEl = root?.querySelector<HTMLTextAreaElement>('[data-text]');
+  const morseEl = root?.querySelector<HTMLTextAreaElement>('[data-morse]');
+  const textNote = root?.querySelector<HTMLElement>('[data-text-note]');
+  const morseNote = root?.querySelector<HTMLElement>('[data-morse-note]');
+  const heardEl = root?.querySelector<HTMLTextAreaElement>('[data-heard]');
+  const micButton = root?.querySelector<HTMLButtonElement>('[data-mic]');
+  const micError = root?.querySelector<HTMLElement>('[data-mic-error]');
+  const meter = root?.querySelector<HTMLElement>('[data-mic-meter]');
+  const meterBar = root?.querySelector<HTMLElement>('[data-mic-bar]');
+  const drop = root?.querySelector<HTMLButtonElement>('[data-drop]');
+  const fileInput = root?.querySelector<HTMLInputElement>('[data-file]');
+  const fileError = root?.querySelector<HTMLElement>('[data-file-error]');
+  const fileName = root?.querySelector<HTMLElement>('[data-file-name]');
+  const audioMorse = root?.querySelector<HTMLElement>('[data-audio-morse]');
+
+  if (
+    root &&
+    textEl &&
+    morseEl &&
+    textNote &&
+    morseNote &&
+    heardEl &&
+    micButton &&
+    micError &&
+    meter &&
+    meterBar &&
+    drop &&
+    fileInput &&
+    fileError &&
+    fileName &&
+    audioMorse
+  ) {
+    const showAlert = (el: HTMLElement, message: string) => {
+      el.textContent = message;
+      el.hidden = message.length === 0;
+    };
+
+    const syncFromText = () => {
+      const result = convertText(textEl.value);
+      morseEl.value = result.output;
+      textNote.textContent = unsupportedWarning(result.unsupported);
+      morseNote.textContent = '';
+    };
+
+    const syncFromMorse = () => {
+      const result = convertMorse(morseEl.value);
+      textEl.value = result.output;
+      morseNote.textContent = notationWarning(morseEl.value);
+      textNote.textContent = result.unknown > 0 ? `${result.unknown} Morse group${result.unknown === 1 ? '' : 's'} could not be read and became #.` : '';
+    };
+
+    textEl.addEventListener('input', syncFromText);
+    morseEl.addEventListener('input', syncFromMorse);
+
+    root.querySelectorAll<HTMLButtonElement>('[data-insert]').forEach((button) => {
+      button.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+      });
+      button.addEventListener('click', () => {
+        const token = button.dataset.insert === EXTRA_LONG_DASH_TOKEN ? EXTRA_LONG_DASH_TOKEN : LONG_DASH_TOKEN;
+        const focused = document.activeElement === morseEl;
+        const start = focused ? morseEl.selectionStart : morseEl.value.length;
+        const end = focused ? morseEl.selectionEnd : morseEl.value.length;
+        const next = insertToken(morseEl.value, start, end, token);
+        morseEl.value = next.value;
+        morseEl.focus();
+        morseEl.setSelectionRange(next.cursor, next.cursor);
+        syncFromMorse();
+      });
+    });
+
+    const rms = (samples: Float32Array) => {
+      let sum = 0;
+      for (const sample of samples) sum += sample * sample;
+      return Math.sqrt(sum / samples.length);
+    };
+
+    let decoder = createAmericanMicDecoder();
+    let stream: MediaStream | null = null;
+    let ctx: AudioContext | null = null;
+    let analyser: AnalyserNode | null = null;
+    let source: MediaStreamAudioSourceNode | null = null;
+    let rafId = 0;
+    let running = false;
+    let markStart: number | null = null;
+    let spaceStart: number | null = null;
+    let sampleBuf: Float32Array<ArrayBuffer> | null = null;
+
+    const applyHeard = (text: string, morse: string) => {
+      heardEl.value = text;
+      audioMorse.textContent = morse;
+    };
+
+    const setListening = (on: boolean) => {
+      running = on;
+      micButton.setAttribute('aria-pressed', on ? 'true' : 'false');
+      micButton.textContent = on ? 'Stop listening' : 'Start listening';
+    };
+
+    const stopTracks = () => {
+      stream?.getTracks().forEach((track) => track.stop());
+      stream = null;
+      source?.disconnect();
+      source = null;
+      analyser = null;
+      if (ctx) void ctx.close().catch(() => {});
+      ctx = null;
+    };
+
+    const stopMic = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = 0;
+      const now = performance.now();
+      if (markStart !== null) decoder.push({ type: 'mark', durationMs: now - markStart });
+      if (spaceStart !== null) decoder.push({ type: 'space', durationMs: now - spaceStart });
+      markStart = null;
+      spaceStart = null;
+      const state = decoder.flush();
+      if (running || state.text) applyHeard(state.text, state.morse);
+      stopTracks();
+      setListening(false);
+      meterBar.style.width = '0';
+      meter.setAttribute('aria-valuenow', '0');
+    };
+
+    const tick = (now: number) => {
+      if (!running || !analyser) return;
+      if (!sampleBuf || sampleBuf.length !== analyser.fftSize) sampleBuf = new Float32Array(analyser.fftSize);
+      analyser.getFloatTimeDomainData(sampleBuf);
+      const level = rms(sampleBuf);
+      const pct = Math.min(100, Math.round((level / 0.25) * 100));
+      meterBar.style.width = `${pct}%`;
+      meter.setAttribute('aria-valuenow', String(pct));
+      const isMark = level >= MIC_RMS_THRESHOLD;
+      if (isMark) {
+        if (spaceStart !== null) {
+          decoder.push({ type: 'space', durationMs: now - spaceStart });
+          spaceStart = null;
+        }
+        if (markStart === null) markStart = now;
+      } else {
+        if (markStart !== null) {
+          decoder.push({ type: 'mark', durationMs: now - markStart });
+          markStart = null;
+        }
+        if (spaceStart === null) spaceStart = now;
+        else decoder.silence(now - spaceStart);
+      }
+      const state = decoder.snapshot();
+      applyHeard(state.text, state.morse);
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const startMic = async () => {
+      showAlert(micError, '');
+      stopMic();
+      if (!navigator.mediaDevices?.getUserMedia) {
+        showAlert(micError, micErrorMessage('unsupported'));
+        return;
+      }
+      if (!window.isSecureContext) {
+        showAlert(micError, micErrorMessage('insecure'));
+        return;
+      }
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+        });
+      } catch (error) {
+        const name = error instanceof DOMException ? error.name : '';
+        showAlert(micError, micErrorMessage(micErrorKind(name)));
+        stream = null;
+        return;
+      }
+      const AudioCtx =
+        window.AudioContext ??
+        (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioCtx) {
+        showAlert(micError, micErrorMessage('unsupported'));
+        stopTracks();
+        return;
+      }
+      ctx = new AudioCtx();
+      await ctx.resume().catch(() => {});
+      source = ctx.createMediaStreamSource(stream);
+      analyser = ctx.createAnalyser();
+      analyser.fftSize = 1024;
+      source.connect(analyser);
+      decoder = createAmericanMicDecoder();
+      decoder.reset();
+      applyHeard('', '');
+      fileName.textContent = '';
+      markStart = null;
+      spaceStart = null;
+      setListening(true);
+      rafId = requestAnimationFrame(tick);
+    };
+
+    micButton.addEventListener('click', () => {
+      if (running) stopMic();
+      else void startMic();
+    });
+
+    const readFile = async (file: File) => {
+      showAlert(fileError, '');
+      if (running) stopMic();
+      if (!isAudioFileName(file.name)) {
+        showAlert(fileError, fileErrorMessage('type', file.name));
+        return;
+      }
+      fileName.textContent = file.name;
+      const AudioCtx =
+        window.AudioContext ??
+        (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioCtx) {
+        showAlert(fileError, fileErrorMessage('decode', file.name));
+        return;
+      }
+      const audioCtx = new AudioCtx();
+      try {
+        const buffer = await audioCtx.decodeAudioData(await file.arrayBuffer());
+        const mono = new Float32Array(buffer.length);
+        const channels = buffer.numberOfChannels;
+        for (let channel = 0; channel < channels; channel += 1) {
+          const data = buffer.getChannelData(channel);
+          for (let i = 0; i < buffer.length; i += 1) mono[i] = (mono[i] ?? 0) + data[i]! / channels;
+        }
+        const state = decodePcm(mono, buffer.sampleRate);
+        applyHeard(state.text, state.morse);
+        fileName.textContent = file.name;
+        if (!state.text) showAlert(fileError, 'No Morse was found in that audio.');
+      } catch {
+        showAlert(fileError, fileErrorMessage('decode', file.name));
+      } finally {
+        void audioCtx.close().catch(() => {});
+      }
+    };
+
+    drop.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files?.[0];
+      if (file) void readFile(file);
+      fileInput.value = '';
+    });
+    drop.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      drop.dataset.dragging = 'true';
+    });
+    drop.addEventListener('dragleave', () => {
+      delete drop.dataset.dragging;
+    });
+    drop.addEventListener('drop', (event) => {
+      event.preventDefault();
+      delete drop.dataset.dragging;
+      const file = event.dataTransfer?.files?.[0];
+      if (file) void readFile(file);
+    });
+
+    window.addEventListener('pagehide', () => {
+      if (running) stopMic();
+    });
+  }
+</script>
