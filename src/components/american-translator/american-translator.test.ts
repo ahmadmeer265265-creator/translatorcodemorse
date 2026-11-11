@@ -47,6 +47,12 @@ describe('American Morse translator markup', () => {
     expect(html).toContain('disabled');
     expect(html).toContain('for="am-sensitivity"');
     expect(html).toContain('Microphone pickup');
+    expect(html).toContain('aria-label="Input mode"');
+    expect(html).toContain('>Type</span>');
+    expect(html).toContain('>Listen</span>');
+    expect(html).toContain('>Playback settings</summary>');
+    expect(html).toContain('>Listening settings</summary>');
+    expect(html).not.toContain('<details open');
     expect(html).not.toContain('WPM');
   });
 });

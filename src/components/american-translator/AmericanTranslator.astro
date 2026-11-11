@@ -14,128 +14,150 @@ import '../../styles/american-translator.css';
 ---
 
 <section class="am-tool" data-american-translator aria-label="American Morse translator">
-  <div class="am-panel">
-    <label class="am-label" for="am-text">Plain text</label>
-    <textarea
-      id="am-text"
-      class="am-field"
-      data-text
-      rows="4"
-      autocomplete="off"
-      placeholder="Type letters, numbers, or punctuation"
-    ></textarea>
-    <p class="am-note" data-text-note aria-live="polite"></p>
-  </div>
-
-  <div class="am-panel">
-    <label class="am-label" for="am-morse">American Morse</label>
-    <textarea
-      id="am-morse"
-      class="am-field am-field--mono"
-      data-morse
-      rows="4"
-      autocomplete="off"
-      autocapitalize="off"
-      autocorrect="off"
-      spellcheck="false"
-      placeholder=".- for A, space inside C O R Y Z, / between letters, // between words"
-    ></textarea>
-    <div class="am-keys" role="group" aria-label="Insert a dash that is not on the keyboard">
-      <button class="am-key" type="button" data-insert={LONG_DASH_TOKEN}>{LONG_DASH_LABEL}</button>
-      <button class="am-key" type="button" data-insert={EXTRA_LONG_DASH_TOKEN}>{EXTRA_LONG_DASH_LABEL}</button>
-    </div>
-    <p class="am-legend">
-      A space is the pause inside one letter. One slash starts the next letter. Two slashes start the next word.
-      = is L’s long dash. _ is 0’s extra-long dash.
-    </p>
-    <p class="am-note" data-morse-note aria-live="polite"></p>
-  </div>
-
-  <div class="am-panel">
-    <p class="am-label" id="am-play-label">Play the Morse</p>
-    <div class="am-modes" role="radiogroup" aria-labelledby="am-play-label">
-      <label class="am-choice">
-        <input type="radio" name="am-mode" value="sounder" data-mode checked />
-        Telegraph sounder
+  <div class="am-card">
+    <div class="am-tabs" role="radiogroup" aria-label="Input mode">
+      <label class="am-tab">
+        <input class="sr-only" type="radio" name="am-view" value="type" checked />
+        <span>Type</span>
       </label>
-      <label class="am-choice">
-        <input type="radio" name="am-mode" value="cw" data-mode />
-        CW tone
+      <label class="am-tab">
+        <input class="sr-only" type="radio" name="am-view" value="listen" />
+        <span>Listen</span>
       </label>
     </div>
-    <div class="am-audio-row">
-      <button class="am-btn am-btn--primary" type="button" data-play>Play</button>
-      <button class="am-btn" type="button" data-stop>Stop</button>
-      <span class="am-lamp" data-lamp data-mode="sounder" data-on="false" aria-hidden="true"></span>
-    </div>
-    <p class="am-legend">The light follows CW tone only.</p>
-    <label class="am-slider" for="am-speed">
-      <span>Speed</span>
-      <input id="am-speed" type="range" min="5" max="40" value="15" step="1" data-speed />
-    </label>
-    <label class="am-slider" for="am-volume">
-      <span>Volume</span>
-      <input id="am-volume" type="range" min="0" max="100" value="70" step="1" data-volume />
-    </label>
-    <label class="am-slider" for="am-pitch" data-pitch-wrap data-disabled="true">
-      <span>Pitch</span>
-      <input id="am-pitch" type="range" min="200" max="1200" value="700" step="10" data-pitch disabled />
-    </label>
-    <label class="am-choice">
-      <input type="checkbox" data-vibrate checked />
-      Vibrate with the marks
-    </label>
-    <p class="am-note" data-play-note aria-live="polite"></p>
-  </div>
 
-  <div class="am-panel">
-    <p class="am-label" id="am-audio-label">Decode from sound</p>
-    <p class="am-legend">
-      Listening and file decoding stay on this device. The audio is not recorded or uploaded.
-    </p>
-    <div class="am-audio-row">
-      <button class="am-btn am-btn--primary" type="button" data-mic aria-pressed="false">Start listening</button>
-    </div>
-    <div
-      class="am-meter"
-      role="meter"
-      aria-label="Microphone level"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      aria-valuenow="0"
-      data-mic-meter
-    >
-      <div class="am-meter__bar" data-mic-bar></div>
-    </div>
-    <label class="am-slider" for="am-sensitivity">
-      <span>Microphone pickup</span>
-      <input
-        id="am-sensitivity"
-        type="range"
-        min="0"
-        max="100"
-        value="70"
-        step="1"
-        data-sensitivity
-        aria-describedby="am-sensitivity-note"
-      />
-    </label>
-    <p class="am-legend" id="am-sensitivity-note">
-      Higher pickup hears quieter signals. Lower pickup ignores more room noise.
-    </p>
-    <p class="am-note" data-mic-error role="alert" hidden></p>
+    <div class="am-type">
+      <div class="am-pair">
+        <div class="am-col">
+          <label class="am-label" for="am-text">Plain text</label>
+          <textarea
+            id="am-text"
+            class="am-field"
+            data-text
+            rows="2"
+            autocomplete="off"
+            placeholder="Type letters, numbers, or punctuation"
+          ></textarea>
+          <p class="am-note" data-text-note aria-live="polite"></p>
+        </div>
+        <div class="am-col">
+          <label class="am-label" for="am-morse">American Morse</label>
+          <textarea
+            id="am-morse"
+            class="am-field am-field--mono"
+            data-morse
+            rows="2"
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            placeholder=".- for A, space inside C O R Y Z, / between letters, // between words"
+          ></textarea>
+          <div class="am-keys" role="group" aria-label="Insert a dash that is not on the keyboard">
+            <button class="am-key" type="button" data-insert={LONG_DASH_TOKEN}>{LONG_DASH_LABEL}</button>
+            <button class="am-key" type="button" data-insert={EXTRA_LONG_DASH_TOKEN}>{EXTRA_LONG_DASH_LABEL}</button>
+          </div>
+          <p class="am-note" data-morse-note aria-live="polite"></p>
+        </div>
+      </div>
+      <p class="am-legend">
+        A space is the pause inside one letter. One slash starts the next letter. Two slashes start the next word.
+      </p>
 
-    <button class="am-drop" type="button" data-drop>
-      <span>Drop an audio file here, or click to browse</span>
-      <span class="am-drop__hint">WAV, MP3, or OGG. Decoded on this device.</span>
-    </button>
-    <input class="am-file" type="file" accept={AUDIO_FILE_ACCEPT} data-file aria-label="Choose an audio file" />
-    <p class="am-note" data-file-error role="alert" hidden></p>
-    <p class="am-note" data-file-name></p>
-    <p class="am-note am-mono" data-audio-morse></p>
+      <div class="am-playbar">
+        <div class="am-sound" role="radiogroup" aria-label="Playback sound">
+          <label class="am-tab">
+            <input class="sr-only" type="radio" name="am-mode" value="sounder" data-mode checked />
+            <span>Telegraph sounder</span>
+          </label>
+          <label class="am-tab">
+            <input class="sr-only" type="radio" name="am-mode" value="cw" data-mode />
+            <span>CW tone</span>
+          </label>
+        </div>
+        <div class="am-audio-row">
+          <button class="am-btn am-btn--primary" type="button" data-play>Play</button>
+          <button class="am-btn" type="button" data-stop>Stop</button>
+          <span class="am-lamp" data-lamp data-mode="sounder" data-on="false" aria-hidden="true"></span>
+          <span class="am-legend">The light follows CW tone only.</span>
+        </div>
+      </div>
+      <p class="am-note" data-play-note aria-live="polite"></p>
 
-    <label class="am-label" for="am-heard">Heard as text</label>
-    <textarea id="am-heard" class="am-field" data-heard rows="3" readonly aria-live="polite"></textarea>
+      <details class="am-settings">
+        <summary>Playback settings</summary>
+        <div class="am-settings__body">
+          <label class="am-slider" for="am-speed">
+            <span>Speed</span>
+            <input id="am-speed" type="range" min="5" max="40" value="15" step="1" data-speed />
+          </label>
+          <label class="am-slider" for="am-volume">
+            <span>Volume</span>
+            <input id="am-volume" type="range" min="0" max="100" value="70" step="1" data-volume />
+          </label>
+          <label class="am-slider" for="am-pitch" data-pitch-wrap data-disabled="true">
+            <span>Pitch</span>
+            <input id="am-pitch" type="range" min="200" max="1200" value="700" step="10" data-pitch disabled />
+          </label>
+          <label class="am-choice">
+            <input type="checkbox" data-vibrate checked />
+            Vibrate with the marks
+          </label>
+        </div>
+      </details>
+    </div>
+
+    <div class="am-listen">
+      <p class="am-legend">
+        Listening and file decoding stay on this device. The audio is not recorded or uploaded.
+      </p>
+      <div class="am-audio-row">
+        <button class="am-btn am-btn--primary" type="button" data-mic aria-pressed="false">Start listening</button>
+      </div>
+      <div
+        class="am-meter"
+        role="meter"
+        aria-label="Microphone level"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        data-mic-meter
+      >
+        <div class="am-meter__bar" data-mic-bar></div>
+      </div>
+      <p class="am-note" data-mic-error role="alert" hidden></p>
+      <button class="am-drop" type="button" data-drop>
+        <span>Drop an audio file here, or click to browse</span>
+        <span class="am-drop__hint">WAV, MP3, or OGG. Decoded on this device.</span>
+      </button>
+      <input class="am-file" type="file" accept={AUDIO_FILE_ACCEPT} data-file aria-label="Choose an audio file" />
+      <p class="am-note" data-file-error role="alert" hidden></p>
+      <p class="am-note" data-file-name></p>
+      <p class="am-note am-mono" data-audio-morse></p>
+      <label class="am-label" for="am-heard">Heard as text</label>
+      <textarea id="am-heard" class="am-field" data-heard rows="2" readonly aria-live="polite"></textarea>
+      <details class="am-settings">
+        <summary>Listening settings</summary>
+        <div class="am-settings__body">
+          <label class="am-slider" for="am-sensitivity">
+            <span>Microphone pickup</span>
+            <input
+              id="am-sensitivity"
+              type="range"
+              min="0"
+              max="100"
+              value="70"
+              step="1"
+              data-sensitivity
+              aria-describedby="am-sensitivity-note"
+            />
+          </label>
+          <p class="am-legend" id="am-sensitivity-note">
+            Higher pickup hears quieter signals. Lower pickup ignores more room noise.
+          </p>
+        </div>
+      </details>
+    </div>
   </div>
 </section>
 
