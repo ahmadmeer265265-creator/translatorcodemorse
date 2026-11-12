@@ -100,6 +100,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
+      customSitemaps: [`${SITE_URL}/sitemap-video.xml`],
       filter: (page) => {
         const pathname = new URL(page).pathname;
         if (pathname.includes('/404')) return false;
