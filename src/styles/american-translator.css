@@ -85,6 +85,60 @@
   min-width: 0;
 }
 
+.am-pair {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "text"
+    "swap"
+    "morse";
+}
+
+.am-pair[data-direction='morse'] {
+  grid-template-areas:
+    "morse"
+    "swap"
+    "text";
+}
+
+.am-col--text {
+  grid-area: text;
+}
+
+.am-col--morse {
+  grid-area: morse;
+}
+
+.am-swap {
+  grid-area: swap;
+  justify-self: center;
+  align-self: center;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.am-swap-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+  transition: transform 160ms ease;
+}
+
+.am-swap[data-direction='morse'] .am-swap-icon {
+  transform: rotate(180deg);
+}
+
+.am-pair:has([data-concealed='true']) {
+  grid-template-areas: "morse";
+}
+
+.am-pair:has([data-concealed='true']) .am-swap {
+  display: none;
+}
+
+.am-col[data-concealed='true'] {
+  display: none;
+}
+
 .am-label {
   font-size: 0.875rem;
   font-weight: 600;
@@ -99,9 +153,26 @@
   border-radius: 0.75rem;
   background: var(--canvas);
   color: var(--ink);
-  padding: 0.4rem 0.65rem;
+  padding: 0.45rem 4.4rem 0.4rem 0.65rem;
   font-size: 1rem;
   line-height: 1.4;
+}
+
+.am-box {
+  position: relative;
+  min-width: 0;
+}
+
+.am-in-copy {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  z-index: 1;
+  min-height: 1.7rem;
+  padding: 0.1rem 0.55rem;
+  border-width: 1px;
+  background: var(--canvas);
+  font-size: 0.75rem;
 }
 
 .am-field--mono,
@@ -186,12 +257,51 @@
   font-size: 0.875rem;
 }
 
+.am-audio-row,
+.am-transport .am-btn {
+  gap: 0.35rem;
+}
+
+.am-keys {
+  gap: 0.4rem;
+}
+
+.am-keyrow,
 .am-keys,
 .am-audio-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.am-keyrow {
   gap: 0.4rem;
+  justify-content: center;
+}
+
+.am-transport {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.am-transport .am-btn {
+  width: 100%;
+  padding-inline: 0.4rem;
+  white-space: nowrap;
+}
+
+.am-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+}
+
+.am-btn:focus-visible,
+.am-key:focus-visible,
+.am-chart-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .am-key,
@@ -214,6 +324,25 @@
   border-color: transparent;
   background: var(--accent);
   color: var(--on-accent);
+}
+
+.am-btn.am-swap {
+  width: auto;
+  height: auto;
+  min-height: 1.7rem;
+  padding: 0.1rem 0.6rem 0.1rem 0.4rem;
+  gap: 0.28rem;
+  border-color: var(--accent);
+  color: var(--accent);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.am-btn.am-in-copy {
+  min-height: 1.7rem;
+  padding: 0.1rem 0.55rem;
+  border-width: 1px;
+  font-size: 0.75rem;
 }
 
 .am-settings {
@@ -373,9 +502,26 @@
     gap: 0.5rem;
   }
 
+  .am-pair {
+    gap: 0.28rem;
+  }
+
+  .am-keyrow {
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+  }
+
+  .am-keyrow .am-btn,
+  .am-keyrow .am-key {
+    min-height: 2.25rem;
+    padding-inline: 0.45rem;
+    font-size: 0.72rem;
+  }
+
   .am-keys {
-    gap: 0.75rem;
-    margin-top: 0.25rem;
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+    margin-top: 0;
   }
 }
 
@@ -385,8 +531,38 @@
   }
 
   .am-pair {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) 4.25rem minmax(0, 1fr);
+    grid-template-areas: "text swap morse";
     align-items: start;
+    column-gap: 0.35rem;
+  }
+
+  .am-pair[data-direction='morse'] {
+    grid-template-areas: "morse swap text";
+  }
+
+  .am-pair:has([data-concealed='true']) {
+    grid-template-columns: 1fr;
+    grid-template-areas: "morse";
+  }
+
+  .am-swap {
+    align-self: start;
+    margin-top: 2.15rem;
+  }
+
+  .am-btn.am-swap {
+    flex-direction: column;
+    width: 3.4rem;
+    min-height: 3rem;
+    padding: 0.3rem 0.1rem;
+    gap: 0.12rem;
+    font-size: 0.68rem;
+  }
+
+  .am-swap-icon {
+    width: 1rem;
+    height: 1rem;
   }
 }
 
@@ -394,7 +570,31 @@
   .am-tabs::before,
   .am-sound::before,
   .am-settings > summary::before,
-  .am-meter__bar {
+  .am-meter__bar,
+  .am-swap-icon {
     transition: none;
+  }
+}
+
+@media (max-height: 700px) {
+  .am-card {
+    gap: 0.4rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .am-type,
+  .am-listen {
+    gap: 0.35rem;
+  }
+
+  .am-field {
+    height: 3.25rem;
+    min-height: 3.25rem;
+  }
+
+  .am-legend--note {
+    font-size: 0.75rem;
+    line-height: 1.2;
   }
 }

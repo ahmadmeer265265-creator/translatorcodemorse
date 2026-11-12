@@ -27,37 +27,53 @@ import '../../styles/american-translator.css';
     </div>
 
     <div class="am-type">
-      <div class="am-pair">
-        <div class="am-col">
+      <div class="am-pair" data-direction="text">
+        <div class="am-col am-col--text" data-text-col>
           <label class="am-label" for="am-text">Plain text</label>
-          <textarea
-            id="am-text"
-            class="am-field"
-            data-text
-            rows="2"
-            autocomplete="off"
-            placeholder="Type letters, numbers, or punctuation"
-          ></textarea>
+          <div class="am-box">
+            <textarea
+              id="am-text"
+              class="am-field"
+              data-text
+              rows="2"
+              autocomplete="off"
+              placeholder="Type letters, numbers, or punctuation"
+            ></textarea>
+            <button class="am-btn am-in-copy" type="button" data-copy="text" data-label="Copy" data-flash="Copied" aria-label="Copy text">Copy</button>
+          </div>
           <p class="am-note" data-text-note aria-live="polite"></p>
         </div>
-        <div class="am-col">
+        <button class="am-btn am-swap" type="button" data-swap data-direction="text" aria-label="Swap, Text → Morse">
+          <svg class="am-swap-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M2 7.2h11V5.2L18.6 8 13 10.8V8.8H2z"></path>
+            <path fill="currentColor" d="M22 15.2H11v-2L5.4 16 11 18.8V16.8h11z"></path>
+          </svg>
+          <span>Swap</span>
+        </button>
+        <div class="am-col am-col--morse">
           <label class="am-label" for="am-morse">American Morse</label>
-          <textarea
-            id="am-morse"
-            class="am-field am-field--mono"
-            data-morse
-            rows="2"
-            autocomplete="off"
-            autocapitalize="off"
-            autocorrect="off"
-            spellcheck="false"
-            placeholder=".- for A, space inside C O R Y Z, / between letters, // between words"
-          ></textarea>
-          <div class="am-keys" role="group" aria-label="Insert a dash that is not on the keyboard">
-            <button class="am-key" type="button" data-insert={LONG_DASH_TOKEN}>{LONG_DASH_LABEL}</button>
-            <button class="am-key" type="button" data-insert={EXTRA_LONG_DASH_TOKEN}>{EXTRA_LONG_DASH_LABEL}</button>
+          <div class="am-box">
+            <textarea
+              id="am-morse"
+              class="am-field am-field--mono"
+              data-morse
+              rows="2"
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
+              placeholder=".- for A, space inside C O R Y Z, / between letters, // between words"
+            ></textarea>
+            <button class="am-btn am-in-copy" type="button" data-copy="morse" data-label="Copy" data-flash="Copied" aria-label="Copy Morse code">Copy</button>
           </div>
           <p class="am-note" data-morse-note aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="am-keyrow">
+        <button class="am-btn" type="button" data-random>Random example</button>
+        <div class="am-keys" role="group" aria-label="Insert a dash that is not on the keyboard">
+          <button class="am-key" type="button" data-insert={LONG_DASH_TOKEN}>{LONG_DASH_LABEL}</button>
+          <button class="am-key" type="button" data-insert={EXTRA_LONG_DASH_TOKEN}>{EXTRA_LONG_DASH_LABEL}</button>
         </div>
       </div>
       <p class="am-legend am-legend--note">
@@ -76,18 +92,29 @@ import '../../styles/american-translator.css';
             <span>CW tone</span>
           </label>
         </div>
-        <div class="am-audio-row">
-          <button class="am-btn am-btn--primary" type="button" data-play>Play</button>
-          <button class="am-btn" type="button" data-stop>Stop</button>
+        <div class="am-transport">
+          <button class="am-btn am-btn--primary" type="button" data-play data-phase="stopped" aria-label="Play">
+            <svg class="am-icon" data-icon="play" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4.5 2.8v10.4L13.2 8z"></path></svg>
+            <svg class="am-icon" data-icon="pause" viewBox="0 0 16 16" aria-hidden="true" hidden><path fill="currentColor" d="M3.2 2.5h3.2v11H3.2zm6.4 0h3.2v11H9.6z"></path></svg>
+            <span data-play-label>Play</span>
+          </button>
+          <button class="am-btn" type="button" data-stop aria-label="Stop">
+            <svg class="am-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.2" y="3.2" width="9.6" height="9.6" rx="1" fill="currentColor"></rect></svg>
+            <span>Stop</span>
+          </button>
+          <button class="am-btn" type="button" data-download aria-label="Download the Morse audio as a WAV file">
+            <svg class="am-icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 2v7.2l2.4-2.4 1.2 1.2L8 12.6 4.4 8l1.2-1.2L8 9.2V2zM3 13h10v1.5H3z"></path></svg>
+            <span>Download</span>
+          </button>
         </div>
-        <p class="am-legend am-flash-note">The dock border pulses with the CW tone only, never the page. Not suitable for people sensitive to flashing lights.</p>
       </div>
       <p class="am-note" data-play-note aria-live="polite"></p>
       <div class="am-tools">
-        <button class="am-btn" type="button" data-copy="text" data-label="Copy text" data-flash="Copied">Copy text</button>
-        <button class="am-btn" type="button" data-copy="morse" data-label="Copy Morse" data-flash="Copied">Copy Morse</button>
+        <button class="am-btn" type="button" data-reveal hidden>Show text</button>
         <button class="am-btn" type="button" data-clear>Clear</button>
-        <button class="am-btn" type="button" data-random>Random example</button>
+        <button class="am-btn" type="button" data-share-copy data-label="Copy share link" data-flash="Link copied">Copy share link</button>
+        <button class="am-btn" type="button" data-share data-label="Share" data-flash="Link copied">Share</button>
+        <button class="am-btn" type="button" data-puzzle data-label="Copy puzzle link" data-flash="Link copied">Copy puzzle link</button>
         <a class="am-chart-link" href="#american-morse-chart">Full character chart</a>
       </div>
 
@@ -119,6 +146,7 @@ import '../../styles/american-translator.css';
           </label>
           <p class="am-legend" data-waveform-note>Waveform applies to CW tone only.</p>
           <p class="am-legend">No sound on iPhone? Turn off silent mode.</p>
+          <p class="am-legend am-flash-note">The dock border pulses with the CW tone only, never the page. Not suitable for people sensitive to flashing lights.</p>
         </div>
       </details>
     </div>
@@ -208,12 +236,27 @@ import '../../styles/american-translator.css';
     unsupportedWarning,
   } from '../../lib/american-translator-ui';
   import {
+    americanPuzzleUrl,
+    americanShareUrl,
+    americanWavName,
+    canRenderWav,
     clearedPair,
     cwWaveformFor,
+    directionLabel,
     dockFlashOn,
     examplePair,
+    nextTransportPhase,
+    pcmToWav,
     pickAmericanExample,
+    readAmericanLink,
+    renderAmericanPcm,
+    swappedDirection,
     textToCopy,
+    transportLabel,
+    vibrationRemainder,
+    WAV_SAMPLE_RATE,
+    type FieldDirection,
+    type TransportPhase,
   } from './polish';
 
   const root = document.querySelector<HTMLElement>('[data-american-translator]');
@@ -232,7 +275,15 @@ import '../../styles/american-translator.css';
   const fileName = root?.querySelector<HTMLElement>('[data-file-name]');
   const audioMorse = root?.querySelector<HTMLElement>('[data-audio-morse]');
   const playButton = root?.querySelector<HTMLButtonElement>('[data-play]');
+  const playLabel = playButton?.querySelector<HTMLElement>('[data-play-label]');
+  const playIcon = playButton?.querySelector<Element>('[data-icon="play"]');
+  const pauseIcon = playButton?.querySelector<Element>('[data-icon="pause"]');
   const stopButton = root?.querySelector<HTMLButtonElement>('[data-stop]');
+  const downloadButton = root?.querySelector<HTMLButtonElement>('[data-download]');
+  const swapButton = root?.querySelector<HTMLButtonElement>('[data-swap]');
+  const pairEl = root?.querySelector<HTMLElement>('.am-pair');
+  const textCol = root?.querySelector<HTMLElement>('[data-text-col]');
+  const revealButton = root?.querySelector<HTMLButtonElement>('[data-reveal]');
   const playbar = root?.querySelector<HTMLElement>('[data-playbar]');
   const speedInput = root?.querySelector<HTMLInputElement>('[data-speed]');
   const volumeInput = root?.querySelector<HTMLInputElement>('[data-volume]');
@@ -263,7 +314,15 @@ import '../../styles/american-translator.css';
     fileName &&
     audioMorse &&
     playButton &&
+    playLabel &&
+    playIcon &&
+    pauseIcon &&
     stopButton &&
+    downloadButton &&
+    swapButton &&
+    pairEl &&
+    textCol &&
+    revealButton &&
     playbar &&
     speedInput &&
     volumeInput &&
@@ -517,6 +576,9 @@ import '../../styles/american-translator.css';
     let lampRaf = 0;
     let playing = false;
     let starting = false;
+    let playToken = 0;
+    let phase: TransportPhase = 'stopped';
+    let pausedElapsed = 0;
     let activeTimeline: TimedSpan[] = [];
     let activeMode: PlaybackMode = 'sounder';
     let playOrigin = 0;
@@ -547,6 +609,15 @@ import '../../styles/american-translator.css';
       playbar.dataset.flashLit = on && !reduceMotion.matches ? 'true' : 'false';
     };
 
+    const paintTransport = () => {
+      const label = transportLabel(phase);
+      playButton.dataset.phase = phase;
+      playButton.setAttribute('aria-label', label);
+      playLabel.textContent = label;
+      playIcon.toggleAttribute('hidden', phase === 'playing');
+      pauseIcon.toggleAttribute('hidden', phase !== 'playing');
+    };
+
     const clickBuffer = (audio: AudioContext, ms: number) => {
       const length = Math.max(1, Math.round(audio.sampleRate * (ms / 1000)));
       const buffer = audio.createBuffer(1, length, audio.sampleRate);
@@ -559,11 +630,15 @@ import '../../styles/american-translator.css';
     };
 
     stopPlayback = () => {
-      const wasPlaying = playing || graph !== null;
+      playToken += 1;
+      const wasBusy = phase !== 'stopped' || graph !== null;
       if (lampRaf) cancelAnimationFrame(lampRaf);
       lampRaf = 0;
       playing = false;
+      phase = 'stopped';
+      pausedElapsed = 0;
       setFlash(false);
+      paintTransport();
       if (graph) {
         const { ctx, osc, sources } = graph;
         if (osc) {
@@ -583,7 +658,7 @@ import '../../styles/american-translator.css';
         void ctx.close().catch(() => {});
         graph = null;
       }
-      if (wasPlaying) stopVibration(vibrate, vibrationSupported);
+      if (wasBusy) stopVibration(vibrate, vibrationSupported);
     };
 
     const paintLamp = (now: number) => {
@@ -594,12 +669,51 @@ import '../../styles/american-translator.css';
       else stopPlayback();
     };
 
+    const pausePlayback = () => {
+      if (phase !== 'playing' || !graph) return;
+      const elapsed = Math.max(0, performance.now() - playOrigin);
+      if (elapsed >= timelineDuration(activeTimeline)) {
+        stopPlayback();
+        return;
+      }
+      if (lampRaf) cancelAnimationFrame(lampRaf);
+      lampRaf = 0;
+      playing = false;
+      phase = 'paused';
+      pausedElapsed = elapsed;
+      setFlash(false);
+      stopVibration(vibrate, vibrationSupported);
+      void graph.ctx.suspend().catch(() => {});
+      paintTransport();
+    };
+
+    const resumePlayback = async () => {
+      if (phase !== 'paused' || !graph || starting) return;
+      starting = true;
+      try {
+        phase = 'playing';
+        playing = true;
+        paintTransport();
+        await graph.ctx.resume().catch(() => {});
+        if (phase !== 'playing' || !graph) return;
+        playOrigin = performance.now() - pausedElapsed;
+        if (vibrateInput.checked) {
+          const rest = vibrationRemainder(activeTimeline, pausedElapsed);
+          if (rest.length > 0) vibrate(rest);
+        }
+        lampRaf = requestAnimationFrame(paintLamp);
+      } finally {
+        starting = false;
+      }
+    };
+
     const startPlayback = async () => {
       if (starting) return;
       starting = true;
       try {
         if (running) stopMic();
         stopPlayback();
+        const token = playToken;
         const timeline = buildAmericanTimeline(morseEl.value, clampSpeed(Number(speedInput.value)));
         if (!timeline.some((span) => span.on)) {
           if (!vibrationSupported) playNote.textContent = 'This device does not vibrate.';
@@ -617,6 +731,10 @@ import '../../styles/american-translator.css';
         }
         const ctx = new AudioCtx();
         await ctx.resume().catch(() => {});
+        if (token !== playToken) {
+          void ctx.close().catch(() => {});
+          return;
+        }
         const master = ctx.createGain();
         master.gain.value = clampVolume(Number(volumeInput.value)) / 100;
         master.connect(ctx.destination);
@@ -663,7 +781,10 @@ import '../../styles/american-translator.css';
         activeTimeline = timeline;
         activeMode = mode;
         playing = true;
+        phase = 'playing';
+        pausedElapsed = 0;
         playOrigin = performance.now() + 50;
+        paintTransport();
         if (vibrateInput.checked) startVibration(timeline, vibrate, vibrationSupported);
         setFlash(false);
         lampRaf = requestAnimationFrame(paintLamp);
@@ -673,9 +794,47 @@ import '../../styles/american-translator.css';
     };
 
     playButton.addEventListener('click', () => {
-      void startPlayback();
+      if (starting) return;
+      const next = nextTransportPhase(phase, 'play');
+      if (next === 'paused') pausePlayback();
+      else if (phase === 'paused') void resumePlayback();
+      else void startPlayback();
     });
-    stopButton.addEventListener('click', stopPlayback);
+    stopButton.addEventListener('click', () => {
+      stopPlayback();
+    });
+    downloadButton.addEventListener('click', () => {
+      const timeline = buildAmericanTimeline(morseEl.value, clampSpeed(Number(speedInput.value)));
+      const duration = timelineDuration(timeline);
+      if (!timeline.some((span) => span.on)) {
+        playNote.textContent = 'Type Morse above, then download it.';
+        return;
+      }
+      if (!canRenderWav(duration)) {
+        playNote.textContent = 'That message is too long to download. Shorten it and try again.';
+        return;
+      }
+      const mode = selectedMode();
+      const pcm = renderAmericanPcm(timeline, {
+        mode,
+        frequency: clampPitch(Number(pitchInput.value)),
+        sampleRate: WAV_SAMPLE_RATE,
+        volume: clampVolume(Number(volumeInput.value)) / 100,
+        waveform: cwWaveformFor(mode, waveformInput.value) ?? 'sine',
+      });
+      const wav = pcmToWav(pcm, WAV_SAMPLE_RATE);
+      const blob = new Blob([wav], { type: 'audio/wav' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = americanWavName(mode);
+      link.rel = 'noopener';
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+      if (vibrationSupported) playNote.textContent = '';
+    });
     volumeInput.addEventListener('input', () => {
       if (!graph) return;
       graph.master.gain.setValueAtTime(clampVolume(Number(volumeInput.value)) / 100, graph.ctx.currentTime);
@@ -689,7 +848,7 @@ import '../../styles/american-translator.css';
       if (graph?.osc && type) graph.osc.type = type;
     });
     speedInput.addEventListener('input', () => {
-      if (playing) stopPlayback();
+      if (phase !== 'stopped') stopPlayback();
     });
     vibrateInput.addEventListener('change', () => {
       if (!vibrateInput.checked && playing) stopVibration(vibrate, vibrationSupported);
@@ -697,36 +856,127 @@ import '../../styles/american-translator.css';
     for (const input of modeInputs) {
       input.addEventListener('change', () => {
         syncToneControls();
-        if (playing) stopPlayback();
+        if (phase !== 'stopped') stopPlayback();
       });
     }
     syncToneControls();
+
+    const concealText = (hidden: boolean) => {
+      if (hidden) {
+        textCol.dataset.concealed = 'true';
+        textCol.setAttribute('inert', '');
+        textEl.setAttribute('aria-hidden', 'true');
+        revealButton.hidden = false;
+      } else {
+        delete textCol.dataset.concealed;
+        textCol.removeAttribute('inert');
+        textEl.removeAttribute('aria-hidden');
+        revealButton.hidden = true;
+      }
+    };
+
+    const paintDirection = (direction: FieldDirection) => {
+      pairEl.dataset.direction = direction;
+      swapButton.setAttribute('aria-label', `Swap, ${directionLabel(direction)}`);
+      swapButton.dataset.direction = direction;
+    };
+
+    swapButton.addEventListener('click', () => {
+      const next = swappedDirection(pairEl.dataset.direction === 'morse' ? 'morse' : 'text');
+      paintDirection(next);
+      if (next === 'morse' || !textCol.hasAttribute('inert')) {
+        (next === 'morse' ? morseEl : textEl).focus();
+      }
+    });
+    revealButton.addEventListener('click', () => {
+      concealText(false);
+      textEl.focus();
+    });
+
+    const flashButton = (button: HTMLButtonElement) => {
+      const label = button.dataset.label ?? button.textContent ?? '';
+      button.textContent = button.dataset.flash ?? 'Copied';
+      button.dataset.state = 'copied';
+      window.setTimeout(() => {
+        button.textContent = label;
+        delete button.dataset.state;
+      }, 1500);
+    };
+
+    const copyValue = async (value: string) => {
+      const write = navigator.clipboard?.writeText?.bind(navigator.clipboard);
+      if (!write) return false;
+      try {
+        await write(value);
+        return true;
+      } catch {
+        return false;
+      }
+    };
+
+    const copyLink = async (url: string | null, emptyNote: string, button: HTMLButtonElement) => {
+      if (!url) {
+        playNote.textContent = emptyNote;
+        return;
+      }
+      const ok = await copyValue(url);
+      if (!ok) {
+        playNote.textContent = "Couldn't copy automatically. Select the text and press Ctrl+C.";
+        return;
+      }
+      playNote.textContent = '';
+      flashButton(button);
+    };
 
     let lastExample: string | null = null;
     const copyButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-copy]')];
     for (const button of copyButtons) {
       button.addEventListener('click', () => {
         const target = button.dataset.copy === 'morse' ? 'morse' : 'text';
+        if (target === 'text' && textCol.hasAttribute('inert')) {
+          playNote.textContent = 'Text is hidden. Show text first.';
+          return;
+        }
         const value = textToCopy(target, { text: textEl.value, morse: morseEl.value });
-        const write = navigator.clipboard?.writeText?.bind(navigator.clipboard);
-        const finish = (ok: boolean) => {
+        void copyValue(value).then((ok) => {
           if (!ok) {
             playNote.textContent = "Couldn't copy automatically. Select the text and press Ctrl+C.";
             return;
           }
-          const label = button.dataset.label ?? button.textContent ?? '';
-          button.textContent = button.dataset.flash ?? 'Copied';
-          button.dataset.state = 'copied';
-          window.setTimeout(() => {
-            button.textContent = label;
-            delete button.dataset.state;
-          }, 1500);
-        };
-        if (!write) {
-          finish(false);
+          playNote.textContent = '';
+          flashButton(button);
+        });
+      });
+    }
+    const shareCopyButton = root.querySelector<HTMLButtonElement>('[data-share-copy]');
+    const shareButton = root.querySelector<HTMLButtonElement>('[data-share]');
+    const puzzleButton = root.querySelector<HTMLButtonElement>('[data-puzzle]');
+    if (shareCopyButton) {
+      shareCopyButton.addEventListener('click', () => {
+        void copyLink(americanShareUrl(location.href, textEl.value), 'Type a message first.', shareCopyButton);
+      });
+    }
+    if (shareButton) {
+      shareButton.addEventListener('click', () => {
+        const url = americanShareUrl(location.href, textEl.value);
+        if (!url) {
+          playNote.textContent = 'Type a message first.';
           return;
         }
-        void write(value).then(() => finish(true)).catch(() => finish(false));
+        const nav = navigator as Navigator & { share?: (data: ShareData) => Promise<void> };
+        if (typeof nav.share !== 'function') {
+          void copyLink(url, 'Type a message first.', shareButton);
+          return;
+        }
+        void nav.share({ url, title: document.title }).catch((error: unknown) => {
+          if (error instanceof DOMException && error.name === 'AbortError') return;
+          void copyLink(url, 'Type a message first.', shareButton);
+        });
+      });
+    }
+    if (puzzleButton) {
+      puzzleButton.addEventListener('click', () => {
+        void copyLink(americanPuzzleUrl(location.href, morseEl.value), 'Type Morse above, then copy a puzzle link.', puzzleButton);
       });
     }
     root.querySelector<HTMLButtonElement>('[data-clear]')?.addEventListener('click', () => {
@@ -736,6 +986,7 @@ import '../../styles/american-translator.css';
       morseEl.value = cleared.morse;
       textNote.textContent = '';
       morseNote.textContent = '';
+      concealText(false);
     });
     root.querySelector<HTMLButtonElement>('[data-random]')?.addEventListener('click', () => {
       stopPlayback();
@@ -746,7 +997,18 @@ import '../../styles/american-translator.css';
       morseEl.value = pair.morse;
       textNote.textContent = '';
       morseNote.textContent = '';
+      concealText(false);
     });
+
+    const opened = readAmericanLink(location.hash);
+    if (opened?.text) {
+      textEl.value = opened.text;
+      syncFromText();
+    } else if (opened?.morse) {
+      morseEl.value = opened.morse;
+      syncFromMorse();
+    }
+    if (opened?.hide) concealText(true);
 
     window.addEventListener('pagehide', () => {
       stopPlayback();
