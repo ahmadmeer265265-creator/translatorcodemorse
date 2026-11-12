@@ -3,6 +3,7 @@
  * Article under the image translator. Wording follows the corrected source.
  * Pandoc backslashes are not part of the Morse.
  */
+import RelatedPages from '../RelatedPages.astro';
 import { imageTranslatorFaqs } from './image-faqs';
 
 const link = 'text-accent underline underline-offset-4';
@@ -742,4 +743,23 @@ const code = 'font-mono tracking-wide';
       }
     </div>
   </section>
+
+  <RelatedPages
+    links={[
+      {
+        href: '/american-morse-code-translator/',
+        label: 'American Morse code translator',
+        description: 'Railroad Morse, with pauses inside C, O, R, Y, and Z. This image tool reads International Morse only.',
+      },
+      {
+        href: '/morse-code-audio-translator/',
+        label: 'Morse code audio translator',
+        description: 'Decode Morse from a recording or a microphone.',
+      },
+      { href: '/morse-code-alphabet/', label: 'Morse code alphabet chart' },
+      { href: '/morse-code-numbers/', label: 'Morse code numbers from 0 to 9' },
+      { href: '/sos-in-morse-code/', label: 'How SOS is sent in Morse code' },
+      { href: '/', label: 'Translate text to Morse code' },
+    ]}
+  />
 </article>

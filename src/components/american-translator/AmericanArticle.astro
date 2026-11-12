@@ -1,4 +1,8 @@
 ---
+import { Image } from 'astro:assets';
+import featuredImage from '../../assets/brand/american-morse-code-translator.webp';
+import gapsImage from '../../assets/brand/american-morse-gaps.webp';
+import RelatedPages from '../RelatedPages.astro';
 import { AMERICAN_MORSE_ALPHABET, CLOSE_QUOTE } from '../../lib/american-morse';
 import { americanTranslatorFaqs } from './american-faqs';
 
@@ -58,6 +62,43 @@ const overlaps: readonly (readonly [string, string, string])[] = [
 ---
 
 <article class="mt-12 grid gap-10 rounded-2xl border border-line px-4 py-6 text-[1.0625rem] leading-7 sm:px-8 sm:py-8">
+  <figure class="overflow-hidden rounded-xl border border-line bg-surface">
+    <Image
+      src={featuredImage}
+      alt="American Morse Code Translator featured image showing a dot, a dash, the long dash for L, and the extra-long dash for 0, with the word RAIL"
+      width={1280}
+      height={720}
+      widths={[480, 768, 1280]}
+      sizes="(max-width: 640px) 100vw, 928px"
+      loading="lazy"
+      decoding="async"
+      class="block h-auto w-full"
+    />
+  </figure>
+  <section class="cv grid gap-3">
+    <h2 class={h2}>How to Use the American Morse Code Translator</h2>
+    <p>Four short steps. The other box updates as you type.</p>
+    <ol class="grid list-decimal gap-3 pl-5">
+      <li>
+        <span class="font-semibold">Type in either box.</span> Words go in Plain text. American Morse goes in the other
+        box, with . - = and _. A space sits inside C, O, R, Y, and Z. One slash is the next letter. Two slashes are the
+        next word.
+      </li>
+      <li>
+        <span class="font-semibold">Read the other box.</span> It fills in as you type. Swap only moves which box is on
+        the left.
+      </li>
+      <li>
+        <span class="font-semibold">Press Play.</span> Choose the telegraph sounder or the CW tone. Pause holds your
+        place, Stop goes back to the start, and Download saves that sound as a WAV.
+      </li>
+      <li>
+        <span class="font-semibold">Copy, share, or listen.</span> Copy sits inside each box. Under the player you can
+        clear the message, copy a share link, or copy a puzzle link. The Listen tab reads a microphone or an audio file
+        on this device.
+      </li>
+    </ol>
+  </section>
   <section class="cv grid gap-3">
     <h2 class={h2}>What Is American Morse Code?</h2>
     <p>
@@ -195,8 +236,25 @@ const overlaps: readonly (readonly [string, string, string])[] = [
       Five letters hide a pause inside them: C, O, R, Y, and Z. The easiest way to remember them is to treat each one
       as two small letters stuck together. C is I then E, O is E then E, R is E then I, Y is I then I, and Z is S then
       E. L is the other odd one out, a single long dash. The remaining twenty letters use only ordinary dots and dashes,
-      and fifteen of those twenty are identical to International Morse.
+      and fifteen of those twenty are identical to the
+      <a class={link} href="/morse-code-alphabet/">International Morse alphabet</a>.
     </p>
+    <figure class="overflow-hidden rounded-xl border border-line bg-surface">
+      <Image
+        src={gapsImage}
+        alt="Three pauses in American Morse: I is two close dots, O has a gap between two dots, C is one letter, and IE is two letters with a wider gap"
+        width={1280}
+        height={720}
+        widths={[480, 768, 1280]}
+        sizes="(max-width: 640px) 100vw, 928px"
+        loading="lazy"
+        decoding="async"
+        class="block h-auto w-full"
+      />
+      <figcaption class="border-t border-line bg-canvas px-3 py-2 text-sm text-muted">
+        O is not I, and C is not IE. The pause inside the letter is what makes them different.
+      </figcaption>
+    </figure>
     <div class="overflow-x-auto">
       <table class={tableClass}>
         <thead>
@@ -223,9 +281,9 @@ const overlaps: readonly (readonly [string, string, string])[] = [
     </div>
     <h3 class={h3}>Digits (0 to 9)</h3>
     <p>
-      International digits always run to five marks, which makes them easy to learn. American digits follow no such
-      rule. 0 is one mark, 5 is three dashes, and 6 is six dots, so each digit has to be learned on its own. Only 4
-      matches the International version.
+      The <a class={link} href="/morse-code-numbers/">International Morse numbers</a> always run to five marks, which
+      makes them easy to learn. American digits follow no such rule. 0 is one mark, 5 is three dashes, and 6 is six
+      dots, so each digit has to be learned on its own. Only 4 matches the International version.
     </p>
     <div class="overflow-x-auto">
       <table class={tableClass}>
@@ -472,9 +530,9 @@ const overlaps: readonly (readonly [string, string, string])[] = [
       <li>Paste that text into the translator on this page to get American Morse.</li>
     </ol>
     <p>
-      The same path works the other way around. Decode American Morse here, then paste the text into the
-      <a class={link} href="/">main Morse code translator</a> for International Morse. Check numbers and punctuation
-      afterwards, since those are where the two codes disagree the most.
+      The same path works the other way around. Decode American Morse here, then paste the text into the main Morse
+      code translator for International Morse. Check numbers and punctuation afterwards, since those are where the two
+      codes disagree the most.
     </p>
   </section>
 
@@ -601,4 +659,24 @@ const overlaps: readonly (readonly [string, string, string])[] = [
       wish I could read this.”
     </p>
   </section>
+
+  <RelatedPages
+    links={[
+      {
+        href: '/morse-code-audio-translator/',
+        label: 'Morse code audio translator',
+        description: 'Decode International Morse from a recording or a microphone.',
+      },
+      {
+        href: '/morse-code-image-translator/',
+        label: 'Morse code image translator',
+        description: 'Read International Morse from a photo. It does not read American Morse.',
+      },
+      {
+        href: '/sos-in-morse-code/',
+        label: 'SOS in Morse code',
+        description: 'The distress signal is International Morse, not railroad Morse.',
+      },
+    ]}
+  />
 </article>
