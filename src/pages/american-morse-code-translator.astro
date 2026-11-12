@@ -11,6 +11,29 @@ const title = 'American Morse Code Translator';
 const description =
   'Convert text to American Morse, or type railroad Morse and read it as text. Decode from a microphone or an audio file. Free and private in your browser.';
 const pageUrl = absoluteUrl('/american-morse-code-translator/');
+const videoDescription = `Try it free: https://translatorcodemorse.com/american-morse-code-translator/
+American Morse Code Translator is a free, private online tool that translates text into the original American (railroad) Morse code and back, instantly, right in your browser. No sign-up. Hear it on a telegraph sounder or as a clean CW tone, and even decode Morse from a microphone or an audio file.
+In this video:
+0:00 Intro
+0:19 Type text and watch it become American Morse
+0:33 Play it back on the telegraph sounder
+0:40 Switch to a clean CW tone
+0:46 The long L and the extra-long zero
+0:54 Swap and decode Morse back into text
+1:02 Download, share link and puzzle link
+1:07 The full American Morse character chart
+1:12 It listens too: decode a microphone or audio file
+What you can do with it:
+• Convert text to American Morse code and American Morse back to text
+• Hear every signal on a telegraph sounder or as a CW tone, with each letter lit up as it plays
+• Download the audio as a WAV file
+• Use the spaced letters only American Morse has, like C, O, R, Y and Z
+• Play the long dash of L and the extra-long dash of zero
+• Copy, share a link, or send a friend a Morse puzzle link
+• Decode Morse from your microphone or an audio file
+• Look up any character in the full American Morse chart
+Made by Mir Labs. We build fast, free and private online tools, and show how they work.
+#MorseCode #AmericanMorseCode #LearnMorse`;
 
 const jsonLd = [
   ...supportingJsonLd({
@@ -44,10 +67,26 @@ const jsonLd = [
       'Decode a microphone or an audio file in the browser',
     ],
   },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: 'American Morse Code Translator: The Original Railroad Morse, Free Online',
+    description: videoDescription,
+    thumbnailUrl: 'https://i.ytimg.com/vi/9QkAjYD8Lq8/maxresdefault.jpg',
+    uploadDate: '2026-11-11T22:55:29-08:00',
+    duration: 'PT1M26S',
+    embedUrl: 'https://www.youtube-nocookie.com/embed/9QkAjYD8Lq8',
+    contentUrl: 'https://www.youtube.com/watch?v=9QkAjYD8Lq8',
+    publisher: {
+      '@type': 'Organization',
+      name: 'Mir Labs',
+      url: 'https://www.youtube.com/@mir_labs',
+    },
+  },
 ];
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
+<BaseLayout title={title} description={description} ogType="article" jsonLd={jsonLd} suffix={false}>
   <h1 class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">American Morse Code Translator</h1>
   <p class="mx-auto mt-1 max-w-2xl text-center text-sm text-muted sm:text-base">
     Type text or railroad Morse and play it back on this device. A microphone or an audio file can be decoded here too.
