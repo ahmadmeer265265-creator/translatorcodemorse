@@ -1,17 +1,39 @@
 ---
 import {
+  MACHINE_ACTIVITY_LABEL,
   MACHINE_CHART_DIGITS,
   MACHINE_CHART_LETTERS,
   MACHINE_KEYBINDS,
   MACHINE_MODE_HINT,
 } from '../../lib/morse-machine-ui';
 import { DEFAULT_MACHINE_WPM, MACHINE_WPM_MAX, MACHINE_WPM_MIN } from '../../lib/morse-machine-timing';
+import {
+  DEFAULT_SIDETONE_PITCH,
+  DEFAULT_SIDETONE_VOLUME,
+  SIDETONE_PITCH_MAX,
+  SIDETONE_PITCH_MIN,
+} from '../../lib/morse-machine-sidetone';
 import '../../styles/morse-machine.css';
 ---
 
-<section class="mm-tool" data-morse-machine aria-label="Morse Code Machine">
-  <div class="mm-card" data-card>
-    <div class="mm-tabs" role="radiogroup" aria-label="Input mode">
+<section class="mm-tool" data-morse-machine data-mm-theme="light" aria-label="Morse Code Machine">
+  <div class="mm-card" data-card data-mode="key" data-activity="send">
+    <div class="mm-tabs mm-tabs--activity" role="radiogroup" aria-label="Activity" data-activity-tabs>
+      <label class="mm-tab">
+        <input class="sr-only" type="radio" name="mm-activity" value="send" data-activity checked />
+        <span>Send</span>
+      </label>
+      <label class="mm-tab">
+        <input class="sr-only" type="radio" name="mm-activity" value="listen" data-activity />
+        <span>{MACHINE_ACTIVITY_LABEL.listen}</span>
+      </label>
+      <label class="mm-tab">
+        <input class="sr-only" type="radio" name="mm-activity" value="letter" data-activity />
+        <span>{MACHINE_ACTIVITY_LABEL.letter}</span>
+      </label>
+    </div>
+
+    <div class="mm-tabs mm-tabs--mode" role="radiogroup" aria-label="Input mode" data-input-tabs>
       <label class="mm-tab">
         <input class="sr-only" type="radio" name="mm-mode" value="key" data-mode checked />
         <span>Key</span>
@@ -24,6 +46,28 @@ import '../../styles/morse-machine.css';
         <input class="sr-only" type="radio" name="mm-mode" value="paddle" data-mode />
         <span>Paddle</span>
       </label>
+    </div>
+
+    <div class="mm-practice" data-practice>
+      <div class="mm-diff" role="radiogroup" aria-label="Difficulty">
+        <label>
+          <input class="sr-only" type="radio" name="mm-diff" value="character" data-diff checked />
+          <span>Character</span>
+        </label>
+        <label>
+          <input class="sr-only" type="radio" name="mm-diff" value="word" data-diff />
+          <span>Word</span>
+        </label>
+      </div>
+      <p class="mm-listen-hint" data-listen-hint>Listen, then send what you heard.</p>
+      <p class="mm-target" data-target aria-live="polite"></p>
+      <p class="mm-feedback" data-feedback aria-live="polite"></p>
+      <div class="mm-actions">
+        <button class="mm-btn" type="button" data-play>Play</button>
+        <button class="mm-btn" type="button" data-replay>Play again</button>
+        <button class="mm-btn" type="button" data-check>Check</button>
+        <button class="mm-btn" type="button" data-next>Next</button>
+      </div>
     </div>
 
     <div class="mm-live">
@@ -71,23 +115,69 @@ import '../../styles/morse-machine.css';
       </div>
     </div>
 
-    <label class="mm-speed" for="mm-speed">
-      <span>Speed</span>
-      <input
-        id="mm-speed"
-        type="range"
-        min={MACHINE_WPM_MIN}
-        max={MACHINE_WPM_MAX}
-        value={DEFAULT_MACHINE_WPM}
-        step="1"
-        data-speed
-      />
-      <output id="mm-speed-value" for="mm-speed" data-speed-value>{DEFAULT_MACHINE_WPM} WPM</output>
-    </label>
-
     <div class="mm-row">
       <button class="mm-btn" type="button" data-clear>Clear</button>
     </div>
+
+    <details class="mm-settings" data-settings>
+      <summary>Settings</summary>
+      <div class="mm-settings__body">
+        <label class="mm-speed" for="mm-speed">
+          <span>Speed</span>
+          <input
+            id="mm-speed"
+            type="range"
+            min={MACHINE_WPM_MIN}
+            max={MACHINE_WPM_MAX}
+            value={DEFAULT_MACHINE_WPM}
+            step="1"
+            data-speed
+          />
+          <output id="mm-speed-value" for="mm-speed" data-speed-value>{DEFAULT_MACHINE_WPM} WPM</output>
+        </label>
+        <label class="mm-check" for="mm-sidetone">
+          <input id="mm-sidetone" type="checkbox" data-sidetone-on checked />
+          <span>Sidetone</span>
+        </label>
+        <label class="mm-speed" for="mm-volume">
+          <span>Volume</span>
+          <input
+            id="mm-volume"
+            type="range"
+            min="0"
+            max="100"
+            value={DEFAULT_SIDETONE_VOLUME}
+            step="1"
+            data-volume
+          />
+          <output id="mm-volume-value" for="mm-volume" data-volume-value>{DEFAULT_SIDETONE_VOLUME}%</output>
+        </label>
+        <label class="mm-speed" for="mm-pitch">
+          <span>Pitch</span>
+          <input
+            id="mm-pitch"
+            type="range"
+            min={SIDETONE_PITCH_MIN}
+            max={SIDETONE_PITCH_MAX}
+            value={DEFAULT_SIDETONE_PITCH}
+            step="10"
+            data-pitch
+          />
+          <output id="mm-pitch-value" for="mm-pitch" data-pitch-value>{DEFAULT_SIDETONE_PITCH} Hz</output>
+        </label>
+        <span class="mm-label">Theme</span>
+        <div class="mm-theme" role="radiogroup" aria-label="Theme">
+          <label class="mm-tab">
+            <input class="sr-only" type="radio" name="mm-theme" value="light" data-theme checked />
+            <span>Light</span>
+          </label>
+          <label class="mm-tab">
+            <input class="sr-only" type="radio" name="mm-theme" value="dark" data-theme />
+            <span>Dark</span>
+          </label>
+        </div>
+      </div>
+    </details>
 
     <details class="mm-ref">
       <summary>Characters and keybinds</summary>
@@ -133,10 +223,26 @@ import '../../styles/morse-machine.css';
   import type { MorseKeyEvent } from '../../lib/morse-key-events?mm';
   import { createStraightKeySession, clampMachineWpm } from '../../lib/morse-machine-timing?mm';
   import {
+    clampSidetonePitch,
+    clampSidetoneVolume,
+    createSidetone,
+  } from '../../lib/morse-machine-sidetone?mm';
+  import {
+    checkPractice,
     displayForMode,
+    isMachineActivity,
     isMachineMode,
+    isMachineTheme,
+    isPracticeDifficulty,
+    liveSidetoneAllowed,
     MACHINE_MODE_HINT,
+    nextPracticePrompt,
+    practiceFeedback,
+    type ListenAndGuessPrompt,
+    type MachineActivity,
     type MachineMode,
+    type MachineTheme,
+    type PracticeDifficulty,
   } from '../../lib/morse-machine-ui?mm';
 
   const root = document.querySelector<HTMLElement>('[data-morse-machine]');
@@ -148,8 +254,22 @@ import '../../styles/morse-machine.css';
   const typeField = root?.querySelector<HTMLTextAreaElement>('[data-type]');
   const speedInput = root?.querySelector<HTMLInputElement>('[data-speed]');
   const speedValue = root?.querySelector<HTMLElement>('[data-speed-value]');
+  const volumeInput = root?.querySelector<HTMLInputElement>('[data-volume]');
+  const volumeValue = root?.querySelector<HTMLElement>('[data-volume-value]');
+  const pitchInput = root?.querySelector<HTMLInputElement>('[data-pitch]');
+  const pitchValue = root?.querySelector<HTMLElement>('[data-pitch-value]');
+  const sidetoneOnInput = root?.querySelector<HTMLInputElement>('[data-sidetone-on]');
   const clearButton = root?.querySelector<HTMLButtonElement>('[data-clear]');
+  const playButton = root?.querySelector<HTMLButtonElement>('[data-play]');
+  const replayButton = root?.querySelector<HTMLButtonElement>('[data-replay]');
+  const checkButton = root?.querySelector<HTMLButtonElement>('[data-check]');
+  const nextButton = root?.querySelector<HTMLButtonElement>('[data-next]');
+  const targetOut = root?.querySelector<HTMLElement>('[data-target]');
+  const feedbackOut = root?.querySelector<HTMLElement>('[data-feedback]');
   const modeInputs = [...(root?.querySelectorAll<HTMLInputElement>('input[data-mode]') ?? [])];
+  const activityInputs = [...(root?.querySelectorAll<HTMLInputElement>('input[data-activity]') ?? [])];
+  const diffInputs = [...(root?.querySelectorAll<HTMLInputElement>('input[data-diff]') ?? [])];
+  const themeInputs = [...(root?.querySelectorAll<HTMLInputElement>('input[data-theme]') ?? [])];
   const ditBtn = root?.querySelector<HTMLButtonElement>('[data-paddle="dot"]');
   const dahBtn = root?.querySelector<HTMLButtonElement>('[data-paddle="dash"]');
 
@@ -163,34 +283,105 @@ import '../../styles/morse-machine.css';
     typeField &&
     speedInput &&
     speedValue &&
+    volumeInput &&
+    volumeValue &&
+    pitchInput &&
+    pitchValue &&
+    sidetoneOnInput &&
     clearButton &&
+    playButton &&
+    replayButton &&
+    checkButton &&
+    nextButton &&
+    targetOut &&
+    feedbackOut &&
     ditBtn &&
     dahBtn
   ) {
     const clock = { now: () => performance.now() };
     let wpm = clampMachineWpm(Number(speedInput.value) || DEFAULT_IAMBIC_WPM);
     let mode: MachineMode = 'key';
+    let activity: MachineActivity = 'send';
+    let difficulty: PracticeDifficulty = 'character';
+    let prompt: ListenAndGuessPrompt | null = null;
+    let sidetoneOn = sidetoneOnInput.checked;
+    let volume = clampSidetoneVolume(Number(volumeInput.value));
+    let pitch = clampSidetonePitch(Number(pitchInput.value));
     const keySession = createStraightKeySession({ clock, wpm });
     let keyer: IambicKeyer = createIambicKeyer({ clock, wpm });
     let paddleEvents: MorseKeyEvent[] = [];
     let tickTimer = 0;
     const paddleHeld: Record<IambicSide, boolean> = { dot: false, dash: false };
+    const sidetone = createSidetone({
+      getSettings: () => ({
+        enabled: sidetoneOn && liveSidetoneAllowed(mode),
+        volume,
+        frequency: pitch,
+      }),
+    });
+
+    const currentEvents = () => (mode === 'paddle' ? paddleEvents : keySession.events());
 
     const render = () => {
-      const display = displayForMode(mode, mode === 'paddle' ? paddleEvents : keySession.events(), typeField.value);
+      const display = displayForMode(mode, currentEvents(), typeField.value);
       morseOut.textContent = display.morse;
       textOut.textContent = display.text;
+    };
+
+    const setFeedback = (kind: '' | 'correct' | 'incorrect', text = '') => {
+      feedbackOut.dataset.kind = kind;
+      feedbackOut.textContent = text;
+    };
+
+    const renderPractice = () => {
+      if (activity === 'letter') targetOut.textContent = prompt?.text ?? '';
+      else targetOut.textContent = '';
+    };
+
+    const resetSend = () => {
+      keySession.clear();
+      paddleEvents = [];
+      keyer.clear();
+      paddleHeld.dot = false;
+      paddleHeld.dash = false;
+      setPressed(pad, false);
+      setPressed(ditBtn, false);
+      setPressed(dahBtn, false);
+      typeField.value = '';
+      sidetone.stopLive();
+      render();
+    };
+
+    const setPrompt = (next: ListenAndGuessPrompt) => {
+      prompt = next;
+      setFeedback('', '');
+      renderPractice();
+    };
+
+    const ensurePrompt = () => {
+      if (!prompt) setPrompt(nextPracticePrompt(difficulty));
+      return prompt;
     };
 
     const setPressed = (button: HTMLButtonElement, pressed: boolean) => {
       button.dataset.pressed = pressed ? 'true' : 'false';
     };
 
+    const takePaddle = (events: MorseKeyEvent[]) => {
+      if (!events.length) return;
+      paddleEvents.push(...events);
+      if (liveSidetoneAllowed(mode)) {
+        for (const event of events) {
+          if (event.kind === 'mark') sidetone.playMark(event.mark, wpm);
+        }
+      }
+    };
+
     const ensureTick = () => {
       if (tickTimer || mode === 'type') return;
       tickTimer = window.setInterval(() => {
         if (mode === 'key') keySession.tick();
-        else if (mode === 'paddle') paddleEvents.push(...keyer.tick());
+        else if (mode === 'paddle') takePaddle(keyer.tick());
         render();
       }, 40);
     };
@@ -202,6 +393,7 @@ import '../../styles/morse-machine.css';
     };
 
     const setMode = (next: MachineMode) => {
+      if (next === 'type') sidetone.stopLive();
       mode = next;
       card.dataset.mode = next;
       hint.textContent = MACHINE_MODE_HINT[next];
@@ -210,6 +402,28 @@ import '../../styles/morse-machine.css';
       if (next === 'key') pad.focus();
       else if (next === 'type') typeField.focus();
       render();
+    };
+
+    const setActivity = (next: MachineActivity) => {
+      activity = next;
+      card.dataset.activity = next;
+      sidetone.stopPlayback();
+      if (next === 'send') {
+        renderPractice();
+        return;
+      }
+      ensurePrompt();
+      renderPractice();
+    };
+
+    const setDifficulty = (next: PracticeDifficulty) => {
+      difficulty = next;
+      resetSend();
+      setPrompt(nextPracticePrompt(difficulty));
+    };
+
+    const setTheme = (next: MachineTheme) => {
+      root.dataset.mmTheme = next;
     };
 
     const setWpm = (next: number) => {
@@ -227,9 +441,23 @@ import '../../styles/morse-machine.css';
       if (paddleHeld[side] === down) return;
       paddleHeld[side] = down;
       setPressed(side === 'dot' ? ditBtn : dahBtn, down);
-      paddleEvents.push(...(down ? keyer.paddleDown(side) : keyer.paddleUp(side)));
+      takePaddle(down ? keyer.paddleDown(side) : keyer.paddleUp(side));
       ensureTick();
       render();
+    };
+
+    const playPrompt = () => {
+      const current = ensurePrompt();
+      if (!current || activity !== 'listen') return;
+      void sidetone.unlock().then(() => sidetone.playMorse(current.morse, wpm));
+    };
+
+    const checkAnswer = () => {
+      const current = ensurePrompt();
+      if (!current || activity === 'send') return;
+      const score = checkPractice(current.text, mode, currentEvents(), typeField.value);
+      const feedback = practiceFeedback(score, { revealAnswer: activity === 'listen' });
+      setFeedback(feedback.kind, feedback.text);
     };
 
     const bindPointerKey = (button: HTMLButtonElement, onDown: () => void, onUp: () => void) => {
@@ -265,11 +493,13 @@ import '../../styles/morse-machine.css';
       () => {
         setPressed(pad, true);
         keySession.down();
+        sidetone.startLive();
         ensureTick();
       },
       () => {
         setPressed(pad, false);
         keySession.up();
+        sidetone.stopLive();
         render();
       },
     );
@@ -284,9 +514,13 @@ import '../../styles/morse-machine.css';
       () => setPaddle('dash', false),
     );
 
-    const typingTarget = (target: EventTarget | null) =>
-      target instanceof HTMLTextAreaElement ||
-      (target instanceof HTMLInputElement && target.type !== 'range');
+    const shouldIgnoreKey = (target: EventTarget | null) => {
+      if (!(target instanceof HTMLElement)) return false;
+      if (target === pad || target === ditBtn || target === dahBtn) return false;
+      if (target instanceof HTMLTextAreaElement || target instanceof HTMLButtonElement) return true;
+      if (target instanceof HTMLInputElement) return true;
+      return Boolean(target.closest('summary'));
+    };
 
     window.addEventListener('keydown', (event) => {
       if (event.repeat) {
@@ -295,14 +529,15 @@ import '../../styles/morse-machine.css';
         return;
       }
       if (mode === 'key' && (event.code === 'Space' || event.key === ' ')) {
-        if (typingTarget(event.target)) return;
+        if (shouldIgnoreKey(event.target)) return;
         event.preventDefault();
         setPressed(pad, true);
         keySession.down();
+        sidetone.startLive();
         ensureTick();
         return;
       }
-      if (mode !== 'paddle' || typingTarget(event.target)) return;
+      if (mode !== 'paddle' || shouldIgnoreKey(event.target)) return;
       if (event.code === 'ArrowLeft' || event.code === 'KeyJ') {
         event.preventDefault();
         setPaddle('dot', true);
@@ -314,14 +549,15 @@ import '../../styles/morse-machine.css';
 
     window.addEventListener('keyup', (event) => {
       if (mode === 'key' && (event.code === 'Space' || event.key === ' ')) {
-        if (typingTarget(event.target)) return;
+        if (shouldIgnoreKey(event.target)) return;
         event.preventDefault();
         setPressed(pad, false);
         keySession.up();
+        sidetone.stopLive();
         render();
         return;
       }
-      if (mode !== 'paddle' || typingTarget(event.target)) return;
+      if (mode !== 'paddle' || shouldIgnoreKey(event.target)) return;
       if (event.code === 'ArrowLeft' || event.code === 'KeyJ') {
         event.preventDefault();
         setPaddle('dot', false);
@@ -339,22 +575,62 @@ import '../../styles/morse-machine.css';
       });
     }
 
-    speedInput.addEventListener('input', () => setWpm(Number(speedInput.value)));
+    for (const input of activityInputs) {
+      input.addEventListener('change', () => {
+        if (input.checked && isMachineActivity(input.value)) setActivity(input.value);
+      });
+    }
 
-    clearButton.addEventListener('click', () => {
-      keySession.clear();
-      paddleEvents = [];
-      keyer.clear();
-      paddleHeld.dot = false;
-      paddleHeld.dash = false;
-      setPressed(pad, false);
-      setPressed(ditBtn, false);
-      setPressed(dahBtn, false);
-      typeField.value = '';
-      render();
+    for (const input of diffInputs) {
+      input.addEventListener('change', () => {
+        if (input.checked && isPracticeDifficulty(input.value)) setDifficulty(input.value);
+      });
+    }
+
+    for (const input of themeInputs) {
+      input.addEventListener('change', () => {
+        if (input.checked && isMachineTheme(input.value)) setTheme(input.value);
+      });
+    }
+
+    speedInput.addEventListener('input', () => setWpm(Number(speedInput.value)));
+    volumeInput.addEventListener('input', () => {
+      volume = clampSidetoneVolume(Number(volumeInput.value));
+      volumeValue.textContent = `${volume}%`;
+    });
+    pitchInput.addEventListener('input', () => {
+      pitch = clampSidetonePitch(Number(pitchInput.value));
+      pitchValue.textContent = `${pitch} Hz`;
+    });
+    sidetoneOnInput.addEventListener('change', () => {
+      sidetoneOn = sidetoneOnInput.checked;
+      if (!sidetoneOn) sidetone.stopLive();
     });
 
+    playButton.addEventListener('click', playPrompt);
+    replayButton.addEventListener('click', playPrompt);
+    checkButton.addEventListener('click', checkAnswer);
+    nextButton.addEventListener('click', () => {
+      resetSend();
+      setPrompt(nextPracticePrompt(difficulty));
+    });
+
+    clearButton.addEventListener('click', () => {
+      resetSend();
+      setFeedback('', '');
+    });
+
+    const pageTheme = document.documentElement.getAttribute('data-theme');
+    if (pageTheme && isMachineTheme(pageTheme)) {
+      const match = themeInputs.find((input) => input.value === pageTheme);
+      if (match) {
+        match.checked = true;
+        setTheme(pageTheme);
+      }
+    }
+
     setMode('key');
+    setActivity('send');
     ensureTick();
     render();
   }

@@ -1,6 +1,14 @@
 import { encode, decode, MORSE_ALPHABET } from './morse';
+import { morseStringToEvents, type MorseKeyEvent } from './morse-key-events';
+import {
+  generateListenAndGuess,
+  scoreMorseTheLetter,
+  type CharacterMismatch,
+  type ListenAndGuessPrompt,
+  type MorseTheLetterScore,
+  type PracticeDifficulty,
+} from './morse-machine-practice';
 import { displayFromEvents, type MachineDisplay } from './morse-machine-timing';
-import type { MorseKeyEvent } from './morse-key-events';
 
 export const MACHINE_PAGE_PATH = '/morse-code-machine/';
 export const MACHINE_TITLE = 'Morse Code Machine';
@@ -51,4 +59,85 @@ export function displayFromType(typed: string): MachineDisplay {
 
 export function emptyDisplay(): MachineDisplay {
   return { morse: '', text: '', pending: '' };
+}
+
+export type { ListenAndGuessPrompt, MorseTheLetterScore, PracticeDifficulty };
+
+export const MACHINE_ACTIVITIES = ['send', 'listen', 'letter'] as const;
+export type MachineActivity = (typeof MACHINE_ACTIVITIES)[number];
+
+export const MACHINE_ACTIVITY_LABEL: Record<MachineActivity, string> = {
+  send: 'Send',
+  listen: 'Listen & Guess',
+  letter: 'Morse the Letter',
+};
+
+export const MACHINE_THEMES = ['light', 'dark'] as const;
+export type MachineTheme = (typeof MACHINE_THEMES)[number];
+
+export const PRACTICE_DIFFICULTIES = ['character', 'word'] as const;
+
+export function isMachineActivity(value: string): value is MachineActivity {
+  return (MACHINE_ACTIVITIES as readonly string[]).includes(value);
+}
+
+export function isMachineTheme(value: string): value is MachineTheme {
+  return (MACHINE_THEMES as readonly string[]).includes(value);
+}
+
+export function isPracticeDifficulty(value: string): value is PracticeDifficulty {
+  return (PRACTICE_DIFFICULTIES as readonly string[]).includes(value);
+}
+
+export function liveSidetoneAllowed(mode: MachineMode): boolean {
+  return mode !== 'type';
+}
+
+export function nextPracticePrompt(
+  difficulty: PracticeDifficulty,
+  random: () => number = Math.random,
+): ListenAndGuessPrompt {
+  return generateListenAndGuess(difficulty, random);
+}
+
+export function eventsForPracticeGuess(
+  mode: MachineMode,
+  events: readonly MorseKeyEvent[],
+  typed: string,
+): MorseKeyEvent[] {
+  if (mode === 'type') return morseStringToEvents(encode(typed).output);
+  return [...events];
+}
+
+export function checkPractice(
+  target: string,
+  mode: MachineMode,
+  events: readonly MorseKeyEvent[],
+  typed: string,
+): MorseTheLetterScore {
+  return scoreMorseTheLetter(target, eventsForPracticeGuess(mode, events, typed));
+}
+
+export function formatPracticeMismatches(mismatches: readonly CharacterMismatch[]): string {
+  return mismatches
+    .map((row) => {
+      const at = row.index + 1;
+      if (!row.actual) return `missing ${row.expected} at ${at}`;
+      if (!row.expected) return `extra ${row.actual} at ${at}`;
+      return `${row.expected}→${row.actual} at ${at}`;
+    })
+    .join('; ');
+}
+
+export function practiceFeedback(
+  score: MorseTheLetterScore,
+  options: { revealAnswer: boolean },
+): { kind: 'correct' | 'incorrect'; text: string } {
+  if (score.match) return { kind: 'correct', text: 'Correct.' };
+  const parts = ['Incorrect.'];
+  if (options.revealAnswer) parts.push(`The answer was ${score.target}.`);
+  parts.push(score.sent ? `You sent ${score.sent}.` : 'Nothing received.');
+  const mismatches = formatPracticeMismatches(score.mismatches);
+  if (mismatches) parts.push(mismatches + '.');
+  return { kind: 'incorrect', text: parts.join(' ') };
 }

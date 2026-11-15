@@ -17,11 +17,16 @@ async function render(component: unknown): Promise<string> {
 describe('Morse Code Machine markup', () => {
   it('wires five input methods, live output, speed, and a collapsed chart', async () => {
     const html = await render(MorseMachine);
+    const markup = html.replace(/<script\b[\s\S]*?<\/script>/gi, '');
     expect(html).toContain('data-morse-machine');
     expect(html).toContain('aria-label="Input mode"');
+    expect(html).toContain('aria-label="Activity"');
     expect(html).toContain('>Key</span>');
     expect(html).toContain('>Type</span>');
     expect(html).toContain('>Paddle</span>');
+    expect(html).toContain('>Send</span>');
+    expect(html).toContain('Listen &amp; Guess');
+    expect(html).toContain('>Morse the Letter</span>');
     expect(html).toContain('data-morse-out');
     expect(html).toContain('data-text-out');
     expect(html).toContain('Tap or hold · Space');
@@ -35,14 +40,28 @@ describe('Morse Code Machine markup', () => {
     expect(html).toContain('>Speed</span>');
     expect(html).toContain('min="5"');
     expect(html).toContain('max="40"');
+    expect(html).toContain('>Sidetone</span>');
+    expect(html).toContain('>Volume</span>');
+    expect(html).toContain('>Pitch</span>');
+    expect(html).toContain('min="400"');
+    expect(html).toContain('max="1000"');
+    expect(html).toContain('value="600"');
+    expect(html).toContain('>Theme</span>');
+    expect(html).toContain('>Light</span>');
+    expect(html).toContain('>Dark</span>');
+    expect(html).toContain('>Settings</summary>');
+    expect(html).toContain('>Play again</button>');
+    expect(html).toContain('>Next</button>');
+    expect(html).toContain('>Check</button>');
+    expect(html).toContain('>Character</span>');
+    expect(html).toContain('>Word</span>');
+    expect(html).toContain('data-activity="send"');
     expect(html).toContain('>Clear</button>');
     expect(html).toContain('>Characters and keybinds</summary>');
     expect(html).not.toContain('<details open');
     expect(html).toContain('href="/morse-code-alphabet/"');
     expect(html).toContain('Full Morse alphabet chart');
-    expect(html).not.toContain('Listen & Guess');
-    expect(html).not.toContain('Morse the Letter');
-    expect(html).not.toContain('AudioContext');
+    expect(markup).not.toContain('AudioContext');
   });
 });
 
