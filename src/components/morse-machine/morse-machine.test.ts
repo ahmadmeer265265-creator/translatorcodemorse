@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { describe, expect, it } from 'vitest';
 import { primaryNav } from '../../config/nav';
+import { machineFaqs } from './machine-faqs';
 import { MACHINE_DESCRIPTION, MACHINE_PAGE_PATH, MACHINE_TITLE } from '../../lib/morse-machine-ui';
 // @ts-expect-error .astro imports are resolved by the Astro Vite plugin
 import MorseMachine from './MorseMachine.astro';
@@ -47,8 +48,11 @@ describe('Morse Code Machine markup', () => {
     expect(html).toContain('max="1000"');
     expect(html).toContain('value="600"');
     expect(html).toContain('>Theme</span>');
-    expect(html).toContain('>Light</span>');
-    expect(html).toContain('>Dark</span>');
+    expect(html).toContain('data-mm-theme-toggle');
+    expect(html).toContain('aria-label="Switch to dark theme"');
+    expect(html).toContain('Switch to dark theme');
+    expect(html).not.toContain('>Light</span>');
+    expect(html).not.toContain('>Dark</span>');
     expect(html).toContain('>Settings</summary>');
     expect(html).toContain('>Play again</button>');
     expect(html).toContain('>Next</button>');
@@ -68,24 +72,46 @@ describe('Morse Code Machine markup', () => {
 describe('Morse Code Machine page', () => {
   it('is a titled tool page with schema and a nav link', async () => {
     const html = await render(MachinePage);
-    expect(html).toContain(`<title>${MACHINE_TITLE}</title>`);
-    expect(html).toContain(`content="${MACHINE_DESCRIPTION}"`);
+    expect(html).toContain(`<title>${MACHINE_TITLE.replaceAll('&', '&amp;')}</title>`);
+    expect(html).toContain(`content="${MACHINE_DESCRIPTION.replaceAll('&', '&amp;')}"`);
     expect(html.match(/<h1\b/g)?.length).toBe(1);
-    expect(html).toContain(`>${MACHINE_TITLE}</h1>`);
+    expect(html).toContain('>Morse Code Machine</h1>');
+    expect(html).toContain('>Morse Code Machine: Free Online Key and Keyer Simulator</h2>');
+    expect(html).toContain('href="/american-morse-code-translator/"');
+    expect(html).toContain('href="/morse-code-alphabet/"');
+    expect(html).toContain('href="/sos-in-morse-code/"');
+    expect(html).toContain('href="/morse-code-audio-translator/"');
+    expect(html).toContain('>full Morse code alphabet chart</a>');
+    expect(html).toContain('property="og:type" content="article"');
+    expect(html).toContain('og-default.jpg');
     expect(html).toContain('application/ld+json');
     expect(html).toContain('"@type":"WebApplication"');
     expect(html).toContain('"@type":"BreadcrumbList"');
     expect(html).toContain('"@type":"WebPage"');
-    expect(html).not.toContain('"@type":"FAQPage"');
+    expect(html).toContain('"@type":"FAQPage"');
+    for (const item of machineFaqs) expect(html).toContain(item.question);
     const nav = html.slice(html.indexOf('<nav'), html.indexOf('</nav>'));
     expect(nav).toContain(MACHINE_PAGE_PATH);
     for (const item of primaryNav) expect(nav).toContain(item.href);
   });
 
-  it('is not linked from the homepage article', () => {
+  it('puts every FAQ into JSON-LD word for word', async () => {
+    const html = await render(MachinePage);
+    const raw = html.match(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/)?.[1];
+    expect(raw).toBeTruthy();
+    const blocks = JSON.parse(raw!.replaceAll('\\u003c', '<')) as { '@type'?: string; mainEntity?: { name: string; acceptedAnswer: { text: string } }[] }[];
+    const faq = blocks.find((block) => block['@type'] === 'FAQPage');
+    expect(faq?.mainEntity?.map((entry) => ({ question: entry.name, answer: entry.acceptedAnswer.text }))).toEqual(
+      machineFaqs.map((item) => ({ question: item.question, answer: item.answer })),
+    );
+  });
+
+  it('is linked from an isolated homepage reverse-link block', () => {
     const home = readFileSync(resolve(process.cwd(), 'src/components/HomeArticle.astro'), 'utf8');
+    const block = readFileSync(resolve(process.cwd(), 'src/components/MorseMachineBlock.astro'), 'utf8');
     const index = readFileSync(resolve(process.cwd(), 'src/pages/index.astro'), 'utf8');
-    expect(home).not.toContain(MACHINE_PAGE_PATH);
+    expect(home).toContain('MorseMachineBlock');
+    expect(block).toContain(MACHINE_PAGE_PATH);
     expect(index).not.toContain(MACHINE_PAGE_PATH);
   });
 });

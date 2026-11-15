@@ -17,20 +17,25 @@ import {
   MACHINE_CHART_DIGITS,
   MACHINE_CHART_LETTERS,
   MACHINE_DESCRIPTION,
+  MACHINE_HEADING,
   MACHINE_KEYBINDS,
   MACHINE_MODE_HINT,
   MACHINE_PAGE_PATH,
   MACHINE_TITLE,
+  machineThemeToggleLabel,
   nextPracticePrompt,
   practiceFeedback,
 } from './morse-machine-ui';
 
 describe('Morse Code Machine page copy', () => {
   it('has a unique title and a 140–155 character description', () => {
-    expect(MACHINE_TITLE).toBe('Morse Code Machine');
+    expect(MACHINE_TITLE).toBe('Morse Code Machine - Free Online Key & Keyer');
+    expect(MACHINE_HEADING).toBe('Morse Code Machine: Free Online Key and Keyer Simulator');
     expect([...MACHINE_TITLE].length).toBeLessThanOrEqual(60);
     expect([...MACHINE_DESCRIPTION].length).toBeGreaterThanOrEqual(140);
     expect([...MACHINE_DESCRIPTION].length).toBeLessThanOrEqual(155);
+    expect(machineThemeToggleLabel('light')).toBe('Switch to dark theme');
+    expect(machineThemeToggleLabel('dark')).toBe('Switch to light theme');
   });
 
   it('is in the nav and sitemap, with five input methods documented', () => {

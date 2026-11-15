@@ -1,0 +1,707 @@
+---
+import { machineFaqs } from './machine-faqs';
+
+const link = 'text-accent underline underline-offset-4';
+const h2 = 'text-2xl font-semibold tracking-tight';
+const h3 = 'text-xl font-semibold tracking-tight';
+const tableClass = 'w-full border-collapse text-left text-base';
+const thClass = 'border-b border-line bg-surface px-3 py-2 font-semibold';
+const tdClass = 'border-b border-line px-3 py-2 align-top';
+---
+
+<article class="mt-12 grid gap-10 rounded-2xl border border-line px-4 py-6 text-[1.0625rem] leading-7 sm:px-8 sm:py-8">
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Morse Code Machine: Free Online Key and Keyer Simulator</h2>
+    <p>
+      A Morse code machine is any device or tool you use to send Morse code by hand, from a brass telegraph key to a
+      free online simulator. This page lets you tap out dots and dashes, practice by ear, and check your own sending. It
+      also works as the modern stand-in for the old Boys' Life Morse Code Machine, and it runs on phones, tablets, and
+      computers with no download.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Whatever Happened to the Boy Scouts' "Morse Code Machine"?</h2>
+    <p>
+      If you typed "Morse code machine" into Google and ended up here, you might be looking for something very specific.
+      Years ago, the Boy Scouts' Boys' Life website, now Scoutlife.org, had a free Flash game with exactly that name. It
+      looked like a calculator, with a key for every letter, number, and punctuation mark, and it taught Morse code
+      through two simple games.
+    </p>
+    <p>
+      One game was called Listen and Guess. The machine played a letter or word in Morse and you had to work out what it
+      said. The other was Morse the Letter, where it showed you a letter or number and you had to enter the right dots
+      and dashes. Both were quick and free, and easy for a Scout, a parent, or a ham radio hobbyist to pick up for five
+      minutes of practice.
+    </p>
+    <p>
+      Then it disappeared. By the middle of the 2010s, visitors were already asking where it went, and the question has
+      never stopped coming. The game was built in Flash, which phones and browsers were already pushing out well before
+      Flash's official end, and a few commenters simply say the Scouts pulled it. Nobody outside Scoutlife has confirmed
+      the exact reason.
+    </p>
+    <p><strong>What people are still saying</strong></p>
+    <p>
+      The comments are the best proof. The old Machine's page appears to have been turned into a plain text-to-Morse
+      translator, but the comments about the missing game are still sitting underneath it. One visitor wrote, "Sad the
+      Boy Scouts pulled the Morse Code Machine from this web site," and said they had really enjoyed it. A licensed ham
+      radio operator mentioned liking it for slow code practice, and a few people asked for it to come back in time for
+      JOTA, the Scouts' yearly Jamboree on the Air radio event.
+    </p>
+    <p>
+      What those comments show is that people did not just want a translator. They wanted the game, something that played
+      Morse in your ears, tested you, and let you try again. That is what a Scout could use on the way to the Morse Code
+      Interpreter Strip, and what a ham could use to keep their ears sharp.
+    </p>
+    <p>
+      So that is the gap. A well-liked little tool dropped off the internet, and years later people are still typing its
+      name into Google hoping it came back. The practice modes on this page, including a Listen and Guess mode and a
+      Morse the Letter mode, are built to do the same job without Flash or any download. If you have been missing the
+      old Boys' Life Morse Code Machine, this is as close as it gets to having it back.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>What Is a Morse Code Machine?</h2>
+    <p>
+      "Morse code machine" is one of those terms that means slightly different things depending on who's using it.
+      Sometimes it refers to an actual piece of hardware, a physical switch or lever an operator presses to send dots
+      and dashes. Other times it means a modern web tool, something you tap or click to practice sending and decoding
+      Morse without owning any equipment at all. Both uses are common, and both are covered here.
+    </p>
+    <p>
+      At its core, though, every version does the same job. It turns a deliberate press, tap, or keystroke into a short
+      pulse (a dot) or a longer one (a dash). The timing is precise enough that another person or a machine can read the
+      pattern back as letters and words.
+    </p>
+
+    <h3 class={h3}>Morse Code Machine vs. Telegraph Key vs. Keyer</h3>
+    <p>
+      These three terms get used almost interchangeably online, but people who actually send Morse code mean different
+      things by each one. A key is a piece of hardware, a keyer is electronics, and "machine" is just a casual label. The
+      table below sorts them out and makes the rest of this page easier to follow.
+    </p>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Term</th>
+            <th class={thClass} scope="col">What it actually is</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class={tdClass}><strong>Telegraph key</strong></td>
+            <td class={tdClass}
+              >The broadest term. Any switch used to send Morse by hand, from the simplest straight key to a fully
+              electronic paddle</td
+            >
+          </tr>
+          <tr>
+            <td class={tdClass}><strong>Straight key</strong></td>
+            <td class={tdClass}
+              >The classic up-and-down lever seen in old war films. One contact, pressed by hand for every single dot
+              and dash</td
+            >
+          </tr>
+          <tr>
+            <td class={tdClass}><strong>Bug (semi-automatic key)</strong></td>
+            <td class={tdClass}
+              >A mechanical key that sends a string of dits automatically when held one way, but still needs a manual
+              press for dahs. Side-to-side motion instead of up-and-down</td
+            >
+          </tr>
+          <tr>
+            <td class={tdClass}><strong>Paddle + keyer</strong></td>
+            <td class={tdClass}
+              >The modern setup. The paddle is just the switch; the keyer is the electronics behind it that time the
+              dits and dahs automatically and often add a practice tone (called a sidetone)</td
+            >
+          </tr>
+          <tr>
+            <td class={tdClass}><strong>"Morse code machine" (as used online)</strong></td>
+            <td class={tdClass}
+              >A loose, informal label that usually points to any of the above, or to a browser-based simulator that
+              does the keyer's job in software</td
+            >
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      So when someone searches "Morse code machine," they could mean a $20 practice key or a $300 paddle-and-keyer
+      combo. They could just as easily mean a free tool like this one. All three meet the same need, which is a way to
+      send Morse code by hand instead of only reading it off a chart.
+    </p>
+
+    <h3 class={h3}>Quick Facts</h3>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>
+        Morse code was developed in the 1830s and 1840s by Samuel Morse and his collaborator Alfred Vail
+      </li>
+      <li>A short pulse is called a dot or a "dit," and a long pulse is a dash or a "dah"</li>
+      <li>A skilled operator using a mechanical bug key can send in excess of 40 words per minute</li>
+      <li>
+        The U.S. no longer requires Morse code proficiency for any amateur radio license; the FCC dropped that rule in
+        2007
+      </li>
+      <li>
+        This page uses International Morse code, the worldwide standard. The older American (railroad) version has its
+        own{' '}
+        <a class={link} href="/american-morse-code-translator/">American Morse code translator</a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Using This Morse Code Machine & Keyer</h2>
+    <p>
+      The tool at the top of this page isn't just one thing. It works as a tap key you can use right now, a practice
+      trainer that tests your ear, and a way to check how accurately you can send a message yourself. You can switch
+      between these without leaving the page or installing anything.
+    </p>
+
+    <h3 class={h3}>Input Modes: Tap, Click, Type, and Keyboard</h3>
+    <p>
+      You can key in Morse code using whichever input feels natural to you. On a touchscreen, a quick tap sends a dot
+      and a slightly longer press sends a dash. On a computer, the same works with a mouse click, a keyboard key, or an
+      on-screen paddle.
+    </p>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>
+        <strong>Tap, click, or hold</strong>: press and release on screen or with your mouse, a short press is a dot and
+        a longer press is a dash
+      </li>
+      <li>
+        <strong>Keyboard key</strong>: use one key, like the spacebar, the same way, so your hands never leave the
+        keyboard
+      </li>
+      <li>
+        <strong>Type</strong>: type letters normally and the tool shows the Morse code as you go
+      </li>
+      <li>
+        <strong>Iambic paddle</strong>: two keys, one for dots and one for dashes, like a real electronic keyer, squeeze
+        both to alternate automatically
+      </li>
+    </ul>
+
+    <h3 class={h3}>Practice Mode: Listen and Guess at Adjustable Speed</h3>
+    <p>
+      This mode flips the tool around, so it sends to you instead. Pick a speed, press play, and it plays a short letter
+      or word in audio Morse for you to copy by ear. It is the same kind of listening practice the old Boys' Life game
+      offered, and it works for beginners and licensed hams alike. Start slow while you are still matching sounds to
+      letters, then raise the speed once copying feels automatic.
+    </p>
+
+    <h3 class={h3}>Send-and-Check Mode: Morse the Letter, Then Whole Words</h3>
+    <p>
+      This is the closest thing to real sending practice you will get without a radio. The tool gives you a letter, and
+      later a short word, and you key it in yourself with whichever input mode you like. It then tells you how close
+      your timing and pattern came to the real thing. It is a handy way to prepare for a Scouts radio activity, a JOTA
+      session, or just to find out whether your sending is actually readable.
+    </p>
+
+    <h3 class={h3}>Settings: Speed, Sidetone, Theme</h3>
+    <p>A few small controls sit off to the side so you can set things up the way you like:</p>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>
+        <strong>Speed</strong>: controls how fast both the practice audio and your own keying are timed
+      </li>
+      <li>
+        <strong>Sidetone</strong>: the audible tone you hear while keying, so you can practice by sound even with the
+        screen turned away
+      </li>
+      <li>
+        <strong>Theme</strong>: switch between light and dark, useful if you're practicing at night
+      </li>
+    </ul>
+
+    <h3 class={h3}>Characters & Keybinds Reference</h3>
+    <p>
+      While you're using any of these modes, a small reference panel shows which taps and keystrokes map to which
+      letters, so you're never guessing. It only covers the basics here; for the complete dot-and-dash chart for every
+      letter, number, and punctuation mark, the{' '}
+      <a class={link} href="/morse-code-alphabet/">full Morse code alphabet chart</a> has the whole thing laid out.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>How Does a Morse Code Machine Work?</h2>
+    <p>
+      Strip away the wires, the radios, and the apps, and every Morse code machine, old or new, does exactly the same
+      job. It takes a deliberate action from a person, turns that action into a precisely timed pulse, and sends that
+      pulse somewhere it can be read back as letters. The equipment changes a lot over 180 years, but the underlying
+      idea hasn't.
+    </p>
+
+    <h3 class={h3}>How the Process Works</h3>
+    <p>
+      The whole thing comes down to four steps, whether you're using a 19th-century telegraph key or the tool on this
+      page:
+    </p>
+    <ol class="grid list-decimal gap-3 pl-5">
+      <li>
+        <strong>You press something.</strong> On a telegraph line, that's a physical key closing an electrical circuit.
+        On a ham radio, it keys the transmitter directly. On a web tool like this one, it's a tap, click, or keystroke
+        read by the browser.
+      </li>
+      <li>
+        <strong>Timing decides dot or dash.</strong> A dash takes about three times as long as a dot. A quick press
+        reads as a dot, and holding it roughly three times longer reads as a dash. The gap between dots and dashes in
+        the same letter is one dot-length, the gap between letters is three, and the gap between words is seven.
+      </li>
+      <li>
+        <strong>The pulse travels.</strong> Over a landline it's an electrical current running down a wire. Over radio
+        it's a burst of radio waves. In a browser, there's no wire or antenna at all, the "pulse" is just a short beep
+        generated by your device's speaker.
+      </li>
+      <li>
+        <strong>Something on the other end reads it back.</strong> A telegraph sounder clicks, a radio operator listens
+        to a tone, or software decodes the pattern automatically and shows you the letters it heard.
+      </li>
+    </ol>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Types of Morse Code Machines & Keyers</h2>
+    <p>
+      "Morse code machine" covers a surprisingly wide range of equipment, from a single metal lever you press by hand to
+      software running entirely in a browser tab. Knowing the main types helps you work out which one fits what you want
+      to do. That might be passing a Scout activity, getting into ham radio, or just playing around with Morse for fun.
+    </p>
+
+    <h3 class={h3}>Straight Key</h3>
+    <p>
+      This is the one everyone pictures when they hear "telegraph key": a simple up-and-down lever with a knob on top
+      and one electrical contact underneath. Every single dot and dash has to be timed by hand, there's no automation at
+      all, which makes it the hardest to master but also the one most radio operators learn on first. It's still widely
+      used today, partly out of tradition and partly because a lot of CW operators enjoy the challenge of sending
+      cleanly without any help from the equipment.
+    </p>
+
+    <h3 class={h3}>Bug / Semi-Automatic Key</h3>
+    <p>
+      A bug key moves side to side instead of up and down, and it uses a small mechanical mechanism to send a string of
+      dots automatically once you push it one way. Dashes still have to be sent by hand, which is why it's called
+      "semi-automatic" rather than fully automatic. Skilled operators can push speeds past 40 words per minute on a bug,
+      and the slightly uneven, musical rhythm it produces is something many CW enthusiasts still recognize and enjoy on
+      the air today.
+    </p>
+
+    <h3 class={h3}>Paddle Key / Iambic Keyer / Cootie Key</h3>
+    <p>
+      A paddle looks similar to a bug but works differently. It's really just two separate switches, one for dots and
+      one for dashes, that you squeeze between your thumb and finger. On its own a paddle does nothing automatic; it
+      needs an electronic keyer behind it to turn those presses into properly timed dots and dashes, including "iambic"
+      keyers that let you squeeze both sides at once and alternate automatically. A cootie key, sometimes called a
+      sideswiper, looks similar but has no electronics at all, it's purely mechanical and still needs manual timing like
+      a straight key.
+    </p>
+
+    <h3 class={h3}>Electronic Keyer</h3>
+    <p>
+      The keyer is the part that actually does the timing work for a paddle. It's a small circuit, sometimes a
+      standalone box and sometimes built directly into a modern ham radio transceiver, that converts a paddle press into
+      a clean, evenly spaced stream of dots or dashes. Many keyers also produce a sidetone, an audible practice beep, so
+      you can hear what you're sending even without transmitting on a real radio frequency.
+    </p>
+
+    <h3 class={h3}>Code Practice Oscillator (CPO)</h3>
+    <p>
+      A CPO strips everything down to the basics: a simple key wired to a buzzer or speaker, with no radio and no
+      transmission involved at all. It exists purely so beginners, often in classrooms or Scout troops, can practice
+      sending and hear what their own Morse sounds like before ever touching real radio equipment. The practice-audio
+      feature built into this page's tool does the same job digitally, without needing to wire anything together.
+    </p>
+
+    <h3 class={h3}>Automatic Telegraph Machines</h3>
+    <p>
+      Not every historical telegraph setup depended on a person listening and writing down what they heard. Early
+      telegraph registers used a stylus to mark or emboss the dots and dashes onto a moving paper tape, which an
+      operator could read later instead of copying in real time. Later machines such as teleprinters went further and
+      printed letters directly, although most of them used different codes than Morse.
+    </p>
+
+    <h3 class={h3}>Wireless Morse Machines / Radio Telegraphy</h3>
+    <p>
+      Morse code first went wireless with spark-gap transmitters, which sent Morse through the air long before voice
+      radio existed. Those early signals carried the famous SOS distress calls from ships in the early 1900s. Later,
+      radio moved to continuous wave transmission, which is why Morse on the radio is still called CW today, and it
+      remains an active part of amateur radio even though it is no longer required for a license.
+    </p>
+
+    <h3 class={h3}>Modern Digital / Online Morse Code Machines</h3>
+    <p>
+      The newest category skips physical hardware entirely. A browser-based tool like the one on this page reads your
+      taps or keystrokes, applies the same dot-dash timing rules telegraph operators have used for 180 years, and
+      decodes the result instantly using nothing but software. It's the most accessible version by far, nothing to buy,
+      nothing to wire up, and it works the same on a phone as it does on a desktop.
+    </p>
+
+    <h3 class={h3}>Comparison Table</h3>
+    <div class="overflow-x-auto">
+      <table class={tableClass}>
+        <thead>
+          <tr>
+            <th class={thClass} scope="col">Type</th>
+            <th class={thClass} scope="col">Era</th>
+            <th class={thClass} scope="col">Skill Needed</th>
+            <th class={thClass} scope="col">Typical Use Today</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class={tdClass}>Straight Key</td>
+            <td class={tdClass}>1840s–present</td>
+            <td class={tdClass}>Beginner to advanced</td>
+            <td class={tdClass}>Learning, traditional CW operating</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Bug (Semi-Automatic)</td>
+            <td class={tdClass}>Early 1900s–present</td>
+            <td class={tdClass}>Advanced</td>
+            <td class={tdClass}>High-speed CW, hobbyist preference</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Paddle + Electronic Keyer</td>
+            <td class={tdClass}>1960s–present</td>
+            <td class={tdClass}>Intermediate to advanced</td>
+            <td class={tdClass}>Modern ham radio operating</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Cootie Key</td>
+            <td class={tdClass}>Early 1900s–present</td>
+            <td class={tdClass}>Advanced</td>
+            <td class={tdClass}>Niche hobbyist use</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Code Practice Oscillator</td>
+            <td class={tdClass}>Mid-1900s–present</td>
+            <td class={tdClass}>Beginner</td>
+            <td class={tdClass}>Classroom and Scout training</td>
+          </tr>
+          <tr>
+            <td class={tdClass}>Online Morse Code Machine (this tool)</td>
+            <td class={tdClass}>2000s–present</td>
+            <td class={tdClass}>Beginner</td>
+            <td class={tdClass}>Practice, learning, quick translation, no equipment needed</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>History & Invention of the Morse Code Machine</h2>
+    <p>
+      The tools used to send Morse code have changed almost beyond recognition since the 1840s, moving from pure
+      mechanics to electronics to software running in a browser. Looking at that progression in order makes it easier to
+      see where today's keys, keyers, and online tools actually come from.
+    </p>
+
+    <h3 class={h3}>Timeline of Development</h3>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>
+        <strong>1830s–1844</strong>: Samuel Morse and his collaborator Alfred Vail develop the original code and send
+        the first public long-distance telegraph message between Washington and Baltimore
+      </li>
+      <li>
+        <strong>1851</strong>: European countries standardize a revised version of the code, which becomes International
+        Morse. The original North American version lives on as American Morse, or Railroad Morse, until the 1970s
+      </li>
+      <li>
+        <strong>Late 1800s</strong>: the straight key becomes the standard way to send Morse by hand, a design still
+        recognizable today
+      </li>
+      <li>
+        <strong>1904</strong>: Horace Greeley Martin files a patent for a side-to-side semi-automatic key, after an
+        earlier mechanical sending device called the Autoplex didn't catch on
+      </li>
+      <li>
+        <strong>1905</strong>: the Vibroplex Company begins selling the key commercially, and it quickly becomes known
+        by its nickname, the "bug"
+      </li>
+      <li>
+        <strong>1908</strong>: a rival inventor named Coffe, who had filed a similar patent months before Martin, wins a
+        lawsuit against him over the design, though the court lets Martin keep manufacturing his key
+      </li>
+      <li>
+        <strong>1930s</strong>: Martin leaves the company he founded
+      </li>
+      <li>
+        <strong>1960s–1970s</strong>: electronic keyers paired with paddles start replacing purely mechanical bugs for
+        operators who want faster, more consistent sending
+      </li>
+      <li>
+        <strong>Around 2010</strong>: Morse practice moves into the browser, with Flash-based tools such as the Boys'
+        Life Morse Code Machine letting anyone practice with no hardware at all
+      </li>
+      <li>
+        <strong>Mid-2010s</strong>: the Boys' Life Morse Code Machine disappears from its page, and visitors begin
+        asking where it went
+      </li>
+      <li>
+        <strong>2007</strong>: the FCC removes Morse code proficiency as a requirement for any class of U.S. amateur
+        radio license
+      </li>
+      <li>
+        <strong>2020</strong>: Flash is officially discontinued, ending support for the technology many early
+        browser-based Morse tools were built on
+      </li>
+    </ul>
+
+    <h3 class={h3}>Vintage Morse Code Machines</h3>
+    <p>
+      Among collectors, not all old keys are worth the same, and a few details separate a desirable piece from an
+      ordinary one. The brand matters, and original Vibroplex bugs are among the best known. Early models that still
+      have their nickel-plated data plates, with the patent numbers and dates showing, are a good sign.
+    </p>
+    <p>
+      Rarity and model name also play a part, since Vibroplex sold several named versions over the years, including the
+      Original, the Blue Racer, and the Lightning Bug. Condition matters just as much, because a key that still works
+      smoothly is worth more than one that has been neglected. Many of these keys are still used on the air today, so
+      buyers often care about how a key performs, not just how it looks.
+    </p>
+
+    <h3 class={h3}>From Telegraph Keys to Web Apps: the Scoutlife.org Chapter</h3>
+    <p>
+      The jump from physical hardware to something you use entirely in a browser happened fast, over roughly the last 25
+      years of a nearly 190-year history. Flash made it possible for a lot of small, free educational tools to appear in
+      the 2000s. Sites could build interactive Morse simulators without asking visitors to install anything beyond a
+      plugin most browsers already had.
+    </p>
+    <p>
+      The Boys' Life Morse Code Machine was one of those tools, and it was online by around 2010. By the middle of the
+      2010s it had vanished from its page, at a time when phones and tablets were already refusing to run Flash. The
+      format that made quick Morse practice available to a generation of Scouts was part of why it faded, and a modern,
+      Flash-free tool like the one on this page is built to close that gap.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Build Your Own Morse Code Key or Keyer at Home</h2>
+    <p>
+      You don't need to buy anything to try real Morse code with your hands. A working key can be built from things most
+      people already have around the house, and a slightly more involved electronic version is a popular weekend project
+      for anyone comfortable with a soldering iron. Both options teach the same core skill, turning a press into a timed
+      signal, which is really all any Morse key has ever done.
+    </p>
+
+    <h3 class={h3}>Simple DIY Key (for Kids)</h3>
+    <p>
+      This is the version most Scout troops and classrooms actually use, and it costs almost nothing to put together. A
+      wooden clothespin, two thumbtacks or small screws, a short length of wire, a battery, and a buzzer or small LED
+      are all you need. None of it requires soldering, which makes it an easy weekend project for a parent and a kid to
+      build together.
+    </p>
+    <p>Here's the basic idea:</p>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>Attach one thumbtack to each jaw of the clothespin so they face each other</li>
+      <li>
+        Wire one tack to a battery, and the battery to a buzzer or LED, then wire the buzzer back to the second tack
+      </li>
+      <li>Squeeze the clothespin so the two tacks touch, completing the circuit and triggering the buzzer or light</li>
+      <li>A quick squeeze makes a dot, a slightly longer squeeze makes a dash, exactly like a real telegraph key</li>
+    </ul>
+    <p>
+      It's safe for kids to build with a little adult supervision, as long as you stick to a small battery such as two
+      AA cells and a buzzer made for that voltage. If you use an LED instead, add a small resistor so it doesn't burn
+      out. Either way, it turns an abstract idea like "Morse code" into something you can feel click under your fingers.
+      Once you've built one, the practice and send-and-check modes on this page will make a lot more sense.
+    </p>
+
+    <h3 class={h3}>Arduino / Electronic DIY Keyer</h3>
+    <p>
+      For anyone wanting to go a step further, a simple push button or paddle switch wired to an Arduino can do
+      everything a real electronic keyer does. It times each press automatically and works out whether you sent a dot or
+      a dash based on how long you held it down. A small piezo buzzer or LED gives instant feedback, so you can hear or
+      see what you just sent without ever needing to connect to an actual radio.
+    </p>
+    <p>
+      This kind of project typically only needs a handful of parts, a button, a resistor, a buzzer, and a few jumper
+      wires, along with some beginner-level code to read the button and measure timing. It's a common first electronics
+      project for people getting into both Arduino and amateur radio at the same time, since it teaches real Morse
+      timing while staying simple enough to finish in an afternoon. Once it's working, you will have a pocket-sized
+      version of the practice tool on this page, built by you.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>How to Use a Morse Code Machine (Step-by-Step)</h2>
+    <p>
+      Learning Morse code isn't about memorizing a chart in one sitting, it builds up through a few small steps
+      repeated over time. Each step below builds on the last. Here's a practical path using the tool on this page.
+    </p>
+
+    <h3 class={h3}>Step 1: Learn the Alphabet</h3>
+    <p>
+      Start with the letters and numbers you'll actually use most, not the whole alphabet at once. The full{' '}
+      <a class={link} href="/morse-code-alphabet/">Morse code alphabet chart</a> has every letter, number, and symbol if
+      you need the complete reference, but learning five or six at a time works better than memorizing everything on day
+      one.
+    </p>
+
+    <h3 class={h3}>Step 2: Practice Dots and Dashes</h3>
+    <p>
+      A dot is short, a dash is about three times as long, and the pause between them matters just as much. Use the tap
+      or keyboard mode on this page to send single letters until the timing feels automatic, not something you're
+      counting.
+    </p>
+
+    <h3 class={h3}>Step 3: Listen While You Practice</h3>
+    <p>
+      Reading Morse and hearing it are two different skills. Switch to practice mode, start slow, and try to recognize
+      letters by sound instead of watching the dots and dashes appear on screen.
+    </p>
+
+    <h3 class={h3}>Step 4: Practice Real Words</h3>
+    <p>
+      Once single letters feel easy, move on to short real words instead of random letters, since your brain picks up
+      patterns in language faster. Try your own name or a simple word, then use send-and-check mode to see how
+      accurately it came through.
+    </p>
+
+    <h3 class={h3}>Common Beginner Mistakes to Avoid</h3>
+    <p>A few habits slow almost everyone down early on, and they're easy to fix once you spot them:</p>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>Counting beeps instead of recognizing a letter's whole rhythm</li>
+      <li>Practicing too fast before the timing feels automatic</li>
+      <li>Only reading Morse visually, skipping listening practice</li>
+      <li>Trying to memorize the full chart before practicing any of it</li>
+      <li>Giving up after a few minutes instead of short, regular sessions</li>
+    </ul>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Morse Code Machines for Kids & Scouts</h2>
+    <p>
+      Morse code has a long history in Scouting. Scouts have used it for signaling and advancement for generations, and
+      in the mid-1900s it was even required for First Class rank. The Radio merit badge dropped its code requirement in
+      1984, but the skill never left Scouting for good. A simple online key fits that tradition, and the activities
+      below work for troop meetings, classrooms, or a rainy afternoon at home.
+    </p>
+
+    <h3 class={h3}>Good Activities</h3>
+    <p>A few simple activities make Morse code click fast for kids, without needing anything beyond this page's tool:</p>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>
+        Send your name or a short message to a partner using tap mode, then swap and see if they can decode it
+      </li>
+      <li>
+        Set up a "secret message" game where one person reads from a card and the other has to copy it by ear in
+        practice mode
+      </li>
+      <li>Time how fast a small group can each send the same word, then compare and try again</li>
+      <li>
+        Use send-and-check mode as a badge-style challenge, see who can key in a phrase with the fewest mistakes
+      </li>
+    </ul>
+
+    <h3 class={h3}>Why Scouts Still Learn Morse Code: JOTA and the Interpreter Strip</h3>
+    <p>
+      Morse code has not been required for the Radio merit badge since 1984 or for any US amateur radio license since
+      2007, but it never disappeared from Scouting. In 2012, the Boy Scouts of America released an official Morse Code
+      Interpreter Strip, a uniform patch for Scouts and Scouters who can show they can use the code. To earn it, a Scout
+      has to carry on a five-minute conversation in Morse at five words per minute or faster, copy a two-minute message,
+      and send a 25-word message, all at that same minimum speed.
+    </p>
+    <p>
+      Morse also has a place at JOTA, the Jamboree on the Air, the yearly event where Scouts around the world talk to
+      each other by amateur radio. Most of that talking is by voice, but some Scouts and radio volunteers use Morse too.
+      The send-and-check mode on this page, set to a slow speed, is a good way to get ready for either one.
+    </p>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Is Morse Code Still Used Today?</h2>
+    <p>
+      It's a fair question, especially since most licensing requirements dropped Morse code decades ago. The short
+      answer is yes, just in smaller, more specific corners than it used to occupy. Here's where it's actually still in
+      active use today.
+    </p>
+
+    <h3 class={h3}>Amateur Radio (Ham Radio)</h3>
+    <p>
+      Morse code, known among hams as CW, remains one of the most popular operating modes in amateur radio, especially
+      for long-distance contacts on weak or noisy signals. A CW signal can often be heard and decoded clearly in
+      conditions where a voice transmission would be unreadable, which is why many operators still prefer it for
+      contests and long-distance contacts. No class of US amateur radio license has required Morse code proficiency
+      since 2007, yet the mode has, if anything, grown more popular since then as a skill people choose rather than one
+      they're forced to learn.
+    </p>
+
+    <h3 class={h3}>Aviation and Navigation</h3>
+    <p>
+      Many aviation navigation beacons, including VOR and NDB stations, still identify themselves by broadcasting a
+      short Morse code signal, usually two or three letters, on a repeating loop. Pilots listen for this identifier to
+      confirm they've tuned into the correct station before relying on it for navigation. It's a small, almost invisible
+      use of Morse code that keeps running quietly in the background of modern air travel.
+    </p>
+
+    <h3 class={h3}>Assistive Technology</h3>
+    <p>
+      For people with severe motor disabilities who can't use a standard keyboard, Morse code offers a surprisingly
+      practical input method, since it only needs one or two switches instead of fine finger control. A single switch
+      triggered by a hand, foot, or even a puff of breath can be timed exactly like a telegraph key, with software
+      converting the dots and dashes into text or speech. It's a niche but genuinely useful application, letting people
+      communicate who otherwise couldn't use a standard keyboard at all.
+    </p>
+
+    <h3 class={h3}>Emergency Communication</h3>
+    <p>
+      Morse code's most famous legacy is <a class={link} href="/sos-in-morse-code/">SOS</a>, the universal distress
+      signal that ships used for most of the 20th century. That specific use has largely ended though, the US Coast
+      Guard stopped monitoring radio frequencies for Morse code distress calls years ago, replaced by satellite and
+      digital emergency systems that work faster and more reliably. Morse still shows up occasionally in survival
+      situations, like signaling with a flashlight or mirror, simply because dot-dash patterns are easy to produce and
+      recognize with almost no equipment at all.
+    </p>
+  </section>
+
+  <section class="cv cv-faq grid gap-3">
+    <h2 class={h2}>Frequently Asked Questions</h2>
+    <div class="grid gap-4">
+      {
+        machineFaqs.map((item) => (
+          <div class="grid gap-2">
+            <h3 class={h3}>{item.question}</h3>
+            {item.question === 'Which Morse code does this machine use?' ? (
+              <p>
+                It uses International Morse code, the standard used worldwide. If you want the older railroad version,
+                try the <a class={link} href="/american-morse-code-translator/">American Morse code translator</a>.
+              </p>
+            ) : (
+              <p>{item.answer}</p>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Related Tools</h2>
+    <p>If Morse code has caught your interest, a few other tools on this site build on what you've practiced here:</p>
+    <ul class="grid list-disc gap-2 pl-5">
+      <li>
+        <a class={link} href="/">Morse Code Translator</a>: convert any text to Morse code or decode Morse back to text
+      </li>
+      <li>
+        <a class={link} href="/morse-code-audio-translator/">Morse Code Audio Translator</a>: decode Morse from a
+        microphone or an uploaded audio file
+      </li>
+      <li>
+        <a class={link} href="/american-morse-code-translator/">American Morse Code Translator</a>: the original
+        railroad-era code, different from the International Morse used on this page
+      </li>
+      <li>
+        <a class={link} href="/sos-in-morse-code/">SOS in Morse Code</a>: how the famous distress signal is sent and
+        where it came from
+      </li>
+      <li>
+        <a class={link} href="/morse-code-alphabet/">Morse Code Alphabet Chart</a>: the complete reference for every
+        letter, number, and symbol
+      </li>
+    </ul>
+  </section>
+</article>

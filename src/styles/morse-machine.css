@@ -363,21 +363,8 @@
   height: 1.15rem;
 }
 
-.mm-theme {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.3rem;
-}
-
-.mm-theme .mm-tab {
-  border: 1px solid var(--line);
-  border-radius: 9999px;
-  background: var(--canvas);
-}
-
-.mm-theme .mm-tab:has(:checked) {
-  border-color: var(--accent);
-  background: var(--accent);
+.mm-theme-toggle {
+  width: 100%;
 }
 
 .mm-ref,

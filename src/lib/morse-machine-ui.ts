@@ -11,9 +11,10 @@ import {
 import { displayFromEvents, type MachineDisplay } from './morse-machine-timing';
 
 export const MACHINE_PAGE_PATH = '/morse-code-machine/';
-export const MACHINE_TITLE = 'Morse Code Machine';
+export const MACHINE_TITLE = 'Morse Code Machine - Free Online Key & Keyer';
+export const MACHINE_HEADING = 'Morse Code Machine: Free Online Key and Keyer Simulator';
 export const MACHINE_DESCRIPTION =
-  'Send International Morse with a tap key, hold, spacebar, typed letters, or iambic paddles. One speed from 5 to 40 WPM. Private in your browser.';
+  'Free online Morse key and keyer simulator. Send International Morse, then practice Listen & Guess and Morse the Letter. Private in your browser.';
 
 export const MACHINE_MODES = ['key', 'type', 'paddle'] as const;
 export type MachineMode = (typeof MACHINE_MODES)[number];
@@ -83,6 +84,10 @@ export function isMachineActivity(value: string): value is MachineActivity {
 
 export function isMachineTheme(value: string): value is MachineTheme {
   return (MACHINE_THEMES as readonly string[]).includes(value);
+}
+
+export function machineThemeToggleLabel(theme: MachineTheme): string {
+  return theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
 }
 
 export function isPracticeDifficulty(value: string): value is PracticeDifficulty {

@@ -1,0 +1,37 @@
+.mmb-box {
+  max-width: 100%;
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.7;
+  font-size: 1.0625rem;
+}
+
+.mmb-box p {
+  margin: 0 0 1rem;
+}
+
+.mmb-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 0 1rem;
+}
+
+.mmb-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.mmb-table th,
+.mmb-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+}
+
+.mmb-table th {
+  background: var(--surface);
+  font-weight: 600;
+}

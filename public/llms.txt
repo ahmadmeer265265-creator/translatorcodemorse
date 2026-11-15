@@ -15,3 +15,4 @@ Free browser-based Morse code translator at translatorcodemorse.com. Convert tex
 - [Accessibility](https://translatorcodemorse.com/accessibility/): Keyboard use, live updates, contrast, and how to report barriers
 - [Contact](https://translatorcodemorse.com/contact/): How to reach the site owner
 - [American Morse code translator](https://translatorcodemorse.com/american-morse-code-translator/): Convert text to American Morse, or type railroad Morse and read it as text. Decode from a microphone or an audio file
+- [Morse Code Machine](https://translatorcodemorse.com/morse-code-machine/): Free online Morse key and keyer. Send International Morse, then practice Listen & Guess and Morse the Letter

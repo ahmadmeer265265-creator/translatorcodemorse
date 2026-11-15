@@ -5,6 +5,7 @@
  */
 import { Image } from 'astro:assets';
 import AmericanMorseBlock from './AmericanMorseBlock.astro';
+import MorseMachineBlock from './MorseMachineBlock.astro';
 import DemoVideo from './DemoVideo.astro';
 import RelatedPages from './RelatedPages.astro';
 import TimingBlock from './TimingBlock.astro';
@@ -824,6 +825,11 @@ const caption = 'border-t border-line bg-canvas px-3 py-2 text-sm text-muted';
   <section class="cv grid gap-3">
     <h2 class={h2}>Difference Between International Morse & American Morse</h2>
     <AmericanMorseBlock />
+  </section>
+
+  <section class="cv grid gap-3">
+    <h2 class={h2}>Morse Code Machine: Key and Keyer Practice</h2>
+    <MorseMachineBlock />
   </section>
 
   <section class="cv cv-faq grid gap-3">

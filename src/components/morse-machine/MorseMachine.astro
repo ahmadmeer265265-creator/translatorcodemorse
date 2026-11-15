@@ -166,16 +166,15 @@ import '../../styles/morse-machine.css';
           <output id="mm-pitch-value" for="mm-pitch" data-pitch-value>{DEFAULT_SIDETONE_PITCH} Hz</output>
         </label>
         <span class="mm-label">Theme</span>
-        <div class="mm-theme" role="radiogroup" aria-label="Theme">
-          <label class="mm-tab">
-            <input class="sr-only" type="radio" name="mm-theme" value="light" data-theme checked />
-            <span>Light</span>
-          </label>
-          <label class="mm-tab">
-            <input class="sr-only" type="radio" name="mm-theme" value="dark" data-theme />
-            <span>Dark</span>
-          </label>
-        </div>
+        <button
+          class="mm-btn mm-theme-toggle"
+          type="button"
+          data-mm-theme-toggle
+          aria-pressed="false"
+          aria-label="Switch to dark theme"
+        >
+          Switch to dark theme
+        </button>
       </div>
     </details>
 
@@ -236,6 +235,7 @@ import '../../styles/morse-machine.css';
     isPracticeDifficulty,
     liveSidetoneAllowed,
     MACHINE_MODE_HINT,
+    machineThemeToggleLabel,
     nextPracticePrompt,
     practiceFeedback,
     type ListenAndGuessPrompt,
@@ -269,7 +269,7 @@ import '../../styles/morse-machine.css';
   const modeInputs = [...(root?.querySelectorAll<HTMLInputElement>('input[data-mode]') ?? [])];
   const activityInputs = [...(root?.querySelectorAll<HTMLInputElement>('input[data-activity]') ?? [])];
   const diffInputs = [...(root?.querySelectorAll<HTMLInputElement>('input[data-diff]') ?? [])];
-  const themeInputs = [...(root?.querySelectorAll<HTMLInputElement>('input[data-theme]') ?? [])];
+  const themeToggle = root?.querySelector<HTMLButtonElement>('[data-mm-theme-toggle]');
   const ditBtn = root?.querySelector<HTMLButtonElement>('[data-paddle="dot"]');
   const dahBtn = root?.querySelector<HTMLButtonElement>('[data-paddle="dash"]');
 
@@ -295,6 +295,7 @@ import '../../styles/morse-machine.css';
     nextButton &&
     targetOut &&
     feedbackOut &&
+    themeToggle &&
     ditBtn &&
     dahBtn
   ) {
@@ -424,6 +425,10 @@ import '../../styles/morse-machine.css';
 
     const setTheme = (next: MachineTheme) => {
       root.dataset.mmTheme = next;
+      const label = machineThemeToggleLabel(next);
+      themeToggle.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+      themeToggle.setAttribute('aria-label', label);
+      themeToggle.textContent = label;
     };
 
     const setWpm = (next: number) => {
@@ -587,11 +592,9 @@ import '../../styles/morse-machine.css';
       });
     }
 
-    for (const input of themeInputs) {
-      input.addEventListener('change', () => {
-        if (input.checked && isMachineTheme(input.value)) setTheme(input.value);
-      });
-    }
+    themeToggle.addEventListener('click', () => {
+      setTheme(root.dataset.mmTheme === 'dark' ? 'light' : 'dark');
+    });
 
     speedInput.addEventListener('input', () => setWpm(Number(speedInput.value)));
     volumeInput.addEventListener('input', () => {
@@ -621,13 +624,7 @@ import '../../styles/morse-machine.css';
     });
 
     const pageTheme = document.documentElement.getAttribute('data-theme');
-    if (pageTheme && isMachineTheme(pageTheme)) {
-      const match = themeInputs.find((input) => input.value === pageTheme);
-      if (match) {
-        match.checked = true;
-        setTheme(pageTheme);
-      }
-    }
+    if (pageTheme && isMachineTheme(pageTheme)) setTheme(pageTheme);
 
     setMode('key');
     setActivity('send');
