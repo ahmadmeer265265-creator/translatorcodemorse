@@ -106,6 +106,16 @@ describe('Morse Code Machine page', () => {
     );
   });
 
+  it('does not auto-focus the key on load so reload cannot stick a focus ring', () => {
+    const src = readFileSync(resolve(process.cwd(), 'src/components/morse-machine/MorseMachine.astro'), 'utf8');
+    expect(src).toContain('setMode(\'key\')');
+    expect(src).not.toContain("setMode('key', { focusInput: true })");
+    expect(src).toContain('options.focusInput');
+    expect(src).toContain("setMode(input.value, { focusInput: true })");
+    expect(src).toContain('releaseBootFocus');
+    expect(src).toContain("addEventListener('pageshow', releaseBootFocus");
+  });
+
   it('does not steal spacebar from links or page chrome', () => {
     const src = readFileSync(resolve(process.cwd(), 'src/components/morse-machine/MorseMachine.astro'), 'utf8');
     expect(src).toContain("target.closest('a')");

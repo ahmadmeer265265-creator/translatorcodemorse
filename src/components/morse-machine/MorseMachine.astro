@@ -393,15 +393,17 @@ import '../../styles/morse-machine.css';
       tickTimer = 0;
     };
 
-    const setMode = (next: MachineMode) => {
+    const setMode = (next: MachineMode, options: { focusInput?: boolean } = {}) => {
       if (next === 'type') sidetone.stopLive();
       mode = next;
       card.dataset.mode = next;
       hint.textContent = MACHINE_MODE_HINT[next];
       if (next === 'type') stopTick();
       else ensureTick();
-      if (next === 'key') pad.focus();
-      else if (next === 'type') typeField.focus();
+      if (options.focusInput) {
+        if (next === 'key') pad.focus({ preventScroll: true });
+        else if (next === 'type') typeField.focus({ preventScroll: true });
+      }
       render();
     };
 
@@ -578,7 +580,7 @@ import '../../styles/morse-machine.css';
 
     for (const input of modeInputs) {
       input.addEventListener('change', () => {
-        if (input.checked && isMachineMode(input.value)) setMode(input.value);
+        if (input.checked && isMachineMode(input.value)) setMode(input.value, { focusInput: true });
       });
     }
 
@@ -628,9 +630,16 @@ import '../../styles/morse-machine.css';
     const pageTheme = document.documentElement.getAttribute('data-theme');
     if (pageTheme && isMachineTheme(pageTheme)) setTheme(pageTheme);
 
+    const releaseBootFocus = () => {
+      const active = document.activeElement;
+      if (active instanceof HTMLElement && root.contains(active)) active.blur();
+    };
+
     setMode('key');
     setActivity('send');
     ensureTick();
     render();
+    releaseBootFocus();
+    window.addEventListener('pageshow', releaseBootFocus, { once: true });
   }
 </script>
