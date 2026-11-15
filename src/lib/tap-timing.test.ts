@@ -87,4 +87,18 @@ describe('tap timing', () => {
     engine.undoMark();
     expect(engine.snapshot().marks).toBe('-');
   });
+
+  it('treats a 1ms press as a dot and a 5s press as a dash', () => {
+    expect(runTapSequence([{ pressMs: 1, gapAfterMs: LETTER_GAP_MS }]).text).toBe('E');
+    expect(runTapSequence([{ pressMs: 5_000, gapAfterMs: LETTER_GAP_MS }]).text).toBe('T');
+  });
+
+  it('keeps ambiguous durations on the documented side of each threshold', () => {
+    expect(runTapSequence([{ pressMs: 199, gapAfterMs: 0 }]).marks).toBe('.');
+    expect(runTapSequence([{ pressMs: 200, gapAfterMs: 0 }]).marks).toBe('-');
+    expect(runTapSequence([{ pressMs: 50, gapAfterMs: LETTER_GAP_MS - 1 }]).text).toBe('');
+    expect(runTapSequence([{ pressMs: 50, gapAfterMs: LETTER_GAP_MS }]).text).toBe('E');
+    expect(runTapSequence([{ pressMs: 50, gapAfterMs: WORD_GAP_MS - 1 }]).text).toBe('E');
+    expect(runTapSequence([{ pressMs: 50, gapAfterMs: WORD_GAP_MS }]).text).toBe('E ');
+  });
 });
