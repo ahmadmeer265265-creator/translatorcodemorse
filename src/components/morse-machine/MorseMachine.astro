@@ -1,0 +1,361 @@
+---
+import {
+  MACHINE_CHART_DIGITS,
+  MACHINE_CHART_LETTERS,
+  MACHINE_KEYBINDS,
+  MACHINE_MODE_HINT,
+} from '../../lib/morse-machine-ui';
+import { DEFAULT_MACHINE_WPM, MACHINE_WPM_MAX, MACHINE_WPM_MIN } from '../../lib/morse-machine-timing';
+import '../../styles/morse-machine.css';
+---
+
+<section class="mm-tool" data-morse-machine aria-label="Morse Code Machine">
+  <div class="mm-card" data-card>
+    <div class="mm-tabs" role="radiogroup" aria-label="Input mode">
+      <label class="mm-tab">
+        <input class="sr-only" type="radio" name="mm-mode" value="key" data-mode checked />
+        <span>Key</span>
+      </label>
+      <label class="mm-tab">
+        <input class="sr-only" type="radio" name="mm-mode" value="type" data-mode />
+        <span>Type</span>
+      </label>
+      <label class="mm-tab">
+        <input class="sr-only" type="radio" name="mm-mode" value="paddle" data-mode />
+        <span>Paddle</span>
+      </label>
+    </div>
+
+    <div class="mm-live">
+      <span class="mm-label" id="mm-morse-label">Morse</span>
+      <p class="mm-out" data-morse-out aria-labelledby="mm-morse-label" aria-live="polite"></p>
+      <span class="mm-label" id="mm-text-label">Decoded text</span>
+      <p class="mm-out mm-out--text" data-text-out aria-labelledby="mm-text-label" aria-live="polite"></p>
+      <p class="mm-hint" data-hint>{MACHINE_MODE_HINT.key}</p>
+    </div>
+
+    <div class="mm-key">
+      <button
+        class="mm-pad"
+        type="button"
+        data-pad
+        data-pressed="false"
+        aria-label="Morse key. Tap or hold. Short is a dot, longer is a dash. Spacebar does the same."
+      >
+        Tap or hold · Space
+      </button>
+    </div>
+
+    <div class="mm-type">
+      <label class="mm-label" for="mm-type">Type letters</label>
+      <textarea
+        id="mm-type"
+        class="mm-type-field"
+        data-type
+        rows="2"
+        autocomplete="off"
+        autocapitalize="characters"
+        spellcheck="false"
+        placeholder="Type here"
+      ></textarea>
+    </div>
+
+    <div class="mm-paddle">
+      <div class="mm-paddles" role="group" aria-label="Iambic paddles">
+        <button class="mm-paddle-btn" type="button" data-paddle="dot" data-pressed="false" aria-label="Dit paddle. Keyboard J or left arrow.">
+          Dit · J / ←
+        </button>
+        <button class="mm-paddle-btn" type="button" data-paddle="dash" data-pressed="false" aria-label="Dah paddle. Keyboard K or right arrow.">
+          Dah · K / →
+        </button>
+      </div>
+    </div>
+
+    <label class="mm-speed" for="mm-speed">
+      <span>Speed</span>
+      <input
+        id="mm-speed"
+        type="range"
+        min={MACHINE_WPM_MIN}
+        max={MACHINE_WPM_MAX}
+        value={DEFAULT_MACHINE_WPM}
+        step="1"
+        data-speed
+      />
+      <output id="mm-speed-value" for="mm-speed" data-speed-value>{DEFAULT_MACHINE_WPM} WPM</output>
+    </label>
+
+    <div class="mm-row">
+      <button class="mm-btn" type="button" data-clear>Clear</button>
+    </div>
+
+    <details class="mm-ref">
+      <summary>Characters and keybinds</summary>
+      <div class="mm-ref__body">
+        <ul class="mm-binds">
+          {MACHINE_KEYBINDS.map((row) => (
+            <li>
+              <strong>{row.keys}</strong>
+              {' — '}
+              {row.action}
+            </li>
+          ))}
+        </ul>
+        <div class="mm-chart" aria-label="Letter Morse chart">
+          {MACHINE_CHART_LETTERS.map((entry) => (
+            <span>
+              <b>{entry.char}</b>
+              <code>{entry.code}</code>
+            </span>
+          ))}
+        </div>
+        <div class="mm-chart" aria-label="Number Morse chart">
+          {MACHINE_CHART_DIGITS.map((entry) => (
+            <span>
+              <b>{entry.char}</b>
+              <code>{entry.code}</code>
+            </span>
+          ))}
+        </div>
+        <a class="mm-chart-link" href="/morse-code-alphabet/">Full Morse alphabet chart</a>
+      </div>
+    </details>
+  </div>
+</section>
+
+<script>
+  import {
+    createIambicKeyer,
+    DEFAULT_IAMBIC_WPM,
+    type IambicKeyer,
+    type IambicSide,
+  } from '../../lib/iambic-keyer?mm';
+  import type { MorseKeyEvent } from '../../lib/morse-key-events?mm';
+  import { createStraightKeySession, clampMachineWpm } from '../../lib/morse-machine-timing?mm';
+  import {
+    displayForMode,
+    isMachineMode,
+    MACHINE_MODE_HINT,
+    type MachineMode,
+  } from '../../lib/morse-machine-ui?mm';
+
+  const root = document.querySelector<HTMLElement>('[data-morse-machine]');
+  const card = root?.querySelector<HTMLElement>('[data-card]');
+  const morseOut = root?.querySelector<HTMLElement>('[data-morse-out]');
+  const textOut = root?.querySelector<HTMLElement>('[data-text-out]');
+  const hint = root?.querySelector<HTMLElement>('[data-hint]');
+  const pad = root?.querySelector<HTMLButtonElement>('[data-pad]');
+  const typeField = root?.querySelector<HTMLTextAreaElement>('[data-type]');
+  const speedInput = root?.querySelector<HTMLInputElement>('[data-speed]');
+  const speedValue = root?.querySelector<HTMLElement>('[data-speed-value]');
+  const clearButton = root?.querySelector<HTMLButtonElement>('[data-clear]');
+  const modeInputs = [...(root?.querySelectorAll<HTMLInputElement>('input[data-mode]') ?? [])];
+  const ditBtn = root?.querySelector<HTMLButtonElement>('[data-paddle="dot"]');
+  const dahBtn = root?.querySelector<HTMLButtonElement>('[data-paddle="dash"]');
+
+  if (
+    root &&
+    card &&
+    morseOut &&
+    textOut &&
+    hint &&
+    pad &&
+    typeField &&
+    speedInput &&
+    speedValue &&
+    clearButton &&
+    ditBtn &&
+    dahBtn
+  ) {
+    const clock = { now: () => performance.now() };
+    let wpm = clampMachineWpm(Number(speedInput.value) || DEFAULT_IAMBIC_WPM);
+    let mode: MachineMode = 'key';
+    const keySession = createStraightKeySession({ clock, wpm });
+    let keyer: IambicKeyer = createIambicKeyer({ clock, wpm });
+    let paddleEvents: MorseKeyEvent[] = [];
+    let tickTimer = 0;
+    const paddleHeld: Record<IambicSide, boolean> = { dot: false, dash: false };
+
+    const render = () => {
+      const display = displayForMode(mode, mode === 'paddle' ? paddleEvents : keySession.events(), typeField.value);
+      morseOut.textContent = display.morse;
+      textOut.textContent = display.text;
+    };
+
+    const setPressed = (button: HTMLButtonElement, pressed: boolean) => {
+      button.dataset.pressed = pressed ? 'true' : 'false';
+    };
+
+    const ensureTick = () => {
+      if (tickTimer || mode === 'type') return;
+      tickTimer = window.setInterval(() => {
+        if (mode === 'key') keySession.tick();
+        else if (mode === 'paddle') paddleEvents.push(...keyer.tick());
+        render();
+      }, 40);
+    };
+
+    const stopTick = () => {
+      if (!tickTimer) return;
+      window.clearInterval(tickTimer);
+      tickTimer = 0;
+    };
+
+    const setMode = (next: MachineMode) => {
+      mode = next;
+      card.dataset.mode = next;
+      hint.textContent = MACHINE_MODE_HINT[next];
+      if (next === 'type') stopTick();
+      else ensureTick();
+      if (next === 'key') pad.focus();
+      else if (next === 'type') typeField.focus();
+      render();
+    };
+
+    const setWpm = (next: number) => {
+      wpm = clampMachineWpm(next);
+      speedInput.value = String(wpm);
+      speedValue.textContent = `${wpm} WPM`;
+      keySession.setWpm(wpm);
+      const held = { ...paddleHeld };
+      keyer = createIambicKeyer({ clock, wpm });
+      if (held.dot) keyer.paddleDown('dot');
+      if (held.dash) keyer.paddleDown('dash');
+    };
+
+    const setPaddle = (side: IambicSide, down: boolean) => {
+      if (paddleHeld[side] === down) return;
+      paddleHeld[side] = down;
+      setPressed(side === 'dot' ? ditBtn : dahBtn, down);
+      paddleEvents.push(...(down ? keyer.paddleDown(side) : keyer.paddleUp(side)));
+      ensureTick();
+      render();
+    };
+
+    const bindPointerKey = (button: HTMLButtonElement, onDown: () => void, onUp: () => void) => {
+      let pointerId: number | null = null;
+      button.addEventListener('pointerdown', (event) => {
+        if (pointerId !== null) return;
+        event.preventDefault();
+        pointerId = event.pointerId;
+        try {
+          button.setPointerCapture(event.pointerId);
+        } catch {
+          // ignore
+        }
+        onDown();
+      });
+      const end = (event: PointerEvent) => {
+        if (pointerId === null || event.pointerId !== pointerId) return;
+        pointerId = null;
+        try {
+          button.releasePointerCapture(event.pointerId);
+        } catch {
+          // ignore
+        }
+        onUp();
+      };
+      button.addEventListener('pointerup', end);
+      button.addEventListener('pointercancel', end);
+      button.addEventListener('contextmenu', (event) => event.preventDefault());
+    };
+
+    bindPointerKey(
+      pad,
+      () => {
+        setPressed(pad, true);
+        keySession.down();
+        ensureTick();
+      },
+      () => {
+        setPressed(pad, false);
+        keySession.up();
+        render();
+      },
+    );
+    bindPointerKey(
+      ditBtn,
+      () => setPaddle('dot', true),
+      () => setPaddle('dot', false),
+    );
+    bindPointerKey(
+      dahBtn,
+      () => setPaddle('dash', true),
+      () => setPaddle('dash', false),
+    );
+
+    const typingTarget = (target: EventTarget | null) =>
+      target instanceof HTMLTextAreaElement ||
+      (target instanceof HTMLInputElement && target.type !== 'range');
+
+    window.addEventListener('keydown', (event) => {
+      if (event.repeat) {
+        if (mode === 'key' && (event.code === 'Space' || event.key === ' ')) event.preventDefault();
+        if (mode === 'paddle' && (event.code === 'ArrowLeft' || event.code === 'ArrowRight')) event.preventDefault();
+        return;
+      }
+      if (mode === 'key' && (event.code === 'Space' || event.key === ' ')) {
+        if (typingTarget(event.target)) return;
+        event.preventDefault();
+        setPressed(pad, true);
+        keySession.down();
+        ensureTick();
+        return;
+      }
+      if (mode !== 'paddle' || typingTarget(event.target)) return;
+      if (event.code === 'ArrowLeft' || event.code === 'KeyJ') {
+        event.preventDefault();
+        setPaddle('dot', true);
+      } else if (event.code === 'ArrowRight' || event.code === 'KeyK') {
+        event.preventDefault();
+        setPaddle('dash', true);
+      }
+    });
+
+    window.addEventListener('keyup', (event) => {
+      if (mode === 'key' && (event.code === 'Space' || event.key === ' ')) {
+        if (typingTarget(event.target)) return;
+        event.preventDefault();
+        setPressed(pad, false);
+        keySession.up();
+        render();
+        return;
+      }
+      if (mode !== 'paddle' || typingTarget(event.target)) return;
+      if (event.code === 'ArrowLeft' || event.code === 'KeyJ') {
+        event.preventDefault();
+        setPaddle('dot', false);
+      } else if (event.code === 'ArrowRight' || event.code === 'KeyK') {
+        event.preventDefault();
+        setPaddle('dash', false);
+      }
+    });
+
+    typeField.addEventListener('input', render);
+
+    for (const input of modeInputs) {
+      input.addEventListener('change', () => {
+        if (input.checked && isMachineMode(input.value)) setMode(input.value);
+      });
+    }
+
+    speedInput.addEventListener('input', () => setWpm(Number(speedInput.value)));
+
+    clearButton.addEventListener('click', () => {
+      keySession.clear();
+      paddleEvents = [];
+      keyer.clear();
+      paddleHeld.dot = false;
+      paddleHeld.dash = false;
+      setPressed(pad, false);
+      setPressed(ditBtn, false);
+      setPressed(dahBtn, false);
+      typeField.value = '';
+      render();
+    });
+
+    setMode('key');
+    ensureTick();
+    render();
+  }
+</script>

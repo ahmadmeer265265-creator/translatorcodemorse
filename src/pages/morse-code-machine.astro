@@ -1,0 +1,55 @@
+---
+import MorseMachine from '../components/morse-machine/MorseMachine.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
+import { MACHINE_DESCRIPTION, MACHINE_PAGE_PATH, MACHINE_TITLE } from '../lib/morse-machine-ui';
+
+const title = MACHINE_TITLE;
+const description = MACHINE_DESCRIPTION;
+const pageUrl = absoluteUrl(MACHINE_PAGE_PATH);
+
+const jsonLd = [
+  ...supportingJsonLd({
+    name: title,
+    description,
+    url: pageUrl,
+    crumbs: [
+      { name: 'Home', url: absoluteUrl('/') },
+      { name: title, url: pageUrl },
+    ],
+    dateModified: lastUpdatedIso(MACHINE_PAGE_PATH),
+  }),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: title,
+    url: pageUrl,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    description,
+    featureList: [
+      'Send International Morse from a tap key, hold, or spacebar',
+      'Type letters to Morse',
+      'Iambic paddle keying',
+      'One speed control from 5 to 40 WPM',
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
+  <h1 class="text-center text-xl font-semibold tracking-tight sm:text-2xl">{title}</h1>
+  <p class="mx-auto mt-1 max-w-2xl text-center text-sm text-muted">
+    Send International Morse with a key, keyboard, type, or paddles.
+  </p>
+  <div class="mt-2">
+    <MorseMachine />
+  </div>
+</BaseLayout>

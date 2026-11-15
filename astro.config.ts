@@ -18,10 +18,11 @@ const indexablePaths = new Set(pageMeta.map((page) => page.path));
  *    deps simply load on demand.)
  *
  * 2. at-instance-cascade: the audio-translator page imports some homepage
- *    modules with a `?at` query. Any import made BY a `?at` instance is
- *    re-resolved to a `?at` instance too, so the cloned graph is fully
- *    self-contained and the homepage's originals stay inlined in its own
- *    chunks. One source file, two bundle instances — no src duplication.
+ *    modules with a `?at` query, and the Morse Code Machine page uses `?mm`.
+ *    Any import made BY a `?at` / `?mm` instance is re-resolved with the same
+ *    query, so the cloned graph is fully self-contained and the homepage's
+ *    originals stay inlined in its own chunks. One source file, two bundle
+ *    instances — no src duplication.
  */
 /**
  * strip-preload-helper: Vite wraps every dynamic import in __vitePreload,
@@ -72,14 +73,16 @@ const atInstanceCascade: Plugin = {
   name: 'at-instance-cascade',
   enforce: 'pre',
   async resolveId(source, importer) {
-    if (!importer || !importer.includes('?at')) return null;
+    if (!importer) return null;
+    const suffix = importer.includes('?mm') ? '?mm' : importer.includes('?at') ? '?at' : null;
+    if (!suffix) return null;
     const cleanImporter = importer.split('?')[0]!;
     const resolved = await this.resolve(source, cleanImporter, { skipSelf: true });
     if (!resolved) return null;
     const id = resolved.id;
     if (id.includes('?') || id.includes('node_modules') || id.startsWith('\0')) return null;
     if (!id.includes('/src/') && !id.includes('\\src\\')) return null;
-    return id + '?at';
+    return id + suffix;
   },
 };
 

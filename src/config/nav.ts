@@ -3,6 +3,7 @@ export const primaryNav = [
   { href: '/morse-code-audio-translator/', label: 'Audio' },
   { href: '/morse-code-image-translator/', label: 'Image' },
   { href: '/american-morse-code-translator/', label: 'American' },
+  { href: '/morse-code-machine/', label: 'Machine' },
   { href: '/morse-code-alphabet/', label: 'Alphabet' },
   { href: '/morse-code-numbers/', label: 'Numbers' },
   { href: '/sos-in-morse-code/', label: 'SOS' },
