@@ -106,6 +106,21 @@ describe('Morse Code Machine page', () => {
     );
   });
 
+  it('does not steal spacebar from links or page chrome', () => {
+    const src = readFileSync(resolve(process.cwd(), 'src/components/morse-machine/MorseMachine.astro'), 'utf8');
+    expect(src).toContain("target.closest('a')");
+    expect(src).toContain("target.closest('[data-morse-machine]')");
+  });
+
+  it('scopes machine ink so dark-theme labels stay readable', () => {
+    const css = readFileSync(resolve(process.cwd(), 'src/styles/morse-machine.css'), 'utf8');
+    expect(css).toMatch(/\[data-morse-machine\]\s*\{[^}]*color:\s*var\(--ink\)/s);
+    expect(css).toMatch(/\.mm-ref > summary,\s*\n\.mm-settings > summary \{[^}]*color:\s*var\(--ink\)/s);
+    expect(css).toContain('.mm-type-field::placeholder');
+    expect(css).toContain('caret-color: var(--ink)');
+    expect(css).toContain('accent-color: var(--accent)');
+  });
+
   it('is linked from an isolated homepage reverse-link block', () => {
     const home = readFileSync(resolve(process.cwd(), 'src/components/HomeArticle.astro'), 'utf8');
     const block = readFileSync(resolve(process.cwd(), 'src/components/MorseMachineBlock.astro'), 'utf8');

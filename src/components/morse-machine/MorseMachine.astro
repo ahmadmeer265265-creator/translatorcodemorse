@@ -524,7 +524,9 @@ import '../../styles/morse-machine.css';
       if (target === pad || target === ditBtn || target === dahBtn) return false;
       if (target instanceof HTMLTextAreaElement || target instanceof HTMLButtonElement) return true;
       if (target instanceof HTMLInputElement) return true;
-      return Boolean(target.closest('summary'));
+      if (target.closest('summary') || target.closest('a')) return true;
+      if (target.closest('[data-morse-machine]')) return false;
+      return target.tagName !== 'BODY' && target.tagName !== 'HTML';
     };
 
     window.addEventListener('keydown', (event) => {
