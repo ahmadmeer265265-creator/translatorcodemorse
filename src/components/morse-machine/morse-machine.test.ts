@@ -80,7 +80,7 @@ describe('Morse Code Machine page', () => {
     expect(html).toContain(`<title>${MACHINE_TITLE.replaceAll('&', '&amp;')}</title>`);
     expect(html).toContain(`content="${MACHINE_DESCRIPTION.replaceAll('&', '&amp;')}"`);
     expect(html.match(/<h1\b/g)?.length).toBe(1);
-    expect(html).toContain('>Morse Code Machine</h1>');
+    expect(html).toContain('>Morse Code Machine (Scout)</h1>');
     expect(html).toContain('>Morse Code Machine: Free Online Key and Keyer Simulator</h2>');
     expect(html).toContain('href="/american-morse-code-translator/"');
     expect(html).toContain('href="/morse-code-alphabet/"');
