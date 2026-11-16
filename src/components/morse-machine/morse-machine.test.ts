@@ -129,6 +129,10 @@ describe('Morse Code Machine page', () => {
     expect(css).toContain('.mm-type-field::placeholder');
     expect(css).toContain('caret-color: var(--ink)');
     expect(css).toContain('accent-color: var(--accent)');
+    expect(css).toMatch(/\[data-morse-machine\]\s*\{[^}]*accent-color:\s*var\(--accent\)/s);
+    expect(css).toMatch(/\[data-morse-machine\] input\[type='radio'\]\s*\{[^}]*appearance:\s*none/s);
+    expect(css).toMatch(/\.mm-pad,\s*\n\.mm-paddle-btn \{[^}]*appearance:\s*none/s);
+    expect(css).toMatch(/\.mm-btn \{[^}]*appearance:\s*none/s);
   });
 
   it('is linked from an isolated homepage reverse-link block', () => {

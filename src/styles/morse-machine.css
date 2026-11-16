@@ -1,6 +1,17 @@
 [data-morse-machine] {
   display: block;
   color: var(--ink);
+  background-color: var(--canvas);
+  accent-color: var(--accent);
+}
+
+[data-morse-machine] input[type='radio'] {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: 0;
+  box-shadow: none;
+  accent-color: var(--accent);
 }
 
 [data-morse-machine][data-mm-theme='light'] {
@@ -48,6 +59,7 @@
   border: 1px solid var(--line);
   border-radius: 9999px;
   background: var(--canvas);
+  overflow: hidden;
 }
 
 .mm-tabs::before {
@@ -256,6 +268,8 @@
 
 .mm-pad,
 .mm-paddle-btn {
+  appearance: none;
+  -webkit-appearance: none;
   display: inline-flex;
   min-height: 3.15rem;
   width: 100%;
@@ -297,6 +311,8 @@
 }
 
 .mm-type-field {
+  appearance: none;
+  -webkit-appearance: none;
   width: 100%;
   min-height: 3.15rem;
   height: 3.15rem;
@@ -324,6 +340,8 @@
 }
 
 .mm-btn {
+  appearance: none;
+  -webkit-appearance: none;
   display: inline-flex;
   min-height: 2.5rem;
   align-items: center;
