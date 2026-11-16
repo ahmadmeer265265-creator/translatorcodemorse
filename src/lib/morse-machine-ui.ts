@@ -76,6 +76,12 @@ export const MACHINE_ACTIVITY_LABEL: Record<MachineActivity, string> = {
 export const MACHINE_THEMES = ['light', 'dark'] as const;
 export type MachineTheme = (typeof MACHINE_THEMES)[number];
 
+/** Brand palettes the Morse Code Machine must paint in — never UA Canvas/AccentColor. */
+export const MACHINE_THEME_PALETTE = {
+  light: { canvas: '#f3efe8', accent: '#9a3f06' },
+  dark: { canvas: '#14110e', accent: '#f0a94e' },
+} as const;
+
 export const PRACTICE_DIFFICULTIES = ['character', 'word'] as const;
 
 export function isMachineActivity(value: string): value is MachineActivity {

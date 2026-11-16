@@ -433,6 +433,16 @@ import '../../styles/morse-machine.css';
       themeToggle.textContent = label;
     };
 
+    const readPageTheme = (): MachineTheme | null => {
+      const pageTheme = document.documentElement.getAttribute('data-theme');
+      return pageTheme && isMachineTheme(pageTheme) ? pageTheme : null;
+    };
+
+    const syncThemeFromPage = () => {
+      const pageTheme = readPageTheme();
+      if (pageTheme) setTheme(pageTheme);
+    };
+
     const setWpm = (next: number) => {
       wpm = clampMachineWpm(next);
       speedInput.value = String(wpm);
@@ -597,7 +607,18 @@ import '../../styles/morse-machine.css';
     }
 
     themeToggle.addEventListener('click', () => {
-      setTheme(root.dataset.mmTheme === 'dark' ? 'light' : 'dark');
+      const next: MachineTheme = root.dataset.mmTheme === 'dark' ? 'light' : 'dark';
+      const siteToggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+      if (siteToggle && readPageTheme() !== next) {
+        siteToggle.click();
+        return;
+      }
+      setTheme(next);
+    });
+
+    new MutationObserver(syncThemeFromPage).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
     });
 
     speedInput.addEventListener('input', () => setWpm(Number(speedInput.value)));
@@ -627,8 +648,7 @@ import '../../styles/morse-machine.css';
       setFeedback('', '');
     });
 
-    const pageTheme = document.documentElement.getAttribute('data-theme');
-    if (pageTheme && isMachineTheme(pageTheme)) setTheme(pageTheme);
+    syncThemeFromPage();
 
     const releaseBootFocus = () => {
       const active = document.activeElement;

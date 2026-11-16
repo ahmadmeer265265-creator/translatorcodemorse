@@ -6,8 +6,8 @@
 }
 
 [data-morse-machine] input[type='radio'] {
-  appearance: none;
-  -webkit-appearance: none;
+  appearance: none !important;
+  -webkit-appearance: none !important;
   background-color: transparent;
   border: 0;
   box-shadow: none;
@@ -38,6 +38,61 @@
   --on-accent: #1a1208;
   --track: #8a7a68;
   --thumb-ring: #2a2218;
+}
+
+/*
+  Header toggle writes html[data-theme] immediately. Machine used to keep
+  data-mm-theme="light" until reload, so Send/Key stayed on the light accent
+  #9a3f06 while the page chrome went dark. These selectors outrank
+  [data-mm-theme] so the tool cannot show the other theme's tokens.
+  Hex accent-color/background-color also beat UA AccentColor/Canvas after reload.
+*/
+html[data-theme='light'] [data-morse-machine] {
+  color-scheme: light;
+  --canvas: #f3efe8;
+  --surface: #fffbf5;
+  --ink: #1c1612;
+  --muted: #5a5148;
+  --line: #ddd2c4;
+  --accent: #9a3f06;
+  --on-accent: #ffffff;
+  --track: #8f806c;
+  --thumb-ring: #fff8ef;
+  background-color: #f3efe8;
+  accent-color: #9a3f06;
+}
+
+html[data-theme='dark'] [data-morse-machine] {
+  color-scheme: dark;
+  --canvas: #14110e;
+  --surface: #1c1814;
+  --ink: #f5efe6;
+  --muted: #c9bdb0;
+  --line: #7a6c5c;
+  --accent: #f0a94e;
+  --on-accent: #1a1208;
+  --track: #8a7a68;
+  --thumb-ring: #2a2218;
+  background-color: #14110e;
+  accent-color: #f0a94e;
+}
+
+html[data-theme='light'] [data-morse-machine] .mm-tabs::before {
+  background-color: #9a3f06;
+}
+
+html[data-theme='dark'] [data-morse-machine] .mm-tabs::before {
+  background-color: #f0a94e;
+}
+
+html[data-theme='light'] [data-morse-machine] input[type='range'],
+html[data-theme='light'] [data-morse-machine] input[type='checkbox'] {
+  accent-color: #9a3f06;
+}
+
+html[data-theme='dark'] [data-morse-machine] input[type='range'],
+html[data-theme='dark'] [data-morse-machine] input[type='checkbox'] {
+  accent-color: #f0a94e;
 }
 
 .mm-card {

@@ -21,6 +21,7 @@ import {
   MACHINE_KEYBINDS,
   MACHINE_MODE_HINT,
   MACHINE_PAGE_PATH,
+  MACHINE_THEME_PALETTE,
   MACHINE_TITLE,
   machineThemeToggleLabel,
   nextPracticePrompt,
@@ -36,6 +37,8 @@ describe('Morse Code Machine page copy', () => {
     expect([...MACHINE_DESCRIPTION].length).toBeLessThanOrEqual(155);
     expect(machineThemeToggleLabel('light')).toBe('Switch to dark theme');
     expect(machineThemeToggleLabel('dark')).toBe('Switch to light theme');
+    expect(MACHINE_THEME_PALETTE.light).toEqual({ canvas: '#f3efe8', accent: '#9a3f06' });
+    expect(MACHINE_THEME_PALETTE.dark).toEqual({ canvas: '#14110e', accent: '#f0a94e' });
   });
 
   it('is in the nav and sitemap, with five input methods documented', () => {

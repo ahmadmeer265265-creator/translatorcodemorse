@@ -133,6 +133,21 @@ describe('Morse Code Machine page', () => {
     expect(css).toMatch(/\[data-morse-machine\] input\[type='radio'\]\s*\{[^}]*appearance:\s*none/s);
     expect(css).toMatch(/\.mm-pad,\s*\n\.mm-paddle-btn \{[^}]*appearance:\s*none/s);
     expect(css).toMatch(/\.mm-btn \{[^}]*appearance:\s*none/s);
+    expect(css).toContain("html[data-theme='dark'] [data-morse-machine]");
+    expect(css).toContain("html[data-theme='light'] [data-morse-machine]");
+    expect(css).toContain("html[data-theme='dark'] [data-morse-machine] .mm-tabs::before");
+    expect(css).toContain('background-color: #14110e');
+    expect(css).toContain('accent-color: #f0a94e');
+    expect(css).toContain('background-color: #f3efe8');
+    expect(css).toContain('accent-color: #9a3f06');
+  });
+
+  it('syncs machine theme from html data-theme on click, not only on boot', () => {
+    const src = readFileSync(resolve(process.cwd(), 'src/components/morse-machine/MorseMachine.astro'), 'utf8');
+    expect(src).toContain('MutationObserver');
+    expect(src).toContain("attributeFilter: ['data-theme']");
+    expect(src).toContain('syncThemeFromPage');
+    expect(src).toContain("querySelector<HTMLButtonElement>('[data-theme-toggle]')");
   });
 
   it('is linked from an isolated homepage reverse-link block', () => {
