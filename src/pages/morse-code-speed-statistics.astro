@@ -1,5 +1,4 @@
 ---
-import Breadcrumb from '../components/Breadcrumb.astro';
 import RelatedPages from '../components/RelatedPages.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { lastUpdatedIso } from '../config/pages';
@@ -22,11 +21,8 @@ const jsonLd = supportingJsonLd({
   dateModified: lastUpdatedIso('/morse-code-speed-statistics/'),
 });
 
-const link = 'text-accent underline underline-offset-4';
-const h2 = 'text-2xl font-semibold tracking-tight';
-const tableClass = 'w-full border-collapse text-left text-base';
-const thClass = 'border-b border-line py-2 pr-3 font-medium text-muted';
-const tdClass = 'border-b border-line py-2 pr-3';
+const link = 'speed-link';
+const h2 = 'speed-h2';
 const speedRows = [
   { lab: 'Under 15 WPM', width: '14.8%', val: '4.3%' },
   { lab: '15–19 WPM', width: '49.3%', val: '14.3%' },
@@ -39,64 +35,67 @@ const speedRows = [
 ---
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false} ogType="article">
-  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
-    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Morse Code Speed Statistics' }]} />
-    <header class="grid gap-3">
-      <h1 class="text-3xl font-semibold tracking-tight">How Fast Does the World Actually Send Morse Code?</h1>
-      <p class="text-muted">
+  <article class="speed-study">
+    <header class="speed-head">
+      <h1 class="speed-h1">How Fast Does the World Actually Send Morse Code?</h1>
+      <p class="speed-dek">
         We measured real Morse transmissions recorded by the Reverse Beacon Network, across five weeks in four seasons.
         The answer is slower, and steadier, than most people guess.
       </p>
     </header>
 
-    <div class="rounded-xl border border-line bg-surface px-6 py-8 text-center">
-      <p class="text-6xl font-semibold tracking-tight text-accent sm:text-7xl">
-        24 <span class="text-2xl text-ink sm:text-3xl">WPM</span>
+    <div class="speed-hero speed-reveal speed-reveal--hero">
+      <div class="speed-hero__glow" aria-hidden="true"></div>
+      <p class="speed-hero__figure">
+        <span class="speed-hero__num">24</span>
+        <span class="speed-hero__unit">WPM</span>
       </p>
-      <p class="mt-3 text-muted">
+      <p class="speed-hero__caption">
         The median sending speed of a typical station on air.<br />
         Half of all stations send between 19.5 and 28 WPM.
       </p>
     </div>
 
-    <div class="grid gap-3 sm:grid-cols-2">
-      <div class="rounded-xl border border-line bg-surface px-4 py-3">
-        <p class="text-2xl font-semibold text-accent">16,703,487</p>
-        <p class="text-sm text-muted">Morse transmissions (spots) analysed</p>
+    <div class="speed-stats">
+      <div class="speed-card speed-reveal" style="--d:1">
+        <p class="speed-card__value">16,703,487</p>
+        <p class="speed-card__label">Morse transmissions (spots) analysed</p>
       </div>
-      <div class="rounded-xl border border-line bg-surface px-4 py-3">
-        <p class="text-2xl font-semibold text-accent">110,003</p>
-        <p class="text-sm text-muted">Different stations measured</p>
+      <div class="speed-card speed-reveal" style="--d:2">
+        <p class="speed-card__value">110,003</p>
+        <p class="speed-card__label">Different stations measured</p>
       </div>
-      <div class="rounded-xl border border-line bg-surface px-4 py-3">
-        <p class="text-2xl font-semibold text-accent">5 weeks</p>
-        <p class="text-sm text-muted">Spread across winter, spring, summer and autumn</p>
+      <div class="speed-card speed-reveal" style="--d:3">
+        <p class="speed-card__value">5 weeks</p>
+        <p class="speed-card__label">Spread across winter, spring, summer and autumn</p>
       </div>
-      <div class="rounded-xl border border-line bg-surface px-4 py-3">
-        <p class="text-2xl font-semibold text-accent">23–24 WPM</p>
-        <p class="text-sm text-muted">The median station's speed in every single week</p>
+      <div class="speed-card speed-reveal" style="--d:4">
+        <p class="speed-card__value">23–24 WPM</p>
+        <p class="speed-card__label">The median station's speed in every single week</p>
       </div>
     </div>
 
-    <section class="cv grid gap-3">
+    <section class="speed-section speed-reveal">
       <h2 class={h2}>The short version</h2>
-      <p>
-        The typical station on the bands sends Morse code at about <strong>24 words per minute</strong>. That figure is
-        not an average pulled up by a few very fast operators: it is the median, the station exactly in the middle of
-        the pack. And it barely moves. We sampled one ordinary week in each season of the year, deliberately avoiding
-        the biggest contests, and the median station sent at 23 or 24 WPM every time. The seasons change the bands, the
-        propagation and the number of people on air. They do not change how fast the typical operator sends.
-      </p>
-      <p>
-        Counting every transmission instead of every station gives a slightly higher figure, a median of 25 WPM, because
-        fast, active stations get heard more often. We report the per-station figure as the headline, because it
-        describes the typical operator rather than the typical transmission.
-      </p>
+      <div class="speed-prose">
+        <p>
+          The typical station on the bands sends Morse code at about <strong>24 words per minute</strong>. That figure is
+          not an average pulled up by a few very fast operators: it is the median, the station exactly in the middle of
+          the pack. And it barely moves. We sampled one ordinary week in each season of the year, deliberately avoiding
+          the biggest contests, and the median station sent at 23 or 24 WPM every time. The seasons change the bands, the
+          propagation and the number of people on air. They do not change how fast the typical operator sends.
+        </p>
+        <p>
+          Counting every transmission instead of every station gives a slightly higher figure, a median of 25 WPM, because
+          fast, active stations get heard more often. We report the per-station figure as the headline, because it
+          describes the typical operator rather than the typical transmission.
+        </p>
+      </div>
     </section>
 
-    <section class="cv grid gap-3">
+    <section class="speed-section speed-reveal">
       <h2 class={h2}>Key findings</h2>
-      <ul class="grid list-disc gap-2 pl-5">
+      <ul class="speed-findings">
         <li>
           <strong>The middle is comfortable:</strong> half of all stations send between 19.5 and 28 WPM. Only 1 station
           in 10 sends at 16 WPM or slower, and only 1 in 10 at 32 WPM or faster.
@@ -128,194 +127,194 @@ const speedRows = [
       </ul>
     </section>
 
-    <section class="cv grid gap-3">
+    <section class="speed-section speed-reveal">
       <h2 class={h2}>Where the transmissions fall</h2>
       <p>Share of all 16.7 million transmissions, by sending speed:</p>
-      <div class="speed-chart grid gap-2">
+      <div class="speed-chart">
         {
-          speedRows.map((row) => (
-            <div class="flex items-center gap-3">
-              <div class="w-[6.75rem] shrink-0 text-right text-sm text-muted">{row.lab}</div>
+          speedRows.map((row, i) => (
+            <div class="speed-row" style={`--i:${i}`}>
+              <div class="speed-lab">{row.lab}</div>
               <div class="speed-track">
                 <div class="speed-bar" style={`width:${row.width}`}></div>
               </div>
-              <div class="w-12 shrink-0 font-semibold">{row.val}</div>
+              <div class="speed-val">{row.val}</div>
             </div>
           ))
         }
       </div>
-      <p class="text-sm text-muted">
+      <p class="speed-note">
         Read it as a hill centred on the low twenties. The long, thin tail to the right is the contest crowd; the bulk
         of everyday Morse sits well below it.
       </p>
     </section>
 
-    <section class="cv grid gap-3">
+    <section class="speed-section speed-reveal">
       <h2 class={h2}>Speed by band</h2>
-      <div class="overflow-x-auto">
-        <table class={tableClass}>
+      <div class="speed-table-wrap">
+        <table class="speed-table">
           <thead>
             <tr>
-              <th class={thClass} scope="col">Band</th>
-              <th class={`${thClass} text-right`} scope="col">Transmissions</th>
-              <th class={`${thClass} text-right`} scope="col">Share</th>
-              <th class={`${thClass} text-right`} scope="col">Median WPM</th>
-              <th class={`${thClass} text-right`} scope="col">Mean WPM</th>
+              <th scope="col">Band</th>
+              <th class="num" scope="col">Transmissions</th>
+              <th class="num" scope="col">Share</th>
+              <th class="num" scope="col">Median WPM</th>
+              <th class="num" scope="col">Mean WPM</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class={tdClass}>20m</td>
-              <td class={`${tdClass} text-right`}>5,388,114</td>
-              <td class={`${tdClass} text-right`}>32.3%</td>
-              <td class={`${tdClass} text-right`}>25</td>
-              <td class={`${tdClass} text-right`}>25.3</td>
+              <td>20m</td>
+              <td class="num">5,388,114</td>
+              <td class="num">32.3%</td>
+              <td class="num">25</td>
+              <td class="num">25.3</td>
             </tr>
             <tr>
-              <td class={tdClass}>40m</td>
-              <td class={`${tdClass} text-right`}>4,674,363</td>
-              <td class={`${tdClass} text-right`}>28.0%</td>
-              <td class={`${tdClass} text-right`}>25</td>
-              <td class={`${tdClass} text-right`}>25.2</td>
+              <td>40m</td>
+              <td class="num">4,674,363</td>
+              <td class="num">28.0%</td>
+              <td class="num">25</td>
+              <td class="num">25.2</td>
             </tr>
             <tr>
-              <td class={tdClass}>15m</td>
-              <td class={`${tdClass} text-right`}>1,524,375</td>
-              <td class={`${tdClass} text-right`}>9.1%</td>
-              <td class={`${tdClass} text-right`}>27</td>
-              <td class={`${tdClass} text-right`}>26.5</td>
+              <td>15m</td>
+              <td class="num">1,524,375</td>
+              <td class="num">9.1%</td>
+              <td class="num">27</td>
+              <td class="num">26.5</td>
             </tr>
             <tr>
-              <td class={tdClass}>80m</td>
-              <td class={`${tdClass} text-right`}>1,490,037</td>
-              <td class={`${tdClass} text-right`}>8.9%</td>
-              <td class={`${tdClass} text-right`}>27</td>
-              <td class={`${tdClass} text-right`}>26.3</td>
+              <td>80m</td>
+              <td class="num">1,490,037</td>
+              <td class="num">8.9%</td>
+              <td class="num">27</td>
+              <td class="num">26.3</td>
             </tr>
             <tr>
-              <td class={tdClass}>30m</td>
-              <td class={`${tdClass} text-right`}>1,074,253</td>
-              <td class={`${tdClass} text-right`}>6.4%</td>
-              <td class={`${tdClass} text-right`}>22</td>
-              <td class={`${tdClass} text-right`}>22.2</td>
+              <td>30m</td>
+              <td class="num">1,074,253</td>
+              <td class="num">6.4%</td>
+              <td class="num">22</td>
+              <td class="num">22.2</td>
             </tr>
             <tr>
-              <td class={tdClass}>10m</td>
-              <td class={`${tdClass} text-right`}>819,654</td>
-              <td class={`${tdClass} text-right`}>4.9%</td>
-              <td class={`${tdClass} text-right`}>20</td>
-              <td class={`${tdClass} text-right`}>20.8</td>
+              <td>10m</td>
+              <td class="num">819,654</td>
+              <td class="num">4.9%</td>
+              <td class="num">20</td>
+              <td class="num">20.8</td>
             </tr>
             <tr>
-              <td class={tdClass}>160m *</td>
-              <td class={`${tdClass} text-right`}>775,068</td>
-              <td class={`${tdClass} text-right`}>4.6%</td>
-              <td class={`${tdClass} text-right`}>27</td>
-              <td class={`${tdClass} text-right`}>26.8</td>
+              <td>160m *</td>
+              <td class="num">775,068</td>
+              <td class="num">4.6%</td>
+              <td class="num">27</td>
+              <td class="num">26.8</td>
             </tr>
             <tr>
-              <td class={tdClass}>17m</td>
-              <td class={`${tdClass} text-right`}>683,767</td>
-              <td class={`${tdClass} text-right`}>4.1%</td>
-              <td class={`${tdClass} text-right`}>23</td>
-              <td class={`${tdClass} text-right`}>23.2</td>
+              <td>17m</td>
+              <td class="num">683,767</td>
+              <td class="num">4.1%</td>
+              <td class="num">23</td>
+              <td class="num">23.2</td>
             </tr>
             <tr>
-              <td class={tdClass}>12m</td>
-              <td class={`${tdClass} text-right`}>187,820</td>
-              <td class={`${tdClass} text-right`}>1.1%</td>
-              <td class={`${tdClass} text-right`}>23</td>
-              <td class={`${tdClass} text-right`}>23.8</td>
+              <td>12m</td>
+              <td class="num">187,820</td>
+              <td class="num">1.1%</td>
+              <td class="num">23</td>
+              <td class="num">23.8</td>
             </tr>
             <tr>
-              <td class={tdClass}>60m</td>
-              <td class={`${tdClass} text-right`}>46,831</td>
-              <td class={`${tdClass} text-right`}>0.3%</td>
-              <td class={`${tdClass} text-right`}>22</td>
-              <td class={`${tdClass} text-right`}>22.7</td>
+              <td>60m</td>
+              <td class="num">46,831</td>
+              <td class="num">0.3%</td>
+              <td class="num">22</td>
+              <td class="num">22.7</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p class="text-sm text-muted">
+      <p class="speed-note">
         * The 160m row is the one figure in this study to quote with care: 79% of its spots come from a single contest
         weekend in the December sample week (the ARRL 160-Meter Contest). In the other four weeks, the band's median is
         23 to 26 WPM on far fewer transmissions.
       </p>
     </section>
 
-    <section class="cv grid gap-3">
+    <section class="speed-section speed-reveal">
       <h2 class={h2}>Speed by continent</h2>
-      <div class="overflow-x-auto">
-        <table class={tableClass}>
+      <div class="speed-table-wrap">
+        <table class="speed-table">
           <thead>
             <tr>
-              <th class={thClass} scope="col">Continent of the station heard</th>
-              <th class={`${thClass} text-right`} scope="col">Transmissions</th>
-              <th class={`${thClass} text-right`} scope="col">Share</th>
-              <th class={`${thClass} text-right`} scope="col">Median WPM</th>
-              <th class={`${thClass} text-right`} scope="col">Mean WPM</th>
+              <th scope="col">Continent of the station heard</th>
+              <th class="num" scope="col">Transmissions</th>
+              <th class="num" scope="col">Share</th>
+              <th class="num" scope="col">Median WPM</th>
+              <th class="num" scope="col">Mean WPM</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class={tdClass}>Europe</td>
-              <td class={`${tdClass} text-right`}>10,764,507</td>
-              <td class={`${tdClass} text-right`}>64.4%</td>
-              <td class={`${tdClass} text-right`}>25</td>
-              <td class={`${tdClass} text-right`}>25.4</td>
+              <td>Europe</td>
+              <td class="num">10,764,507</td>
+              <td class="num">64.4%</td>
+              <td class="num">25</td>
+              <td class="num">25.4</td>
             </tr>
             <tr>
-              <td class={tdClass}>North America</td>
-              <td class={`${tdClass} text-right`}>4,346,665</td>
-              <td class={`${tdClass} text-right`}>26.0%</td>
-              <td class={`${tdClass} text-right`}>23</td>
-              <td class={`${tdClass} text-right`}>23.7</td>
+              <td>North America</td>
+              <td class="num">4,346,665</td>
+              <td class="num">26.0%</td>
+              <td class="num">23</td>
+              <td class="num">23.7</td>
             </tr>
             <tr>
-              <td class={tdClass}>Asia</td>
-              <td class={`${tdClass} text-right`}>981,337</td>
-              <td class={`${tdClass} text-right`}>5.9%</td>
-              <td class={`${tdClass} text-right`}>25</td>
-              <td class={`${tdClass} text-right`}>25.5</td>
+              <td>Asia</td>
+              <td class="num">981,337</td>
+              <td class="num">5.9%</td>
+              <td class="num">25</td>
+              <td class="num">25.5</td>
             </tr>
             <tr>
-              <td class={tdClass}>Africa</td>
-              <td class={`${tdClass} text-right`}>274,008</td>
-              <td class={`${tdClass} text-right`}>1.6%</td>
-              <td class={`${tdClass} text-right`}>27</td>
-              <td class={`${tdClass} text-right`}>26.3</td>
+              <td>Africa</td>
+              <td class="num">274,008</td>
+              <td class="num">1.6%</td>
+              <td class="num">27</td>
+              <td class="num">26.3</td>
             </tr>
             <tr>
-              <td class={tdClass}>South America</td>
-              <td class={`${tdClass} text-right`}>207,632</td>
-              <td class={`${tdClass} text-right`}>1.2%</td>
-              <td class={`${tdClass} text-right`}>25</td>
-              <td class={`${tdClass} text-right`}>25.2</td>
+              <td>South America</td>
+              <td class="num">207,632</td>
+              <td class="num">1.2%</td>
+              <td class="num">25</td>
+              <td class="num">25.2</td>
             </tr>
             <tr>
-              <td class={tdClass}>Oceania</td>
-              <td class={`${tdClass} text-right`}>129,338</td>
-              <td class={`${tdClass} text-right`}>0.8%</td>
-              <td class={`${tdClass} text-right`}>24</td>
-              <td class={`${tdClass} text-right`}>24.0</td>
+              <td>Oceania</td>
+              <td class="num">129,338</td>
+              <td class="num">0.8%</td>
+              <td class="num">24</td>
+              <td class="num">24.0</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p class="text-sm text-muted">
+      <p class="speed-note">
         These shares map the Reverse Beacon Network's receiver coverage as much as world activity: most skimmer
         receivers sit in Europe and North America, so stations there are heard far more often.
       </p>
     </section>
 
-    <section class="cv grid gap-3">
+    <section class="speed-section speed-reveal">
       <h2 class={h2}>What this means if you are learning Morse code</h2>
       <p>
         Learners often imagine the bands are full of operators sending far faster than they could ever copy. The data
         says otherwise.
       </p>
-      <ul class="grid list-disc gap-2 pl-5">
+      <ul class="speed-learn">
         <li>
           <strong>Aim for the middle, not the tail.</strong> The typical station sends at about 24 WPM, and half of all
           stations sit between 19.5 and 28 WPM. If you can copy comfortably at around 20 WPM, you are already within
@@ -343,76 +342,541 @@ const speedRows = [
       </p>
     </section>
 
-    <section class="cv grid gap-3">
+    <section class="speed-section speed-reveal">
       <h2 class={h2}>How we measured this (methodology)</h2>
-      <p>
-        <strong>Data.</strong> Every figure comes from the Reverse Beacon Network's public archive of spots: automated
-        receiving stations (skimmers) around the world that listen for callsigns, decode them, and report the frequency,
-        band and estimated sending speed. We downloaded the daily archive files for five complete Monday-to-Sunday
-        weeks: 1–7 December 2025, 2–8 March 2026, 11–17 May 2026, 17–23 August 2026, and 26 October – 1 November 2026.
-      </p>
-      <p>
-        <strong>Week choice.</strong> Weeks were screened to avoid the six biggest CW contests (CQ WW CW, ARRL DX CW, CQ
-        WPX CW, IARU HF, WAE CW and ARRL Sweepstakes CW), whose weekends would have swamped ordinary activity. Three
-        sampled weekends still held smaller CW contests; the largest footprints are disclosed wherever they touch a
-        figure, and removing the single noisiest week leaves the headline unchanged at 24.0 WPM.
-      </p>
-      <p>
-        <strong>Cleaning.</strong> Of 16,844,912 archived rows, we kept CW transmissions with a reported speed between 5
-        and 80 WPM, leaving 16,703,487 spots (0.03% were dropped as out-of-range decoder artefacts). Each station was
-        identified by callsign; portable suffixes count as separate callsigns, so the true number of individual
-        operators is slightly below 110,003.
-      </p>
-      <p>
-        <strong>Honest limits.</strong> Speeds are machine estimates made by the skimmer software, in whole WPM, and can
-        be off by roughly 1 to 2 WPM on any single transmission, especially hand-sent code; medians across millions of
-        transmissions are far more stable than any individual reading. The network hears stations that call CQ within
-        range of a receiver, so quiet one-to-one chats and regions with few receivers are under-counted, and continent
-        shares reflect receiver coverage as much as activity. Five weeks in one year is a strong sample of ordinary
-        weeks, not a census.
-      </p>
+      <div class="speed-method">
+        <p>
+          <strong>Data.</strong> Every figure comes from the Reverse Beacon Network's public archive of spots: automated
+          receiving stations (skimmers) around the world that listen for callsigns, decode them, and report the frequency,
+          band and estimated sending speed. We downloaded the daily archive files for five complete Monday-to-Sunday
+          weeks: 1–7 December 2025, 2–8 March 2026, 11–17 May 2026, 17–23 August 2026, and 26 October – 1 November 2026.
+        </p>
+        <p>
+          <strong>Week choice.</strong> Weeks were screened to avoid the six biggest CW contests (CQ WW CW, ARRL DX CW, CQ
+          WPX CW, IARU HF, WAE CW and ARRL Sweepstakes CW), whose weekends would have swamped ordinary activity. Three
+          sampled weekends still held smaller CW contests; the largest footprints are disclosed wherever they touch a
+          figure, and removing the single noisiest week leaves the headline unchanged at 24.0 WPM.
+        </p>
+        <p>
+          <strong>Cleaning.</strong> Of 16,844,912 archived rows, we kept CW transmissions with a reported speed between 5
+          and 80 WPM, leaving 16,703,487 spots (0.03% were dropped as out-of-range decoder artefacts). Each station was
+          identified by callsign; portable suffixes count as separate callsigns, so the true number of individual
+          operators is slightly below 110,003.
+        </p>
+        <p>
+          <strong>Honest limits.</strong> Speeds are machine estimates made by the skimmer software, in whole WPM, and can
+          be off by roughly 1 to 2 WPM on any single transmission, especially hand-sent code; medians across millions of
+          transmissions are far more stable than any individual reading. The network hears stations that call CQ within
+          range of a receiver, so quiet one-to-one chats and regions with few receivers are under-counted, and continent
+          shares reflect receiver coverage as much as activity. Five weeks in one year is a strong sample of ordinary
+          weeks, not a census.
+        </p>
+      </div>
     </section>
 
-    <section class="cv grid gap-3">
+    <section class="speed-section speed-reveal">
       <h2 class={h2}>Cite this study</h2>
       <p>Cite this study: Mir Labs / translatorcodemorse.com</p>
-      <p class="rounded-xl border border-dashed border-line bg-surface px-4 py-3 text-sm">
+      <p class="speed-cite">
         Mir Labs, “How fast does the world actually send Morse code?”, translatorcodemorse.com, November 2026. Based on
         16,703,487 Reverse Beacon Network spots across 110,003 stations in five sampled weeks between December 2025 and
         November 2026.
       </p>
-      <p class="text-sm text-muted">
+      <p class="speed-note">
         Data: the <a class={link} href="https://www.reversebeacon.net/">Reverse Beacon Network</a> and its volunteer
         skimmer operators, whose receivers recorded every transmission in this study. The network asks that results be
         shared back with the community; this page is that sharing, with thanks.
       </p>
-      <p class="text-sm text-muted">
+      <p class="speed-note">
         Study by Mir Labs, makers of the free <a class={link} href="/">Morse code translator</a> at
         translatorcodemorse.com.
       </p>
     </section>
 
-    <RelatedPages
-      links={[
-        { href: '/', label: 'Translate text to Morse code' },
-        { href: '/morse-code-alphabet/', label: 'Morse code alphabet chart' },
-        { href: '/morse-code-audio-translator/', label: 'Decode Morse audio to text' },
-      ]}
-    />
+    <div class="speed-column">
+      <RelatedPages
+        links={[
+          { href: '/', label: 'Translate text to Morse code' },
+          { href: '/morse-code-alphabet/', label: 'Morse code alphabet chart' },
+          { href: '/morse-code-audio-translator/', label: 'Decode Morse audio to text' },
+        ]}
+      />
+    </div>
   </article>
 </BaseLayout>
 
 <style>
-  .speed-track {
-    flex: 1;
-    height: 1.625rem;
+  .speed-study {
+    display: grid;
+    gap: 2.25rem;
+    width: 100%;
+    margin-inline: auto;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .speed-column,
+  .speed-section,
+  .speed-prose {
+    min-width: 0;
+  }
+
+  .speed-head {
+    display: grid;
+    gap: 0.85rem;
+    margin: 0;
+    text-align: center;
+  }
+
+  .speed-h1 {
+    margin: 0;
+    font-size: clamp(1.65rem, 3.4vw, 2.35rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.18;
+    text-wrap: balance;
+  }
+
+  .speed-dek {
+    margin: 0 auto;
+    max-width: 40rem;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  .speed-h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+
+  .speed-section {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .speed-section > p,
+  .speed-prose p,
+  .speed-method p {
+    margin: 0;
+  }
+
+  .speed-prose {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.15rem 1.2rem 1.2rem 1.15rem;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 0.9rem;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .speed-hero {
+    position: relative;
     overflow: hidden;
-    border-radius: 0.375rem;
+    display: grid;
+    place-items: center;
+    gap: 0.85rem;
+    padding: 2.35rem 1.25rem 1.9rem;
+    text-align: center;
+    border: 1px solid var(--line);
+    border-radius: 1.15rem;
+    background:
+      radial-gradient(ellipse 70% 80% at 50% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 62%),
+      var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .speed-hero__glow {
+    position: absolute;
+    inset: 18% 28% 42%;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 28%, transparent);
+    filter: blur(34px);
+    pointer-events: none;
+  }
+
+  .speed-hero__figure {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.45rem;
+    margin: 0;
+    line-height: 0.9;
+  }
+
+  .speed-hero__num {
+    font-size: clamp(4.25rem, 12vw, 6.5rem);
+    font-weight: 650;
+    letter-spacing: -0.06em;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .speed-hero__unit {
+    font-size: clamp(1.15rem, 3vw, 1.65rem);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+  }
+
+  .speed-hero__caption {
+    position: relative;
+    z-index: 1;
+    margin: 0 auto;
+    max-width: 28rem;
+    color: var(--muted);
+  }
+
+  .speed-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .speed-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.28rem;
+    min-height: 7.25rem;
+    padding: 1.1rem 1rem;
+    text-align: center;
+    border: 1px solid var(--line);
+    border-radius: 0.95rem;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .speed-card__value {
+    margin: 0;
+    font-size: clamp(1.35rem, 3.2vw, 1.7rem);
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    text-wrap: nowrap;
+  }
+
+  .speed-card__label {
+    margin: 0;
+    max-width: 16rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+
+  .speed-findings,
+  .speed-learn,
+  .speed-method {
+    display: grid;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .speed-findings li,
+  .speed-learn li,
+  .speed-method p {
+    padding: 0.95rem 1.05rem 0.95rem 1.1rem;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 0.85rem;
+    background: var(--surface);
+  }
+
+  .speed-chart {
+    display: grid;
+    gap: 0.55rem;
+    padding: 1rem 0.9rem 1rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 0.95rem;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .speed-row {
+    display: grid;
+    grid-template-columns: 6.6rem minmax(0, 1fr) 3.15rem;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .speed-lab {
+    font-size: 0.82rem;
+    line-height: 1.25;
+    text-align: right;
+    color: var(--muted);
+  }
+
+  .speed-val {
+    font-size: 0.92rem;
+    font-weight: 650;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .speed-track {
+    height: 1.45rem;
+    overflow: hidden;
+    border-radius: 999px;
     background: var(--logo-chip);
   }
+
   .speed-bar {
-    height: 1.625rem;
-    border-radius: 0.375rem;
-    background: var(--accent);
+    height: 1.45rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 78%, #6b2a04), var(--accent));
+    transform-origin: left center;
+  }
+
+  .speed-note {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .speed-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 0.95rem;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .speed-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.98rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .speed-table th,
+  .speed-table td {
+    padding: 0.7rem 0.85rem;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+
+  .speed-table th {
+    font-weight: 600;
+    color: var(--muted);
+    background: color-mix(in srgb, var(--logo-chip) 70%, var(--surface));
+  }
+
+  .speed-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .speed-table .num {
+    text-align: right;
+  }
+
+  .speed-cite {
+    margin: 0;
+    padding: 1.05rem 1.15rem;
+    border: 1px dashed var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 0.9rem;
+    background: var(--surface);
+    font-size: 0.95rem;
+  }
+
+  .speed-link {
+    color: var(--accent);
+    text-underline-offset: 4px;
+    text-decoration-line: underline;
+  }
+
+  @media (min-width: 640px) {
+    .speed-study {
+      gap: 2.6rem;
+    }
+
+    .speed-stats,
+    .speed-learn {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .speed-row {
+      grid-template-columns: 7.4rem minmax(0, 1fr) 3.4rem;
+      gap: 0.85rem;
+    }
+
+    .speed-lab {
+      font-size: 0.875rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .speed-study {
+      max-width: 52rem;
+    }
+
+    .speed-hero {
+      padding: 2.8rem 2rem 2.2rem;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .speed-card,
+    .speed-findings li,
+    .speed-learn li,
+    .speed-method p,
+    .speed-cite,
+    .speed-prose {
+      transition:
+        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+    }
+
+    .speed-card:hover,
+    .speed-findings li:hover,
+    .speed-learn li:hover,
+    .speed-method p:hover {
+      transform: translateY(-3px) scale(1.015);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+      box-shadow: 0 16px 32px -22px color-mix(in srgb, var(--ink) 55%, transparent);
+    }
+
+    .speed-table tbody tr {
+      transition: background-color 0.2s ease;
+    }
+
+    .speed-table tbody tr:hover {
+      background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    }
+
+    .speed-bar {
+      transition: filter 0.25s ease;
+    }
+
+    .speed-row:hover .speed-bar {
+      filter: brightness(1.08);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .speed-hero__figure {
+      animation: speed-zoom 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .speed-hero__glow {
+      animation: speed-breathe 4.8s ease-in-out infinite;
+    }
+
+    .speed-reveal {
+      animation: speed-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: calc(var(--d, 0) * 70ms);
+    }
+
+    .speed-bar {
+      animation: speed-bar 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: calc(var(--i, 0) * 70ms + 180ms);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .speed-reveal:not(.speed-reveal--hero) {
+        animation-timeline: view();
+        animation-range: entry 0% entry 42%;
+        animation-delay: 0s;
+      }
+
+      .speed-bar {
+        animation-timeline: view();
+        animation-range: entry 0% entry 55%;
+      }
+    }
+  }
+
+  @keyframes speed-zoom {
+    from {
+      opacity: 0;
+      transform: scale(0.82);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes speed-breathe {
+    0%,
+    100% {
+      transform: scale(0.92);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scale(1.12);
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes speed-rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes speed-bar {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .speed-hero__figure,
+    .speed-hero__glow,
+    .speed-reveal,
+    .speed-bar {
+      animation: none !important;
+    }
+
+    .speed-card:hover,
+    .speed-findings li:hover,
+    .speed-learn li:hover,
+    .speed-method p:hover {
+      transform: none;
+    }
+  }
+
+  @media print {
+    .speed-hero,
+    .speed-card,
+    .speed-prose,
+    .speed-findings li,
+    .speed-learn li,
+    .speed-method p,
+    .speed-chart,
+    .speed-table-wrap,
+    .speed-cite {
+      box-shadow: none;
+      break-inside: avoid;
+    }
+
+    .speed-hero__glow {
+      display: none;
+    }
   }
 </style>
