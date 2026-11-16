@@ -12,6 +12,7 @@ export const pageMeta = [
   { path: '/morse-code-alphabet/', lastUpdated: '2026-10-07' },
   { path: '/morse-code-numbers/', lastUpdated: '2026-10-07' },
   { path: '/sos-in-morse-code/', lastUpdated: '2026-10-07' },
+  { path: '/morse-code-speed-statistics/', lastUpdated: '2026-11-09' },
   { path: '/about/', lastUpdated: '2026-10-19' },
   { path: '/privacy/', lastUpdated: '2026-10-26' },
   { path: '/terms/', lastUpdated: '2026-10-19' },

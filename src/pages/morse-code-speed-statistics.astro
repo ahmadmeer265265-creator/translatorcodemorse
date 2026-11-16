@@ -1,0 +1,418 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import RelatedPages from '../components/RelatedPages.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
+
+const title = 'How Fast Does the World Actually Send Morse Code?';
+const description =
+  'We analysed 16.7 million Morse transmissions from the Reverse Beacon Network. The typical station sends at 24 WPM in every season. Data, charts and method.';
+const pageUrl = absoluteUrl('/morse-code-speed-statistics/');
+const crumbs = [
+  { name: 'Home', url: absoluteUrl('/') },
+  { name: 'Morse Code Speed Statistics', url: pageUrl },
+];
+const jsonLd = supportingJsonLd({
+  name: 'How Fast Does the World Actually Send Morse Code?',
+  description,
+  url: pageUrl,
+  crumbs,
+  dateModified: lastUpdatedIso('/morse-code-speed-statistics/'),
+});
+
+const link = 'text-accent underline underline-offset-4';
+const h2 = 'text-2xl font-semibold tracking-tight';
+const tableClass = 'w-full border-collapse text-left text-base';
+const thClass = 'border-b border-line py-2 pr-3 font-medium text-muted';
+const tdClass = 'border-b border-line py-2 pr-3';
+const speedRows = [
+  { lab: 'Under 15 WPM', width: '14.8%', val: '4.3%' },
+  { lab: '15–19 WPM', width: '49.3%', val: '14.3%' },
+  { lab: '20–24 WPM', width: '100%', val: '29.0%' },
+  { lab: '25–29 WPM', width: '97.2%', val: '28.2%' },
+  { lab: '30–34 WPM', width: '60.3%', val: '17.5%' },
+  { lab: '35–39 WPM', width: '19.7%', val: '5.7%' },
+  { lab: '40+ WPM', width: '2.8%', val: '0.8%' },
+] as const;
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false} ogType="article">
+  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Morse Code Speed Statistics' }]} />
+    <header class="grid gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight">How Fast Does the World Actually Send Morse Code?</h1>
+      <p class="text-muted">
+        We measured real Morse transmissions recorded by the Reverse Beacon Network, across five weeks in four seasons.
+        The answer is slower, and steadier, than most people guess.
+      </p>
+    </header>
+
+    <div class="rounded-xl border border-line bg-surface px-6 py-8 text-center">
+      <p class="text-6xl font-semibold tracking-tight text-accent sm:text-7xl">
+        24 <span class="text-2xl text-ink sm:text-3xl">WPM</span>
+      </p>
+      <p class="mt-3 text-muted">
+        The median sending speed of a typical station on air.<br />
+        Half of all stations send between 19.5 and 28 WPM.
+      </p>
+    </div>
+
+    <div class="grid gap-3 sm:grid-cols-2">
+      <div class="rounded-xl border border-line bg-surface px-4 py-3">
+        <p class="text-2xl font-semibold text-accent">16,703,487</p>
+        <p class="text-sm text-muted">Morse transmissions (spots) analysed</p>
+      </div>
+      <div class="rounded-xl border border-line bg-surface px-4 py-3">
+        <p class="text-2xl font-semibold text-accent">110,003</p>
+        <p class="text-sm text-muted">Different stations measured</p>
+      </div>
+      <div class="rounded-xl border border-line bg-surface px-4 py-3">
+        <p class="text-2xl font-semibold text-accent">5 weeks</p>
+        <p class="text-sm text-muted">Spread across winter, spring, summer and autumn</p>
+      </div>
+      <div class="rounded-xl border border-line bg-surface px-4 py-3">
+        <p class="text-2xl font-semibold text-accent">23–24 WPM</p>
+        <p class="text-sm text-muted">The median station's speed in every single week</p>
+      </div>
+    </div>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>The short version</h2>
+      <p>
+        The typical station on the bands sends Morse code at about <strong>24 words per minute</strong>. That figure is
+        not an average pulled up by a few very fast operators: it is the median, the station exactly in the middle of
+        the pack. And it barely moves. We sampled one ordinary week in each season of the year, deliberately avoiding
+        the biggest contests, and the median station sent at 23 or 24 WPM every time. The seasons change the bands, the
+        propagation and the number of people on air. They do not change how fast the typical operator sends.
+      </p>
+      <p>
+        Counting every transmission instead of every station gives a slightly higher figure, a median of 25 WPM, because
+        fast, active stations get heard more often. We report the per-station figure as the headline, because it
+        describes the typical operator rather than the typical transmission.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Key findings</h2>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>
+          <strong>The middle is comfortable:</strong> half of all stations send between 19.5 and 28 WPM. Only 1 station
+          in 10 sends at 16 WPM or slower, and only 1 in 10 at 32 WPM or faster.
+        </li>
+        <li>
+          <strong>Very fast sending is rare:</strong> fewer than 1 in 100 transmissions (0.8%) are sent at 40 WPM or
+          faster.
+        </li>
+        <li>
+          <strong>Most Morse lives at 20–29 WPM:</strong> 57.3% of all transmissions fall in that range.
+        </li>
+        <li>
+          <strong>Two bands carry three fifths of all CW:</strong> 20 metres (5,388,114 spots, median 25 WPM) and 40
+          metres (4,674,363 spots, median 25 WPM).
+        </li>
+        <li>
+          <strong>The fastest big bands</strong> are 15 and 80 metres (median 27 WPM); the slowest is 10 metres (median
+          20 WPM).
+        </li>
+        <li>
+          <strong>Europe sends a touch faster than North America</strong> in this data: a median of 25 WPM against 23
+          WPM, on 64.4% and 26.0% of spots respectively. Treat that gap with care; it also reflects where the network's
+          receivers are.
+        </li>
+        <li>
+          <strong>The result survives its worst week:</strong> dropping the noisiest sampled week entirely, a December
+          week containing a 160-metre contest, the median station still sends at exactly 24.0 WPM.
+        </li>
+      </ul>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Where the transmissions fall</h2>
+      <p>Share of all 16.7 million transmissions, by sending speed:</p>
+      <div class="speed-chart grid gap-2">
+        {
+          speedRows.map((row) => (
+            <div class="flex items-center gap-3">
+              <div class="w-[6.75rem] shrink-0 text-right text-sm text-muted">{row.lab}</div>
+              <div class="speed-track">
+                <div class="speed-bar" style={`width:${row.width}`}></div>
+              </div>
+              <div class="w-12 shrink-0 font-semibold">{row.val}</div>
+            </div>
+          ))
+        }
+      </div>
+      <p class="text-sm text-muted">
+        Read it as a hill centred on the low twenties. The long, thin tail to the right is the contest crowd; the bulk
+        of everyday Morse sits well below it.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Speed by band</h2>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr>
+              <th class={thClass} scope="col">Band</th>
+              <th class={`${thClass} text-right`} scope="col">Transmissions</th>
+              <th class={`${thClass} text-right`} scope="col">Share</th>
+              <th class={`${thClass} text-right`} scope="col">Median WPM</th>
+              <th class={`${thClass} text-right`} scope="col">Mean WPM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class={tdClass}>20m</td>
+              <td class={`${tdClass} text-right`}>5,388,114</td>
+              <td class={`${tdClass} text-right`}>32.3%</td>
+              <td class={`${tdClass} text-right`}>25</td>
+              <td class={`${tdClass} text-right`}>25.3</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>40m</td>
+              <td class={`${tdClass} text-right`}>4,674,363</td>
+              <td class={`${tdClass} text-right`}>28.0%</td>
+              <td class={`${tdClass} text-right`}>25</td>
+              <td class={`${tdClass} text-right`}>25.2</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>15m</td>
+              <td class={`${tdClass} text-right`}>1,524,375</td>
+              <td class={`${tdClass} text-right`}>9.1%</td>
+              <td class={`${tdClass} text-right`}>27</td>
+              <td class={`${tdClass} text-right`}>26.5</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>80m</td>
+              <td class={`${tdClass} text-right`}>1,490,037</td>
+              <td class={`${tdClass} text-right`}>8.9%</td>
+              <td class={`${tdClass} text-right`}>27</td>
+              <td class={`${tdClass} text-right`}>26.3</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>30m</td>
+              <td class={`${tdClass} text-right`}>1,074,253</td>
+              <td class={`${tdClass} text-right`}>6.4%</td>
+              <td class={`${tdClass} text-right`}>22</td>
+              <td class={`${tdClass} text-right`}>22.2</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>10m</td>
+              <td class={`${tdClass} text-right`}>819,654</td>
+              <td class={`${tdClass} text-right`}>4.9%</td>
+              <td class={`${tdClass} text-right`}>20</td>
+              <td class={`${tdClass} text-right`}>20.8</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>160m *</td>
+              <td class={`${tdClass} text-right`}>775,068</td>
+              <td class={`${tdClass} text-right`}>4.6%</td>
+              <td class={`${tdClass} text-right`}>27</td>
+              <td class={`${tdClass} text-right`}>26.8</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>17m</td>
+              <td class={`${tdClass} text-right`}>683,767</td>
+              <td class={`${tdClass} text-right`}>4.1%</td>
+              <td class={`${tdClass} text-right`}>23</td>
+              <td class={`${tdClass} text-right`}>23.2</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>12m</td>
+              <td class={`${tdClass} text-right`}>187,820</td>
+              <td class={`${tdClass} text-right`}>1.1%</td>
+              <td class={`${tdClass} text-right`}>23</td>
+              <td class={`${tdClass} text-right`}>23.8</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>60m</td>
+              <td class={`${tdClass} text-right`}>46,831</td>
+              <td class={`${tdClass} text-right`}>0.3%</td>
+              <td class={`${tdClass} text-right`}>22</td>
+              <td class={`${tdClass} text-right`}>22.7</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted">
+        * The 160m row is the one figure in this study to quote with care: 79% of its spots come from a single contest
+        weekend in the December sample week (the ARRL 160-Meter Contest). In the other four weeks, the band's median is
+        23 to 26 WPM on far fewer transmissions.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Speed by continent</h2>
+      <div class="overflow-x-auto">
+        <table class={tableClass}>
+          <thead>
+            <tr>
+              <th class={thClass} scope="col">Continent of the station heard</th>
+              <th class={`${thClass} text-right`} scope="col">Transmissions</th>
+              <th class={`${thClass} text-right`} scope="col">Share</th>
+              <th class={`${thClass} text-right`} scope="col">Median WPM</th>
+              <th class={`${thClass} text-right`} scope="col">Mean WPM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class={tdClass}>Europe</td>
+              <td class={`${tdClass} text-right`}>10,764,507</td>
+              <td class={`${tdClass} text-right`}>64.4%</td>
+              <td class={`${tdClass} text-right`}>25</td>
+              <td class={`${tdClass} text-right`}>25.4</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>North America</td>
+              <td class={`${tdClass} text-right`}>4,346,665</td>
+              <td class={`${tdClass} text-right`}>26.0%</td>
+              <td class={`${tdClass} text-right`}>23</td>
+              <td class={`${tdClass} text-right`}>23.7</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>Asia</td>
+              <td class={`${tdClass} text-right`}>981,337</td>
+              <td class={`${tdClass} text-right`}>5.9%</td>
+              <td class={`${tdClass} text-right`}>25</td>
+              <td class={`${tdClass} text-right`}>25.5</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>Africa</td>
+              <td class={`${tdClass} text-right`}>274,008</td>
+              <td class={`${tdClass} text-right`}>1.6%</td>
+              <td class={`${tdClass} text-right`}>27</td>
+              <td class={`${tdClass} text-right`}>26.3</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>South America</td>
+              <td class={`${tdClass} text-right`}>207,632</td>
+              <td class={`${tdClass} text-right`}>1.2%</td>
+              <td class={`${tdClass} text-right`}>25</td>
+              <td class={`${tdClass} text-right`}>25.2</td>
+            </tr>
+            <tr>
+              <td class={tdClass}>Oceania</td>
+              <td class={`${tdClass} text-right`}>129,338</td>
+              <td class={`${tdClass} text-right`}>0.8%</td>
+              <td class={`${tdClass} text-right`}>24</td>
+              <td class={`${tdClass} text-right`}>24.0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-muted">
+        These shares map the Reverse Beacon Network's receiver coverage as much as world activity: most skimmer
+        receivers sit in Europe and North America, so stations there are heard far more often.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>What this means if you are learning Morse code</h2>
+      <p>
+        Learners often imagine the bands are full of operators sending far faster than they could ever copy. The data
+        says otherwise.
+      </p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>
+          <strong>Aim for the middle, not the tail.</strong> The typical station sends at about 24 WPM, and half of all
+          stations sit between 19.5 and 28 WPM. If you can copy comfortably at around 20 WPM, you are already within
+          reach of the middle of the distribution.
+        </li>
+        <li>
+          <strong>Nobody expects 40 WPM.</strong> Fewer than 1 in 100 transmissions go that fast. Contest-speed sending
+          is a speciality, not the entry ticket.
+        </li>
+        <li>
+          <strong>Slow company exists.</strong> One station in ten sends at 16 WPM or slower, so even early on, there
+          are transmissions on air at learner-friendly speeds.
+        </li>
+        <li>
+          <strong>Speed is a habit, not a season.</strong> The median held at 23 to 24 WPM in winter, spring, summer and
+          autumn alike. Whenever you get on air, the pace you practised for is the pace you will find.
+        </li>
+      </ul>
+      <p>
+        Practise at realistic speeds with our free <a class={link} href="/">Morse code translator</a>: learn the shapes
+        from the <a class={link} href="/morse-code-alphabet/">Morse code alphabet chart</a>, then test your ear by
+        decoding real audio with the{' '}
+        <a class={link} href="/morse-code-audio-translator/">Morse code audio translator</a>. Set the player near 20 WPM
+        and you are training for the bands as they actually are.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>How we measured this (methodology)</h2>
+      <p>
+        <strong>Data.</strong> Every figure comes from the Reverse Beacon Network's public archive of spots: automated
+        receiving stations (skimmers) around the world that listen for callsigns, decode them, and report the frequency,
+        band and estimated sending speed. We downloaded the daily archive files for five complete Monday-to-Sunday
+        weeks: 1–7 December 2025, 2–8 March 2026, 11–17 May 2026, 17–23 August 2026, and 26 October – 1 November 2026.
+      </p>
+      <p>
+        <strong>Week choice.</strong> Weeks were screened to avoid the six biggest CW contests (CQ WW CW, ARRL DX CW, CQ
+        WPX CW, IARU HF, WAE CW and ARRL Sweepstakes CW), whose weekends would have swamped ordinary activity. Three
+        sampled weekends still held smaller CW contests; the largest footprints are disclosed wherever they touch a
+        figure, and removing the single noisiest week leaves the headline unchanged at 24.0 WPM.
+      </p>
+      <p>
+        <strong>Cleaning.</strong> Of 16,844,912 archived rows, we kept CW transmissions with a reported speed between 5
+        and 80 WPM, leaving 16,703,487 spots (0.03% were dropped as out-of-range decoder artefacts). Each station was
+        identified by callsign; portable suffixes count as separate callsigns, so the true number of individual
+        operators is slightly below 110,003.
+      </p>
+      <p>
+        <strong>Honest limits.</strong> Speeds are machine estimates made by the skimmer software, in whole WPM, and can
+        be off by roughly 1 to 2 WPM on any single transmission, especially hand-sent code; medians across millions of
+        transmissions are far more stable than any individual reading. The network hears stations that call CQ within
+        range of a receiver, so quiet one-to-one chats and regions with few receivers are under-counted, and continent
+        shares reflect receiver coverage as much as activity. Five weeks in one year is a strong sample of ordinary
+        weeks, not a census.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Cite this study</h2>
+      <p>Cite this study: Mir Labs / translatorcodemorse.com</p>
+      <p class="rounded-xl border border-dashed border-line bg-surface px-4 py-3 text-sm">
+        Mir Labs, “How fast does the world actually send Morse code?”, translatorcodemorse.com, November 2026. Based on
+        16,703,487 Reverse Beacon Network spots across 110,003 stations in five sampled weeks between December 2025 and
+        November 2026.
+      </p>
+      <p class="text-sm text-muted">
+        Data: the <a class={link} href="https://www.reversebeacon.net/">Reverse Beacon Network</a> and its volunteer
+        skimmer operators, whose receivers recorded every transmission in this study. The network asks that results be
+        shared back with the community; this page is that sharing, with thanks.
+      </p>
+      <p class="text-sm text-muted">
+        Study by Mir Labs, makers of the free <a class={link} href="/">Morse code translator</a> at
+        translatorcodemorse.com.
+      </p>
+    </section>
+
+    <RelatedPages
+      links={[
+        { href: '/', label: 'Translate text to Morse code' },
+        { href: '/morse-code-alphabet/', label: 'Morse code alphabet chart' },
+        { href: '/morse-code-audio-translator/', label: 'Decode Morse audio to text' },
+      ]}
+    />
+  </article>
+</BaseLayout>
+
+<style>
+  .speed-track {
+    flex: 1;
+    height: 1.625rem;
+    overflow: hidden;
+    border-radius: 0.375rem;
+    background: var(--logo-chip);
+  }
+  .speed-bar {
+    height: 1.625rem;
+    border-radius: 0.375rem;
+    background: var(--accent);
+  }
+</style>

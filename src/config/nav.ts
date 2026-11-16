@@ -7,6 +7,7 @@ export const primaryNav = [
   { href: '/morse-code-alphabet/', label: 'Alphabet' },
   { href: '/morse-code-numbers/', label: 'Numbers' },
   { href: '/sos-in-morse-code/', label: 'SOS' },
+  { href: '/morse-code-speed-statistics/', label: 'Speed' },
 ] as const;
 
 /** Top-level header items (Morse Tools is a separate disclosure). */
@@ -15,6 +16,7 @@ export const headerTopNav = [
   { href: '/morse-code-alphabet/', label: 'Alphabet' },
   { href: '/morse-code-numbers/', label: 'Numbers' },
   { href: '/sos-in-morse-code/', label: 'SOS' },
+  { href: '/morse-code-speed-statistics/', label: 'Speed' },
 ] as const;
 
 /** Morse Tools dropdown — real <a href> in the HTML, not JS-rendered. */
