@@ -11,10 +11,13 @@ import {
 import { displayFromEvents, type MachineDisplay } from './morse-machine-timing';
 
 export const MACHINE_PAGE_PATH = '/morse-code-machine/';
-export const MACHINE_TITLE = 'Morse Code Machine - Free Online Key & Keyer';
+export const MACHINE_TITLE = 'Morse Code Machine – Free Key, Keyer & Boy Scouts Tool';
 export const MACHINE_HEADING = 'Morse Code Machine: Free Online Key and Keyer Simulator';
 export const MACHINE_DESCRIPTION =
-  'Free online Morse key and keyer simulator. Send International Morse, then practice Listen & Guess and Morse the Letter. Private in your browser.';
+  'Free online Morse code machine with key, paddle, and keyer. Replaces the old Boy Scouts Morse Code Machine — Listen & Guess and Morse the Letter.';
+export const MACHINE_OG_IMAGE_PATH = '/morse-machine-featured.webp';
+export const MACHINE_OG_IMAGE_ALT =
+  'Morse Code Machine: a telegraph key sending Morse dots and dashes, with a Scout badge';
 
 export const MACHINE_MODES = ['key', 'type', 'paddle'] as const;
 export type MachineMode = (typeof MACHINE_MODES)[number];

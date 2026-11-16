@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import featuredImage from '../../assets/brand/morse-machine-featured.webp';
+import { MACHINE_OG_IMAGE_ALT } from '../../lib/morse-machine-ui';
 import { machineFaqs } from './machine-faqs';
 
 const link = 'text-accent underline underline-offset-4';
@@ -10,6 +13,19 @@ const tdClass = 'border-b border-line px-3 py-2 align-top';
 ---
 
 <article class="mt-12 grid gap-10 rounded-2xl border border-line px-4 py-6 text-[1.0625rem] leading-7 sm:px-8 sm:py-8">
+  <figure class="overflow-hidden rounded-xl border border-line bg-surface">
+    <Image
+      src={featuredImage}
+      alt={MACHINE_OG_IMAGE_ALT}
+      width={1200}
+      height={630}
+      widths={[480, 768, 1200]}
+      sizes="(max-width: 640px) 100vw, 928px"
+      loading="lazy"
+      decoding="async"
+      class="block h-auto w-full"
+    />
+  </figure>
   <section class="cv grid gap-3">
     <h2 class={h2}>Morse Code Machine: Free Online Key and Keyer Simulator</h2>
     <p>

@@ -18,6 +18,7 @@ import {
   MACHINE_CHART_LETTERS,
   MACHINE_DESCRIPTION,
   MACHINE_HEADING,
+  MACHINE_OG_IMAGE_PATH,
   MACHINE_KEYBINDS,
   MACHINE_MODE_HINT,
   MACHINE_PAGE_PATH,
@@ -30,11 +31,13 @@ import {
 
 describe('Morse Code Machine page copy', () => {
   it('has a unique title and a 140–155 character description', () => {
-    expect(MACHINE_TITLE).toBe('Morse Code Machine - Free Online Key & Keyer');
+    expect(MACHINE_TITLE).toBe('Morse Code Machine – Free Key, Keyer & Boy Scouts Tool');
     expect(MACHINE_HEADING).toBe('Morse Code Machine: Free Online Key and Keyer Simulator');
     expect([...MACHINE_TITLE].length).toBeLessThanOrEqual(60);
     expect([...MACHINE_DESCRIPTION].length).toBeGreaterThanOrEqual(140);
     expect([...MACHINE_DESCRIPTION].length).toBeLessThanOrEqual(155);
+    expect(MACHINE_DESCRIPTION).toMatch(/Boy Scouts/);
+    expect(MACHINE_OG_IMAGE_PATH).toBe('/morse-machine-featured.webp');
     expect(machineThemeToggleLabel('light')).toBe('Switch to dark theme');
     expect(machineThemeToggleLabel('dark')).toBe('Switch to light theme');
     expect(MACHINE_THEME_PALETTE.light).toEqual({ canvas: '#f3efe8', accent: '#9a3f06' });

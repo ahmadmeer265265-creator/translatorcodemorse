@@ -4,7 +4,12 @@ import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { describe, expect, it } from 'vitest';
 import { primaryNav } from '../../config/nav';
 import { machineFaqs } from './machine-faqs';
-import { MACHINE_DESCRIPTION, MACHINE_PAGE_PATH, MACHINE_TITLE } from '../../lib/morse-machine-ui';
+import {
+  MACHINE_DESCRIPTION,
+  MACHINE_OG_IMAGE_PATH,
+  MACHINE_PAGE_PATH,
+  MACHINE_TITLE,
+} from '../../lib/morse-machine-ui';
 // @ts-expect-error .astro imports are resolved by the Astro Vite plugin
 import MorseMachine from './MorseMachine.astro';
 // @ts-expect-error .astro imports are resolved by the Astro Vite plugin
@@ -83,7 +88,9 @@ describe('Morse Code Machine page', () => {
     expect(html).toContain('href="/morse-code-audio-translator/"');
     expect(html).toContain('>full Morse code alphabet chart</a>');
     expect(html).toContain('property="og:type" content="article"');
-    expect(html).toContain('og-default.jpg');
+    expect(html).toContain(MACHINE_OG_IMAGE_PATH);
+    expect(html).not.toContain('og-default.jpg');
+    expect(html).toContain('morse-machine-featured');
     expect(html).toContain('application/ld+json');
     expect(html).toContain('"@type":"WebApplication"');
     expect(html).toContain('"@type":"BreadcrumbList"');
@@ -101,6 +108,10 @@ describe('Morse Code Machine page', () => {
     expect(raw).toBeTruthy();
     const blocks = JSON.parse(raw!.replaceAll('\\u003c', '<')) as { '@type'?: string; mainEntity?: { name: string; acceptedAnswer: { text: string } }[] }[];
     const faq = blocks.find((block) => block['@type'] === 'FAQPage');
+    const page = blocks.find((block) => block['@type'] === 'WebPage') as { image?: string } | undefined;
+    const app = blocks.find((block) => block['@type'] === 'WebApplication') as { image?: string } | undefined;
+    expect(page?.image).toContain(MACHINE_OG_IMAGE_PATH);
+    expect(app?.image).toContain(MACHINE_OG_IMAGE_PATH);
     expect(faq?.mainEntity?.map((entry) => ({ question: entry.name, answer: entry.acceptedAnswer.text }))).toEqual(
       machineFaqs.map((item) => ({ question: item.question, answer: item.answer })),
     );
