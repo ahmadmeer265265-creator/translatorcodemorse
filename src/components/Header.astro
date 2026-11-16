@@ -4,12 +4,14 @@ import { getCollection } from 'astro:content';
 import ringDark from '../assets/brand/header-ring-dark.png';
 import ringLight from '../assets/brand/header-ring-light.png';
 import SocialLinks from './SocialLinks.astro';
-import { primaryNav } from '../config/nav';
+import { headerTopNav, headerToolsNav } from '../config/nav';
 import { SITE_NAME } from '../config/site';
 
 const pathname = Astro.url.pathname;
 const posts = await getCollection('blog', ({ data }) => !data.draft);
-const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog' }] : [...primaryNav];
+const topLinks = posts.length > 0 ? [...headerTopNav, { href: '/blog/', label: 'Blog' }] : [...headerTopNav];
+const homeLink = topLinks[0]!;
+const restTop = topLinks.slice(1);
 ---
 
 <header class="site-header" data-site-header>
@@ -50,11 +52,34 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
         </template>
         <span data-theme-slot></span>
       </span>
-      <span class="truncate">{SITE_NAME}</span>
+      <span class="min-w-0 leading-5 sm:leading-normal" data-site-name>{SITE_NAME}</span>
     </a>
     <nav class="ml-auto hidden min-w-0 flex-1 flex-nowrap justify-end md:flex" aria-label="Primary">
+      <a
+        class="inline-flex min-h-11 shrink-0 items-center px-2 text-sm text-ink sm:px-3"
+        href={homeLink.href}
+        aria-current={pathname === homeLink.href ? 'page' : undefined}
+      >
+        {homeLink.label}
+      </a>
+      <details class="nav-tools" data-nav-tools>
+        <summary class="inline-flex min-h-11 shrink-0 items-center px-2 text-sm sm:px-3" aria-expanded="false" aria-haspopup="menu">Morse Tools</summary>
+        <div class="nav-tools__menu" role="group" aria-label="Morse Tools">
+          {
+            headerToolsNav.map((link) => (
+              <a
+                class="inline-flex min-h-11 items-center px-2 text-sm text-ink sm:px-3"
+                href={link.href}
+                aria-current={pathname === link.href ? 'page' : undefined}
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </div>
+      </details>
       {
-        links.map((link) => (
+        restTop.map((link) => (
           <a
             class="inline-flex min-h-11 shrink-0 items-center px-2 text-sm text-ink sm:px-3"
             href={link.href}
@@ -128,8 +153,27 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
     hidden
   >
     <div class="mx-auto grid max-w-5xl px-4 py-2">
+      <a
+        class="flex min-h-11 items-center text-ink"
+        href={homeLink.href}
+        aria-current={pathname === homeLink.href ? 'page' : undefined}
+      >
+        {homeLink.label}
+      </a>
+      <p class="nav-tools__heading">Morse Tools</p>
       {
-        links.map((link) => (
+        headerToolsNav.map((link) => (
+          <a
+            class="flex min-h-11 items-center text-ink"
+            href={link.href}
+            aria-current={pathname === link.href ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      {
+        restTop.map((link) => (
           <a
             class="flex min-h-11 items-center text-ink"
             href={link.href}
@@ -145,68 +189,8 @@ const links = posts.length > 0 ? [...primaryNav, { href: '/blog/', label: 'Blog'
 
 <script>
   import { initSiteThemeAssets } from '../lib/site-theme-assets';
+  import { initSiteHeaderNav } from '../lib/site-header-nav';
 
   initSiteThemeAssets();
-
-  const header = document.querySelector('[data-site-header]');
-  const toggle = header?.querySelector('[data-nav-toggle]');
-  const panel = header?.querySelector('[data-nav-panel]');
-  const menuIcon = toggle?.querySelector('.icon-menu');
-  const closeIcon = toggle?.querySelector('.icon-close');
-
-  if (header instanceof HTMLElement && toggle instanceof HTMLButtonElement && panel instanceof HTMLElement) {
-    const panelFocusable = () =>
-      [...panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')].filter(
-        (el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true',
-      );
-
-    const setOpen = (open: boolean) => {
-      const wasOpen = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      panel.hidden = !open;
-      if (menuIcon instanceof SVGElement) menuIcon.toggleAttribute('hidden', open);
-      if (closeIcon instanceof SVGElement) closeIcon.toggleAttribute('hidden', !open);
-      if (open) {
-        const first = panelFocusable()[0];
-        first?.focus();
-      } else if (wasOpen) {
-        toggle.focus();
-      }
-    };
-
-    toggle.addEventListener('click', () => {
-      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-    });
-
-    panel.addEventListener('click', (event) => {
-      const target = event.target;
-      if (target instanceof Element && target.closest('a')) setOpen(false);
-    });
-
-    panel.addEventListener('keydown', (event) => {
-      if (event.key !== 'Tab' || panel.hidden) return;
-      const items = panelFocusable();
-      if (items.length === 0) return;
-      const first = items[0]!;
-      const last = items[items.length - 1]!;
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false);
-    });
-
-    const desktop = window.matchMedia('(min-width: 768px)');
-    const onBreakpoint = () => {
-      if (desktop.matches) setOpen(false);
-    };
-    desktop.addEventListener('change', onBreakpoint);
-  }
+  initSiteHeaderNav();
 </script>

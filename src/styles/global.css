@@ -27,7 +27,8 @@
   --surface: #1c1814;
   --ink: #f5efe6;
   --muted: #c9bdb0;
-  --line: #3a322a;
+  /* 3.70:1 against --canvas #14110e (WCAG 3:1 non-text UI). Was #3a322a at 1.50:1. */
+  --line: #7a6c5c;
   --accent: #f0a94e;
   --on-accent: #1a1208;
   --shadow: 0 12px 32px -18px rgba(0, 0, 0, 0.65);
@@ -47,7 +48,7 @@
     --surface: #1c1814;
     --ink: #f5efe6;
     --muted: #c9bdb0;
-    --line: #3a322a;
+    --line: #7a6c5c;
     --accent: #f0a94e;
     --on-accent: #1a1208;
     --shadow: 0 12px 32px -18px rgba(0, 0, 0, 0.65);
@@ -185,6 +186,76 @@ nav a[aria-current="page"] {
   color: var(--accent);
   text-decoration: none;
   box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.nav-tools {
+  position: relative;
+}
+
+.nav-tools > summary {
+  display: inline-flex;
+  min-height: 2.75rem;
+  list-style: none;
+  cursor: pointer;
+  align-items: center;
+  padding: 0 0.5rem;
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+
+.nav-tools > summary::-webkit-details-marker,
+.nav-tools > summary::marker {
+  display: none;
+  content: "";
+}
+
+.nav-tools > summary::after {
+  content: "";
+  margin-left: 0.35rem;
+  border: 0.22rem solid transparent;
+  border-top-color: currentColor;
+  transform: translateY(0.14rem);
+}
+
+.nav-tools__menu {
+  display: grid;
+}
+
+.nav-tools__heading {
+  margin: 0.35rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (min-width: 768px) {
+  .nav-tools__menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 30;
+    min-width: 15.5rem;
+    display: none;
+    padding: 0.35rem 0;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .nav-tools:hover > .nav-tools__menu,
+  .nav-tools:focus-within > .nav-tools__menu,
+  .nav-tools[open] > .nav-tools__menu {
+    display: grid;
+  }
+
+  .nav-tools__menu a {
+    min-height: 2.75rem;
+    padding: 0 0.85rem;
+    white-space: nowrap;
+  }
 }
 
 .site-footer {
