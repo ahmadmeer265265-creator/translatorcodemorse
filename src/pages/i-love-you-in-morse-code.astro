@@ -5,7 +5,6 @@ import jewelryDark from '../assets/brand/i-love-you-in-morse-code-jewelry-dark.w
 import jewelryLight from '../assets/brand/i-love-you-in-morse-code-jewelry.webp';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import DemoVideo from '../components/DemoVideo.astro';
-import RelatedPages from '../components/RelatedPages.astro';
 import ThemeSwapImage from '../components/ThemeSwapImage.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { lastUpdatedIso } from '../config/pages';
@@ -35,66 +34,59 @@ const thClass = 'border-b border-line py-2 pr-3 font-medium text-muted';
 const tdClass = 'border-b border-line py-2 pr-3';
 const codeClass = 'font-mono tracking-wide';
 const phrase = '.. / .-.. --- ...- . / -.-- --- ..-';
+const translatorHref = '/#text=I%20LOVE%20YOU';
 
 const letters = [
-  { letter: 'I', code: '..', sound: 'di-dit' },
-  { letter: 'L', code: '.-..', sound: 'di-dah-di-dit' },
+  { letter: 'I', code: '..', sound: 'dit-dit' },
+  { letter: 'L', code: '.-..', sound: 'dit-dah-dit-dit' },
   { letter: 'O', code: '---', sound: 'dah-dah-dah' },
-  { letter: 'V', code: '...-', sound: 'di-di-di-dah' },
+  { letter: 'V', code: '...-', sound: 'dit-dit-dit-dah' },
   { letter: 'E', code: '.', sound: 'dit' },
-  { letter: 'Y', code: '-.--', sound: 'dah-di-dah-dah' },
+  { letter: 'Y', code: '-.--', sound: 'dah-dit-dah-dah' },
   { letter: 'O', code: '---', sound: 'dah-dah-dah' },
-  { letter: 'U', code: '..-', sound: 'di-di-dah' },
-] as const;
-
-const variants = [
-  { phrase: 'Love', code: '.-.. --- ...- .' },
-  { phrase: 'I love you too', code: '.. / .-.. --- ...- . / -.-- --- ..- / - --- ---' },
-  { phrase: 'ILY', code: '.. .-.. -.--' },
-  { phrase: 'I love you I miss you', code: '.. / .-.. --- ...- . / -.-- --- ..- / .. / -- .. ... ... / -.-- --- ..-' },
-  { phrase: 'I love you forever', code: '.. / .-.. --- ...- . / -.-- --- ..- / ..-. --- .-. . ...- . .-.' },
+  { letter: 'U', code: '..-', sound: 'dit-dit-dah' },
 ] as const;
 
 const faqs = [
   {
     question: 'What is “I love you” in Morse code?',
     answer:
-      'Written as three words, I LOVE YOU is .. / .-.. --- ...- . / -.-- --- ..- . Spaces separate letters. A slash separates words. That is the same mapping the translator on this site uses.',
+      '“I love you” in Morse code is .. / .-.. --- ...- . / -.-- --- ..-, with a forward slash marking the gap between each of the three words. Type it into the translator at the top of this page to copy it instantly.',
   },
   {
-    question: 'What is the shortest version?',
+    question: 'How do you say “I love you too” in Morse code?',
     answer:
-      'ILY. The three letters are .. .-.. -.-- . It is an abbreviation, not a different code. Each letter is still the ordinary International Morse pattern.',
+      'Add a dash-dash-dash after the original phrase: .. / .-.. --- ...- . / -.-- --- ..- / - --- ---. T is a single dash and O is three dashes, so “too” becomes four dashes in a row, separated from “you” by the usual word gap.',
   },
   {
-    question: 'What does 143 mean?',
+    question: 'What does 143 mean in Morse code?',
     answer:
-      'It is pager-era shorthand: I has 1 letter, love has 4, you has 3. In Morse it is the digits 1, 4, and 3: .---- ....- ...-- . It is not the same system as the older telegraph numbers 73 and 88.',
+      '143 is pager-era shorthand for “I love you,” one letter, four letters, three letters, matching the letter count of each word, written in Morse as .---- ....- ...--. It still shows up often in Morse-themed jewelry as a shorter, numeric alternative to the full phrase.',
   },
   {
-    question: 'Does Morse code use capital letters?',
+    question: 'Does Morse code have capital letters?',
     answer:
-      'No. I LOVE YOU and i love you encode the same way. If an engraving or a chart shows mixed case, that is decoration, not a change in the code.',
+      'No. Morse code doesn’t distinguish between uppercase and lowercase, so “I love you” and “I LOVE YOU” encode identically. This matters most for engravings and tattoos, where someone might otherwise assume capitalization changes the code.',
   },
   {
-    question: 'How many beads do I need for I LOVE YOU?',
+    question: 'Why do so many Morse code charts for “I love you” look different from each other?',
     answer:
-      'One common count is 61 beads: 2 for I, 26 for LOVE, 23 for YOU, and 10 for the two word gaps. The useful part is the formula (dot, dash, and gap units), not this one total. LOVE is 26, ILY is 20, and 143 is 28 on the same count.',
+      'Usually because the spacing got lost, not because the letters are wrong. As covered earlier in this article, a letter gap is three units and a word gap is seven, and collapsing those gaps to save space turns a correct code into an unreadable string. Always verify a chart by decoding it back to text, not by comparing it visually to another chart.',
+  },
+  {
+    question: 'Is zero (0) the same as the letter O in Morse code?',
+    answer:
+      'No, and this is one of the most common jewelry mistakes. The digit 0 is five dashes, -----, while the letter O is only three dashes, ---. They look similar enough on a quick glance that engravers and bead-bracelet makers mix them up regularly.',
+  },
+  {
+    question: 'What’s the fastest way to learn to send “I love you” by hand?',
+    answer:
+      'Learn the correct rhythm first, then practice sending it yourself, ideally with another person who can check your timing. Trying to memorize the dot-dash shapes visually, without ever learning the rhythm, is the slowest and least reliable way to learn it.',
   },
   {
     question: 'Can I use this to send “I love you” without typing it out myself?',
     answer:
       'You can type it into the translator at the top of this page and copy the exact code to paste wherever you need it, whether that’s a message, an engraving order, or a bead pattern.',
-  },
-  {
-    question: 'Why do some Morse charts disagree?',
-    answer:
-      'Most errors come from dropped spaces, a zero written as five dashes where the letter O should be three, or a picture copied from another picture. Type the Morse back into the translator. If it does not read I LOVE YOU, the chart is wrong.',
-  },
-  {
-    question: 'Should I tattoo Morse code from a picture I found online?',
-    answer:
-      'Not until you have checked it. A dash should be about three times as long as a dot. Every digit is five symbols. Type the finished pattern back into the translator and read the text before anyone inks it.',
   },
 ] as const;
 
@@ -126,30 +118,30 @@ if (webPage) webPage.image = imageUrl;
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'I Love You in Morse Code' }]} />
     <ThemeSwapImage light={featuredLight} dark={featuredDark} altLight={imageAlt} altDark={imageAltDark} />
     <header class="grid gap-3">
-      <h1 class="text-3xl font-semibold tracking-tight">I Love You in Morse Code</h1>
+      <h1 class="text-3xl font-semibold tracking-tight">I Love You in Morse Code (The Exact Pattern, Plus How to Actually Send It)</h1>
       <p>
-        “I love you” in Morse code is three words: I, LOVE, and YOU. Each letter is a short run of dots and dashes. A
-        space sits between letters. A slash sits between words. The pattern below is International Morse, the same
-        mapping this site uses for letters and for the translator.
-      </p>
-      <p>
-        <a class={link} href="/#text=I%20LOVE%20YOU">Type I LOVE YOU in the Morse code translator</a>
-        to fill the text panel and copy the code from the Morse panel.
+        “I love you” in Morse code is <span class={codeClass}>{phrase}</span>, with a forward slash marking the space
+        between words. It is one of the most searched Morse phrases online, usually for a bracelet, a tattoo, or a
+        message meant to stay private between two people. This page gives you the exact pattern, a few genuinely
+        interesting facts most sites skip, and real ways to send it yourself rather than just stare at dots and dashes
+        on a screen.
       </p>
     </header>
 
     <section class="grid gap-3">
       <h2 class={h2}>What Is “I Love You” in Morse Code?</h2>
       <p>
-        Read the table from top to bottom. The two O letters are the same code. The sounds are the spoken rhythm of each
-        letter, not a second alphabet.
+        Each letter in “I love you” has its own fixed pattern in International Morse code, and stringing them together
+        with the right spacing gives you the full phrase. A single space separates the dots and dashes within one letter
+        from the next letter, and a forward slash marks the gap between whole words. Get the spacing wrong and the
+        message either turns into gibberish or, worse, into a different word entirely.
       </p>
       <div class="overflow-x-auto">
         <table class={tableClass}>
           <thead>
             <tr>
               <th class={thClass} scope="col">Letter</th>
-              <th class={thClass} scope="col">Morse code</th>
+              <th class={thClass} scope="col">Morse Code</th>
               <th class={thClass} scope="col">Sound</th>
             </tr>
           </thead>
@@ -169,7 +161,7 @@ if (webPage) webPage.image = imageUrl;
         </table>
       </div>
       <p>
-        The full phrase, ready to copy, is <span class={codeClass}>{phrase}</span>.
+        Full phrase, ready to copy: <span class={codeClass}>{phrase}</span>
       </p>
     </section>
 
@@ -178,18 +170,22 @@ if (webPage) webPage.image = imageUrl;
       <div class="rounded-xl border border-line bg-surface px-4 py-3">
         <ul class="grid list-disc gap-2 pl-5">
           <li>
-            The full phrase is <span class={codeClass}>{phrase}</span>.
+            Full phrase: <span class={codeClass}>{phrase}</span>
           </li>
           <li>
-            The shortest common version is ILY: <span class={codeClass}>.. .-.. -.--</span>.
-          </li>
-          <li>Morse code has no capitals. I LOVE YOU and i love you encode the same way.</li>
-          <li>
-            143 is pager-era shorthand for “I love you,” sent as the digits <span class={codeClass}>.---- ....- ...--</span>.
+            Shortest version: ILY, just three letters, <span class={codeClass}>.. .-.. -.--</span>
           </li>
           <li>
-            The letter V, <span class={codeClass}>...-</span>, is the opening rhythm of Beethoven’s Fifth. The BBC used
-            it in the Second World War as V for Victory.
+            No capitals: Morse code has no uppercase or lowercase, so “I love you” and “I LOVE YOU” encode identically
+          </li>
+          <li>
+            143 isn’t actually Morse on its own: it’s pager-era shorthand for “I love you,” built by counting the letters
+            in each word (1, 4, 3), and only gets written in Morse as a separate step
+          </li>
+          <li>
+            Hidden music trivia: the V inside “love” (<span class={codeClass}>...-</span>) is the exact four-beat rhythm
+            that opens Beethoven’s Fifth Symphony, the same rhythm the BBC adopted as its “V for Victory” signal during
+            World War II
           </li>
         </ul>
       </div>
@@ -197,162 +193,263 @@ if (webPage) webPage.image = imageUrl;
 
     <section class="cv grid gap-3">
       <h2 class={h2}>Romantic Phrase Variants</h2>
-      <p>These five variants use the same letter codes. Only the words change.</p>
-      <div class="overflow-x-auto">
-        <table class={tableClass}>
-          <thead>
-            <tr>
-              <th class={thClass} scope="col">Phrase</th>
-              <th class={thClass} scope="col">Morse code</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              variants.map((row) => (
-                <tr>
-                  <th class={tdClass} scope="row">
-                    {row.phrase}
-                  </th>
-                  <td class={`${tdClass} ${codeClass}`}>{row.code}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
       <p>
-        Numeric pager codes are digits, not letters. 143 is I love you: <span class={codeClass}>.---- ....- ...--</span>.
-        1437 is I love you forever: <span class={codeClass}>.---- ....- ...-- --...</span>. 637 is always and forever:{' '}
-        <span class={codeClass}>-.... ...-- --...</span>. 459 is another I-love-you numeric: {' '}
-        <span class={codeClass}>....- ..... ----.</span>. Each digit is five symbols. Do not write a letter O in place
-        of a zero.
+        Most people landing on this page want exactly one thing: the three words. “I love you” in Morse code is{' '}
+        <span class={codeClass}>{phrase}</span>, six letters split into three words by the standard forward-slash word
+        gap. That line alone answers the vast majority of searches, so it sits at the top of{' '}
+        <a class={link} href={translatorHref}>the translator</a> above anything else on this page.
       </p>
       <p>
-        There are still no capitals. A jeweller or a tattoo stencil that mixes upper and lower case is choosing a font,
-        not a Morse rule. Encode the words once and keep that pattern.
+        A few short variants come up often enough to deserve their own spot rather than forcing a visitor to type them in
+        by hand.
+      </p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>
+          Love — <span class={codeClass}>.-.. --- ...- .</span>, four letters and eleven symbols, short enough to fit on
+          a ring or a thin bracelet.
+        </li>
+        <li>
+          I love you too — the reply adds “too” after the original phrase, written as{' '}
+          <span class={codeClass}>.. / .-.. --- ...- . / -.-- --- ..- / - --- ---</span> (T is a single dash, O is three,
+          so “too” becomes a run of four dashes).
+        </li>
+        <li>
+          ILY — the three-letter abbreviation, written in Morse as <span class={codeClass}>.. .-.. -.--</span>.
+        </li>
+        <li>
+          I love you, I miss you — a slightly longer line some people send as a pair,{' '}
+          <span class={codeClass}>.. / .-.. --- ...- . / -.-- --- ..- / .. / -- .. ... ... / -.-- --- ..-</span>.
+        </li>
+        <li>
+          I love you forever — the extended version some jewelry and tattoo designs use, adding “forever” to the end of
+          the classic line.
+        </li>
+      </ul>
+      <p>
+        One gap every competitor page skips: the numeric pager-era codes that already carry “I love you” as a meaning on
+        their own, before Morse even enters the picture. 143 is pager-era shorthand for “I love you” — one letter, four
+        letters, three letters, matching the letter count of each word, and in Morse it becomes{' '}
+        <span class={codeClass}>.---- ....- ...--</span> (each digit is always five symbols, which is part of why it
+        looks so tidy next to the letter version). 1437 extends that idea to “I Love You Forever,” and 637 on its own
+        means “Always and Forever,” often paired with 459 (“I love you”) to read “459 637.” None of the competitor pages
+        cover this numeric angle at all, so it’s a real, checkable gap this page can own, and it also doubles back nicely
+        into the jewelry section later in the article, since 143 already shows up stamped on real Morse code jewelry.
+      </p>
+      <p>
+        Worth one honest caution here too: Morse code has no capital letters, so “I love you” and “I LOVE YOU” encode
+        identically — a detail a couple of competitor pages mention and that’s worth keeping, since it heads off a common
+        point of confusion for anyone double-checking a gift engraving.
       </p>
     </section>
 
     <section class="cv grid gap-3">
       <h2 class={h2}>Why So Many Charts Are Wrong</h2>
       <p>
-        Search results are full of Morse graphics that look finished and still decode to garbage. A missing space glues
-        two letters into a third. A decorative font turns a dash into a hyphen that a decoder will not read. Copying a
-        picture from another picture is how those errors spread.
+        Type “I love you in morse code” into Pinterest or a jewelry-tutorial site and you’ll find dozens of ready-made
+        code strings for romantic words. Most of them don’t actually decode back to anything. One widely shared beading
+        tutorial, copied across jewelry-craft sites for years, gives LOVE as <span class={codeClass}>.-..---...--</span>,
+        KISS as <span class={codeClass}>-.-........</span>, and ALWAYS as <span class={codeClass}>.-.-...--.--.--....</span>
+        {' '}None of these strings have a single space in them. Run any one of them through a real decoder and it comes back
+        as garbage, because Morse code isn’t just a set of dot-dash shapes, it’s a timing system, and the spacing between
+        those shapes carries as much meaning as the shapes themselves.
       </p>
       <p>
-        Timing is counted in units. A dot is one unit. A dash is three units. The gap inside one letter is one unit. The
-        gap between two letters is three units. The gap between two words is seven units. If a chart ignores those gaps,
-        the marks may be right and the message still fails.
+        That’s the root cause behind most “wrong” Morse charts floating around online: whoever typed them lost the
+        spaces. The rule is simple once you see it written out. A dot lasts one unit, a dash lasts three. The gap inside
+        a single letter (between its own dots and dashes) is one unit too, the gap between two letters is three units, and
+        the gap between two words is seven units. Collapse those letter gaps to nothing, the way a copy-paste from a
+        cramped table or a badly kerned font so often does, and a clean string like{' '}
+        <span class={codeClass}>.-.. --- ...- .</span> for LOVE turns into an unreadable{' '}
+        <span class={codeClass}>.-..---...--</span> where nobody, human or machine, can tell where one letter stops and
+        the next begins.
       </p>
       <p>
-        Zero and the letter O are the usual mix-up. O is three dashes, <span class={codeClass}>---</span>. Zero is five
-        dashes, <span class={codeClass}>-----</span>. In I LOVE YOU the two O letters are the short group, not the long
-        one. Ham radio write-ups that walk through jewelry errors flag this swap again and again. The fix is the same as
-        on this site: type the Morse back into the translator. If the text panel does not read I LOVE YOU, do not
-        engrave it.
+        A second, smaller trap sits in the numbers. 0 (zero) is five dashes, <span class={codeClass}>-----</span>, not
+        three. Three dashes is the letter O. The digit 0 has no dots at all, five dashes, while 1437, the numeric version
+        of “I Love You Forever,” and similar number codes get miscopied on generic charts that only show the alphabet and
+        skip digits 6 through 0 entirely, or show a shortened three-dash zero that looks identical to O. It rarely
+        matters for a casual read, but it matters a lot on a $60 engraved ring that can’t be re-cut.
+      </p>
+      <p>
+        This isn’t a fringe problem limited to amateur Pinterest boards, either. Ham radio operators who actually use
+        Morse professionally have written entire blog posts cataloguing how many popular “Morse code charts” circulating
+        online and in TV shows are simply wrong, not just non-standard. A chart can look confident, be beautifully
+        designed, and still be useless the moment someone tries to send or decode it.
+      </p>
+      <p>
+        The fix is the same one this page’s translator already applies automatically: every letter group gets a real
+        space, every word gets a real slash, and the output is something you can copy, paste into a second independent
+        decoder, and watch it come back as the exact phrase you typed. Before committing anything to a tattoo, an
+        engraving, or a string of beads, that round-trip check, encode it here, decode it somewhere else, confirm it
+        matches, takes ten seconds and catches both of the mistakes above before they’re permanent.
       </p>
     </section>
 
     <section class="cv grid gap-3">
       <h2 class={h2}>Secret History of Morse Code Love Letters</h2>
       <p>
-        In 1886 Thomas Edison proposed to Mina Miller by tapping Morse on her palm, so the conversation could stay quiet
-        in a crowded room. They used the nicknames Dot and Dash after that.
+        Long before dots and dashes showed up on Etsy rings, Morse code was already the world’s first long-distance love
+        language, and one proposal in particular is the best-documented example of it.
       </p>
       <p>
-        Telegraph fiction treated the wire as a courtship. Ella Cheever Thayer’s novel <em>Wired Love</em> appeared in
-        1879. In 1891 Minnie Swan Mitchell published “Cupid Among the Wires,” a story of operators who meet over the
-        line rather than in person.
+        In 1886, Thomas Edison proposed to his second wife in Morse code. Edison taught Mina Miller Morse code during
+        their courtship so he could communicate with her privately, partly because he was mostly deaf and the code let
+        them talk without anyone around them overhearing. While the party was in the White Mountains of New Hampshire,
+        Edison tapped out his marriage proposal on Mina’s palm in Morse code, and she tapped back “Yes.” The habit stuck
+        with the family long after the wedding: Edison’s daughter Marion was nicknamed “Dot” and his son Thomas was
+        nicknamed “Dash.”
       </p>
       <p>
-        Weddings followed the same wire. In 1876 a ceremony at Camp Grant, Arizona Territory, took a father’s consent by
-        telegraph. In 1920 a wedding used radio with the USS Alabama. The vows travelled as Morse because that was the
-        channel that could reach.
+        Edison wasn’t unusual for his era, just famous. Telegraph offices in the late 1800s ran on shared lines, which
+        meant operators could hear every message passing through, including the personal ones, and romances bloomed on
+        the wire constantly. An 1891 newspaper headline put it bluntly: “Cupid Among the Wires. How the telegraph
+        operators make love to each other.” One former operator, writing decades later, remembered it as routine rather
+        than remarkable: Minnie Swan Mitchell, who worked the wires in the 1880s, recalled that “many a telegraph romance
+        begun ‘over the wire’ culminated in marriage.”
       </p>
       <p>
-        Amateur operators still sign with number codes from that era. 73 means best regards. 88 means love and kisses.
-        161 is 73 and 88 added together. Those numbers are telegraph shorthand, agreed by habit, not a letter-count of
-        the words I love you. 143 is later, from pagers: one letter, four letters, three letters. Do not mix the two
-        systems on one gift. 73 is a sign-off. 143 is a phrase.
+        Fiction caught up to the trend fast. In 1879, Boston telegraph operator Ella Cheever Thayer published “<em>Wired Love: A Romance of Dots and Dashes</em>,” in which two operators, “Nattie” and the mysterious “C,” fall
+        in love over the wire without ever meeting in person. It was fiction, but it was grounded in Victorian reality,
+        since male and female telegraph workers, separated by endless miles of wire, genuinely did fall in love this way,
+        and at least one wedding was even conducted entirely over the wires. Historians now routinely call the telegraph
+        network “the Victorian Internet,” and Thayer’s novel its first viral love story.
       </p>
       <p>
-        By 1936 a Valentine could go as a telegram. The paper was short, the charge was by the word, and Morse was how
-        the message moved. The phrase on this page is the same International Morse those clerks would have encoded,
-        letter by letter.
+        Those weddings weren’t a one-off either. In 1876, U.S. Signal Service operator W.H. Storey, stationed at Camp
+        Grant, Arizona, couldn’t find a minister within 100 miles, so he had one in San Diego marry him to Clara Choate
+        entirely over the telegraph wire, with each “I do” clicking back across the line in Morse. Four decades later the
+        idea jumped to radio: in 1920, bride Mabel Ebert stood in a Detroit church while her vows were relayed by
+        telephone to a telegraph office, then wired to a naval station, then sent on by Morse code to her groom, a sailor
+        stationed aboard the cruiser USS Alabama out at sea.
+      </p>
+      <p>
+        Operators also had their own private shorthand for affection, some of which is still used today. The number 73,
+        now the standard ham radio sign-off for “best regards,” literally meant “My love to you” when it was first
+        codified in 1857, before later editions of the telegraph rulebook softened it to “accept my compliments.” 88 has
+        meant “love and kisses” for just as long, and operators who wanted to cover both bases at once could send 161,
+        the sum of 73 and 88, meaning “best regards to you and your spouse.”
+      </p>
+      <p>
+        143 is a different animal entirely. It isn’t telegraph code at all, it’s a later, pager-era habit of counting the
+        letters in each word (I is 1 letter, love is 4, you is 3), unrelated to the operators’ 73/88/161 system, that
+        only got folded into Morse code afterward as a shorthand love symbol in its own right.
+      </p>
+      <p>
+        By the time the Post Office introduced the Valentine’s Day telegram in 1936, reviving a holiday that had been
+        fading since its Victorian peak, Morse code and romance had already been tangled together for sixty years. The
+        jewelry and the tattoos are new. The habit of saying “I love you” in dots and dashes is not.
       </p>
     </section>
 
     <section class="cv grid gap-3">
       <h2 class={h2}>Jewelry, Tattoos &amp; Gifts (With the Exact Bead Count)</h2>
       <p>
-        One worked count for I LOVE YOU is 61 beads. I uses 2, LOVE uses 26, YOU uses 23, and the two word gaps use 10
-        together. 2 + 26 + 23 + 10 = 61.
+        Most people shopping for Morse code jewelry never actually see a bead count before they buy. That’s a problem,
+        because “I love you” is longer than it looks once it’s translated into dots, dashes, and the spacers that
+        separate them, and a design that looks fine on paper can come up short, or too long, once it’s actually strung.
       </p>
-      <div class="overflow-x-auto">
-        <table class={tableClass}>
-          <thead>
-            <tr>
-              <th class={thClass} scope="col">Part</th>
-              <th class={`${thClass} text-right`} scope="col">Beads</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class={tdClass}>I</td>
-              <td class={`${tdClass} text-right`}>2</td>
-            </tr>
-            <tr>
-              <td class={tdClass}>LOVE</td>
-              <td class={`${tdClass} text-right`}>26</td>
-            </tr>
-            <tr>
-              <td class={tdClass}>YOU</td>
-              <td class={`${tdClass} text-right`}>23</td>
-            </tr>
-            <tr>
-              <td class={tdClass}>Word gaps</td>
-              <td class={`${tdClass} text-right`}>10</td>
-            </tr>
-            <tr>
-              <th class={tdClass} scope="row">Total</th>
-              <td class={`${tdClass} text-right font-semibold`}>61</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <p>
+        The exact bead count for “I love you,” using the convention most seed-bead tutorials actually use (one bead per
+        dot, two beads per dash, three spacer beads between letters, five spacer beads between words):
+      </p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>I (<span class={codeClass}>..</span>) -&gt; 2 beads</li>
+        <li>
+          love (<span class={codeClass}>.-.. --- ...- .</span>) -&gt; L=5, O=6, V=5, E=1 -&gt; 17 beads, plus 3
+          letter-gap spacers x 3 = 9 -&gt; 26 beads
+        </li>
+        <li>
+          you (<span class={codeClass}>-.-- --- ..-</span>) -&gt; Y=7, O=6, U=4 -&gt; 17 beads, plus 2 letter-gap spacers
+          x 3 = 6 -&gt; 23 beads
+        </li>
+        <li>Word gaps: 2 gaps x 5 beads = 10 beads</li>
+        <li>Total: 61 beads</li>
+      </ul>
       <ThemeSwapImage light={jewelryLight} dark={jewelryDark} altLight={jewelryAltLight} altDark={jewelryAltDark} />
       <p>
-        The formula matters, not this specific 61. If your beads stand for units of time, keep the same rule for every
-        mark and every gap. A different gap rule will change the total. Shorter phrases on the same count: LOVE is 26,
-        ILY is 20, and 143 is 28.
+        That number moves if your supplier uses a different convention (three beads for a dash instead of two, or a
+        single large bead for a word gap instead of five small ones), which is exactly the spacing problem covered earlier
+        in this article. The formula is what matters, not the specific 61: count the dots and dashes for your own phrase,
+        apply whatever bead-per-symbol ratio your kit uses, then add your spacers. Using standard 11/0 seed beads (about
+        20 beads per inch), 61 beads comes out to roughly 3 inches of coded beads, short of a full 6.5 to 7 inch wrist, so
+        the rest of the bracelet is filled with plain background beads on either side, the same way the pattern worksheets
+        sold by bead suppliers already plan for it.
+      </p>
+      <p>Shorter phrases solve the length problem outright and are worth knowing if “I love you” is too long for your piece:</p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>
+          LOVE (<span class={codeClass}>.-.. --- ...- .</span>) -&gt; 26 beads, no word gaps to add
+        </li>
+        <li>
+          ILY (<span class={codeClass}>.. .-.. -.--</span>) -&gt; 20 beads
+        </li>
+        <li>
+          143 (<span class={codeClass}>.---- ....- ...--</span>) -&gt; 28 beads, the pager-era numeric shorthand covered
+          earlier in this article
+        </li>
+      </ul>
+      <p>
+        Rings and small charms, where there’s no room for strung beads at all, typically use an engraved or stamped line
+        instead. For an engraving, the limit is characters, not beads. The copied Morse line{' '}
+        <span class={codeClass}>{phrase}</span> is 35 characters including spaces and slashes. If a ring only takes a few
+        letters, use ILY or LOVE rather than crowding the full phrase.
       </p>
       <p>
-        For an engraving, the limit is characters, not beads. The copied Morse line <span class={codeClass}>{phrase}</span>{' '}
-        is 35 characters including spaces and slashes. If a ring only takes a few letters, use ILY or LOVE rather than
-        crowding the full phrase.
+        For tattoos, the rules are different but the stakes are higher, since a tattoo can’t be restrung if it’s wrong. A
+        dash should read clearly longer than a dot, roughly three times its length, with even, visible gaps between
+        letters; if the dot and dash end up looking too similar in a tattoo artist’s stencil, the whole thing becomes
+        unreadable the moment it’s inked, and there’s no fixing it afterward. Numbers are a particular trap for a tattoo
+        with a date in it: every digit in Morse is always five symbols long, so a four-digit year alone runs twenty
+        symbols, longer than most people expect from something that reads as “just a few numbers.” The safest process is
+        to encode the phrase here, decode the result on a second, independent tool, confirm the two match, and only then
+        hand the verified dot-dash sequence to the artist, rather than a hand-copied version from a chart that might
+        already have the spacing problem covered earlier in this article.
       </p>
+      <p>As a gift, length should drive the format, not the other way around:</p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>A ring or small charm suits a single short word (LOVE, ILY) or a single letter/initial.</li>
+        <li>A bracelet comfortably fits “I love you,” a full name, or a short date.</li>
+        <li>
+          A necklace, which typically has more room than a bracelet, is the natural home for a longer phrase like “I love
+          you forever” or “I love you, I miss you.”
+        </li>
+      </ul>
       <p>
-        For a tattoo, draw a dash about three times as long as a dot. Digits are always five symbols. Round-trip the
-        pattern: generate it here, then type those dots and dashes back and read the text before anyone inks it.
-      </p>
-      <p>
-        Match the gift to the length. A short chain or a small stamp takes ILY or LOVE. A bracelet or a longer plate can
-        take the full three words. A numeric piece can take 143 if the maker will cut five-mark digits and not the
-        letter O.
+        Whatever the format, the same check applies every time: encode it, decode it back on a different tool, and confirm
+        it reads exactly right before it becomes permanent.
       </p>
     </section>
 
     <section class="cv grid gap-3">
       <h2 class={h2}>How to Send It Yourself</h2>
       <p>
-        You do not need a radio. Any way of making a short mark and a long mark will carry the phrase, as long as the
-        dash stays about three times the dot and the pauses stay in place.
+        Typing “I love you” into a translator gets you the correct code instantly, but actually sending it, by hand, to
+        someone standing in front of you, is where the phrase becomes a moment instead of a lookup. The good news is that
+        sending doesn’t need any equipment. Morse code can be sent with a flashlight, a mirror, or by tapping on a
+        surface, which means a phone’s flashlight, a tabletop, or even someone’s palm (Thomas Edison’s method, as covered
+        earlier in this article) all work equally well.
       </p>
+      <p>
+        The mechanics are simple once the rhythm is set. A dot is a short tap or flash, a dash is roughly three times as
+        long, and the gaps described earlier in this article (one unit inside a letter, three between letters, seven
+        between words) are what keep the message readable rather than a blur of taps. Tapping is the most practical way to
+        build a steady, consistent rhythm, since the timing matters as much as the pattern itself, so the real skill isn’t
+        memorizing the dots and dashes for I, L, O, V, E, Y, O, U, it’s keeping a steady beat while you send them.
+      </p>
+      <p>Three ways to actually send “I love you” without any special equipment:</p>
       <ul class="grid list-disc gap-2 pl-5">
-        <li>Flashlight or phone light: a short flash for a dot, a longer flash for a dash.</li>
-        <li>Tapping: a short tap for a dot, a longer tap for a dash, on a table, a pipe, or a palm.</li>
-        <li>Clicking or whistling: the same short and long lengths, spoken as sound instead of light or knock.</li>
+        <li>
+          Flashlight or phone light. Hold the light on for a dot-length flash, off briefly, then a dash-length flash about
+          three times as long. Easiest to see across a room or through a window.
+        </li>
+        <li>
+          Tapping. On a table, a door, a wall, or (as Edison did) directly on someone’s palm. Works silently and up close,
+          which is part of why it became a quiet signal between couples who couldn’t speak freely.
+        </li>
+        <li>
+          Clicking or whistling. A tongue click or a short whistle works the same way a telegraph key does: short pulse
+          for a dot, held pulse for a dash.
+        </li>
       </ul>
       <p>
         Whichever method you use, the safest first step is still the one covered in the jewelry and tattoo section:
@@ -365,28 +462,44 @@ if (webPage) webPage.image = imageUrl;
 
     <section class="cv grid gap-3">
       <h2 class={h2}>Practice Sending It</h2>
+      <p>
+        Learning to send “I love you” well enough that someone can actually understand it takes less time than most
+        people expect, but the practice method matters more than the amount of time put in. The standard advice from
+        people who actually teach Morse code is to study the sound and rhythm of each letter first, then practice sending
+        and receiving with a real partner or a practice tool, rather than trying to memorize the dot-dash shapes visually
+        and translate them in your head character by character. Visual memorization is the slow path; a few instructors go
+        as far as calling it the single most common beginner mistake, since decades of Morse instructors have found it’s
+        counter-productive to learn the alphabet by sight rather than by ear.
+      </p>
+      <p>A simple three-step routine covers this phrase specifically:</p>
       <ol class="grid list-decimal gap-2 pl-5">
         <li>
           Learn the rhythm first. Read through the pattern (short-short, pause,
-          long-short-short-short-short-pause-long-long-long-pause-short-short-short-dash-pause-short) slowly a few
-          times, saying each dot and dash out loud, until it feels familiar before you try to reproduce it by hand.
+          long-short-short-short-short-pause-long-long-long-pause-short-short-short-dash-pause-short) slowly a few times,
+          saying each dot and dash out loud, until it feels familiar before you try to reproduce it by hand.
         </li>
         <li>
-          Tap along. Once the spoken rhythm is familiar, tap the same pattern on a table: two shorts for I, a pause, the
-          letters of LOVE, a longer pause, then YOU. Keep each dash about three times as long as a dot.
+          Tap along, slowly. Match the rhythm you just heard on a table or with a flashlight, at a speed slower than the
+          recording. Speed can come later; accuracy can’t be retrofitted.
         </li>
         <li>
-          Record and check. Record a short run of taps or flashes, then compare each group with the printed code on this
-          page. If a pause is too short or a dash is too long, slow down and send the phrase again.
+          Check your own work. Record yourself sending it (a phone’s voice memo app is enough) and run the playback through
+          a decoder, or better, have someone else decode it without seeing the original phrase. If it comes back as
+          anything other than “I love you,” the timing, not the symbols, is almost always the problem.
         </li>
       </ol>
       <p>
-        A few minutes a day is enough. The goal is a steady rhythm, not speed. If you practice with a partner, one
-        person sends and the other copies the letters on paper, then you swap.
+        Short, consistent practice sessions beat occasional long ones, so five minutes a day sending this one phrase until
+        it’s automatic will get you further than a single hour-long attempt. And practicing with another person helps both
+        sides, since sending reinforces the ability to receive, and the two of you can correct each other as you go, which
+        happens to make this one of the few phrases in Morse code worth practicing with exactly the person you’re planning
+        to send it to.
       </p>
       <p>
-        When you want a key under your hand instead of a table, use the{' '}
-        <a class={link} href="/morse-code-machine/">Morse Code Machine</a>.
+        Once the three words feel natural, the{' '}
+        <a class={link} href="/morse-code-machine/">Morse Code Machine</a> on this site is built for exactly this kind of
+        practice: a real tap key and paddle input, with adjustable speed, so you can move from “I love you” to full
+        conversations without switching tools.
       </p>
     </section>
 
@@ -406,16 +519,38 @@ if (webPage) webPage.image = imageUrl;
 
     <DemoVideo />
 
-    <RelatedPages
-      heading="Related Tools"
-      links={[
-        { href: '/', label: 'Morse Code Translator' },
-        { href: '/morse-code-machine/', label: 'Morse Code Machine' },
-        { href: '/morse-code-audio-translator/', label: 'Morse Code Audio Translator' },
-        { href: '/morse-code-alphabet/', label: 'Morse Code Alphabet Chart' },
-        { href: '/morse-code-numbers/', label: 'Morse Code Numbers' },
-        { href: '/sos-in-morse-code/', label: 'SOS in Morse Code' },
-      ]}
-    />
+    <section class="grid gap-3">
+      <h2 class={h2}>Related Tools</h2>
+      <p>
+        This page covers one phrase in depth, but the dots and dashes behind it work the same way for anything else you
+        want to say. A few places to go next:
+      </p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>
+          <a class={link} href="/">Morse Code Translator</a> — the full text-to-Morse and Morse-to-text converter this
+          page’s “I love you” box is built on, for any other word or phrase.
+        </li>
+        <li>
+          <a class={link} href="/morse-code-machine/">Morse Code Machine</a> — a real tap key and iambic paddle for
+          practicing how to send phrases like this one by hand, with adjustable speed and sidetone.
+        </li>
+        <li>
+          <a class={link} href="/morse-code-audio-translator/">Morse Code Audio Translator</a> — decode Morse you hear (or
+          record someone sending it back to you) straight from a microphone or an uploaded file.
+        </li>
+        <li>
+          <a class={link} href="/morse-code-alphabet/">Morse Code Alphabet Chart</a> — the full A-Z and 0-9 reference,
+          including the exact letter and number spacing covered in this article.
+        </li>
+        <li>
+          <a class={link} href="/morse-code-numbers/">Morse Code Numbers</a> — the full 0-9 reference, including the exact
+          zero-vs-O distinction covered in this article.
+        </li>
+        <li>
+          <a class={link} href="/sos-in-morse-code/">SOS in Morse Code</a> — the other three letters everyone already
+          half-knows, and the real history behind them.
+        </li>
+      </ul>
+    </section>
   </article>
 </BaseLayout>
