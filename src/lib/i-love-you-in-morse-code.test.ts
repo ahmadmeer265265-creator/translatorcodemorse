@@ -115,12 +115,15 @@ describe('I love you in Morse code page', () => {
     expect(html).toContain('data-demo-video');
     expect(html).toContain('https://www.youtube-nocookie.com/embed/Ni3vz9gQCgA?autoplay=1');
     const afterH1 = html.slice(html.indexOf('<h1'));
-    const heartAt = afterH1.indexOf('i-love-you-in-morse-code-featured');
     const introAt = afterH1.indexOf('one of the most searched Morse phrases');
+    const heartAt = afterH1.indexOf('i-love-you-in-morse-code-featured');
+    const whatIsAt = afterH1.indexOf('What Is “I Love You” in Morse Code?');
     expect(html).toContain('<h1');
-    expect(heartAt).toBeGreaterThan(-1);
-    expect(heartAt).toBeLessThan(introAt);
+    expect(introAt).toBeGreaterThan(-1);
+    expect(heartAt).toBeGreaterThan(introAt);
+    expect(whatIsAt).toBeGreaterThan(heartAt);
     expect(html).toContain('overflow-hidden rounded-xl border border-line bg-surface');
+    expect(html).toContain('rounded-2xl border border-line px-4 py-6 sm:px-8 sm:py-8');
   });
 
   it('puts every FAQ into JSON-LD word for word, without WebApplication schema', async () => {

@@ -118,7 +118,6 @@ if (webPage) webPage.image = imageUrl;
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'I Love You in Morse Code' }]} />
     <header class="grid gap-3 text-center">
       <h1 class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">I Love You in Morse Code (The Exact Pattern, Plus How to Actually Send It)</h1>
-      <ThemeSwapImage light={featuredLight} dark={featuredDark} altLight={imageAlt} altDark={imageAltDark} />
       <p>
         “I love you” in Morse code is <span class={codeClass}>{phrase}</span>, with a forward slash marking the space
         between words. It is one of the most searched Morse phrases online, usually for a bracelet, a tattoo, or a
@@ -126,6 +125,9 @@ if (webPage) webPage.image = imageUrl;
         interesting facts most sites skip, and real ways to send it yourself rather than just stare at dots and dashes
         on a screen.
       </p>
+      <div class="rounded-2xl border border-line px-4 py-6 sm:px-8 sm:py-8">
+        <ThemeSwapImage light={featuredLight} dark={featuredDark} altLight={imageAlt} altDark={imageAltDark} />
+      </div>
     </header>
 
     <section class="grid gap-3">
