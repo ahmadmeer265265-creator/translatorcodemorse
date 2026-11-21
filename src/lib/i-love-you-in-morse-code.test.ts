@@ -4,7 +4,7 @@ import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { describe, expect, it } from 'vitest';
 import { encode } from './morse';
 import { draftPageMeta, pageMeta } from '../config/pages';
-import { headerTopNav, primaryNav } from '../config/nav';
+import { headerToolsNav, headerTopNav, primaryNav } from '../config/nav';
 // @ts-expect-error .astro imports are resolved by the Astro Vite plugin
 import LovePage from '../pages/i-love-you-in-morse-code.astro';
 
@@ -20,12 +20,23 @@ const reciprocal = [
   { file: 'src/components/morse-machine/MorseArticle.astro', text: 'I Love You in Morse Code' },
 ] as const;
 
+const OG_IMAGE_PATH = '/i-love-you-in-morse-code-featured.webp';
+const OG_IMAGE_ALT =
+  'Illustration of Morse code dots and dashes arranged into a heart on a warm cream background';
+const TITLE = 'I Love You in Morse Code: ILY, 143, and How to Send It';
+const DESCRIPTION =
+  'I love you in Morse code, letter by letter: the full International Morse phrase, ILY, 143, bead counts for jewelry, and how to send it by light or tap.';
+
 describe('I love you in Morse code page', () => {
-  it('is a draft page, not in the sitemap index or nav', () => {
-    expect(draftPageMeta.some((page) => page.path === PATH)).toBe(true);
-    expect(pageMeta.some((page) => page.path === PATH)).toBe(false);
+  it('is live and indexable, but not in the header or footer nav', () => {
+    expect(pageMeta.some((page) => page.path === PATH)).toBe(true);
+    expect(draftPageMeta.some((page) => page.path === PATH)).toBe(false);
     expect(primaryNav.some((item) => item.href === PATH)).toBe(false);
     expect(headerTopNav.some((item) => item.href === PATH)).toBe(false);
+    expect(headerToolsNav.some((item) => item.href === PATH)).toBe(false);
+    expect([...TITLE].length).toBeLessThanOrEqual(60);
+    expect([...DESCRIPTION].length).toBeGreaterThanOrEqual(140);
+    expect([...DESCRIPTION].length).toBeLessThanOrEqual(155);
   });
 
   it('encodes the headline phrase the way the translator does', () => {
@@ -51,7 +62,15 @@ describe('I love you in Morse code page', () => {
     const html = await container.renderToString(LovePage as never);
     expect(html.match(/<h1\b/g)?.length).toBe(1);
     expect(html).toContain('>I Love You in Morse Code</h1>');
-    expect(html).toContain('name="robots" content="noindex, follow"');
+    expect(html).toContain(`<title>${TITLE}</title>`);
+    expect(html).toContain(`name="description" content="${DESCRIPTION}"`);
+    expect(html).toContain('name="robots" content="index, follow"');
+    expect(html).not.toContain('name="keywords"');
+    expect(html).toContain('property="og:type" content="article"');
+    expect(html).toContain(OG_IMAGE_PATH);
+    expect(html).toContain(`property="og:image:alt" content="${OG_IMAGE_ALT}"`);
+    expect(html).not.toContain('og-default.jpg');
+    expect(html).toContain(OG_IMAGE_ALT);
     expect(html).toContain('What Is “I Love You” in Morse Code?');
     expect(html).toContain('Quick Facts');
     expect(html).toContain('Romantic Phrase Variants');
@@ -77,6 +96,33 @@ describe('I love you in Morse code page', () => {
     expect(html.toLowerCase()).not.toContain('downloadable audio');
     expect(html.toLowerCase()).not.toContain('shareable link');
     expect(html.toLowerCase()).not.toContain('shareable pre-decoded');
+  });
+
+  it('puts every FAQ into JSON-LD word for word, without WebApplication schema', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(LovePage as never);
+    const raw = html.match(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/)?.[1];
+    expect(raw).toBeTruthy();
+    const blocks = JSON.parse(raw!.replaceAll('\\u003c', '<')) as {
+      '@type'?: string;
+      image?: string;
+      mainEntity?: { name: string; acceptedAnswer: { text: string } }[];
+    }[];
+    expect(blocks.map((block) => block['@type']).sort()).toEqual(['BreadcrumbList', 'FAQPage', 'WebPage']);
+    const page = blocks.find((block) => block['@type'] === 'WebPage');
+    const faq = blocks.find((block) => block['@type'] === 'FAQPage');
+    expect(page?.image).toContain(OG_IMAGE_PATH);
+    const faqHtml = html.match(/<section class="cv cv-faq[\s\S]*?<\/section>/)?.[0] ?? '';
+    const details = [...faqHtml.matchAll(/<summary[^>]*>([\s\S]*?)<\/summary>\s*<p[^>]*>([\s\S]*?)<\/p>/g)].map(
+      (match) => ({
+        question: match[1].replace(/<[^>]+>/g, '').trim(),
+        answer: match[2].replace(/<[^>]+>/g, '').trim(),
+      }),
+    );
+    expect(details).toHaveLength(8);
+    expect(faq?.mainEntity?.map((entry) => ({ question: entry.name, answer: entry.acceptedAnswer.text }))).toEqual(
+      details,
+    );
   });
 
   it('adds one reciprocal related-tools link from each of the six destinations', () => {

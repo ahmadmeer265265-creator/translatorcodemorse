@@ -1,11 +1,22 @@
 ---
+import { Image } from 'astro:assets';
+import featuredImage from '../assets/brand/i-love-you-in-morse-code-featured.webp';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import RelatedPages from '../components/RelatedPages.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
 
-const title = 'I Love You in Morse Code';
+const title = 'I Love You in Morse Code: ILY, 143, and How to Send It';
 const description =
-  'The Morse code for I love you, letter by letter, plus ILY, 143, bead counts for jewelry, and how to send the phrase by light or tap.';
+  'I love you in Morse code, letter by letter: the full International Morse phrase, ILY, 143, bead counts for jewelry, and how to send it by light or tap.';
+const pagePath = '/i-love-you-in-morse-code/';
+const pageUrl = absoluteUrl(pagePath);
+const imagePath = '/i-love-you-in-morse-code-featured.webp';
+const imageAlt =
+  'Illustration of Morse code dots and dashes arranged into a heart on a warm cream background';
+const imageUrl = absoluteUrl(imagePath);
 
 const link = 'text-accent underline underline-offset-4';
 const h2 = 'text-2xl font-semibold tracking-tight';
@@ -76,11 +87,46 @@ const faqs = [
       'Not until you have checked it. A dash should be about three times as long as a dot. Every digit is five symbols. Type the finished pattern back into the translator and read the text before anyone inks it.',
   },
 ] as const;
+
+const jsonLd = supportingJsonLd({
+  name: 'I Love You in Morse Code',
+  description,
+  url: pageUrl,
+  crumbs: [
+    { name: 'Home', url: absoluteUrl('/') },
+    { name: 'I Love You in Morse Code', url: pageUrl },
+  ],
+  faqs,
+  dateModified: lastUpdatedIso(pagePath),
+});
+const webPage = jsonLd.find((block) => block['@type'] === 'WebPage');
+if (webPage) webPage.image = imageUrl;
 ---
 
-<BaseLayout title={title} description={description} robots="noindex, follow" suffix={false}>
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  jsonLd={jsonLd}
+  suffix={false}
+  image={imagePath}
+  imageAlt={imageAlt}
+>
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'I Love You in Morse Code' }]} />
+    <figure class="overflow-hidden rounded-xl border border-line bg-surface">
+      <Image
+        src={featuredImage}
+        alt={imageAlt}
+        width={1200}
+        height={630}
+        widths={[480, 768, 1200]}
+        sizes="(max-width: 640px) 100vw, 768px"
+        loading="lazy"
+        decoding="async"
+        class="block h-auto w-full"
+      />
+    </figure>
     <header class="grid gap-3">
       <h1 class="text-3xl font-semibold tracking-tight">I Love You in Morse Code</h1>
       <p>

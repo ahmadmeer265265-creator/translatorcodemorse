@@ -12,6 +12,7 @@ export const pageMeta = [
   { path: '/morse-code-alphabet/', lastUpdated: '2026-10-07' },
   { path: '/morse-code-numbers/', lastUpdated: '2026-10-07' },
   { path: '/sos-in-morse-code/', lastUpdated: '2026-10-07' },
+  { path: '/i-love-you-in-morse-code/', lastUpdated: '2026-11-21' },
   { path: '/morse-code-speed-statistics/', lastUpdated: '2026-11-09' },
   { path: '/about/', lastUpdated: '2026-10-19' },
   { path: '/privacy/', lastUpdated: '2026-10-26' },
@@ -21,9 +22,7 @@ export const pageMeta = [
 ] as const;
 
 /** Unpublished pages. Empty while every built page is in pageMeta. */
-export const draftPageMeta = [
-  { path: '/i-love-you-in-morse-code/', lastUpdated: '2026-11-21' },
-] as const;
+export const draftPageMeta = [] as const;
 
 export type PagePath = (typeof pageMeta)[number]['path'] | (typeof draftPageMeta)[number]['path'];
 
