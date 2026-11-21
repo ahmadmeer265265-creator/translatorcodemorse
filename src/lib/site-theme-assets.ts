@@ -1,6 +1,7 @@
 /**
  * One watcher for site theme (documentElement data-theme), not OS preference.
- * Drives favicon hrefs, the header logo slot, and the homepage feature slot.
+ * Drives favicon hrefs, the header logo slot, and every [data-article-feature]
+ * slot (homepage hero plus any content-page illustrations).
  */
 export type SiteTheme = 'light' | 'dark';
 
@@ -40,20 +41,23 @@ function featureIsNear(root: Element) {
 
 export function initSiteThemeAssets() {
   const logo = document.querySelector('[data-theme-logo]');
-  const feature = document.querySelector('[data-article-feature]');
-  let featureReady = false;
+  const features = [...document.querySelectorAll('[data-article-feature]')];
+  const ready = new Set<Element>();
 
   const apply = () => {
     const theme = siteTheme();
     syncFavicons(theme);
     fillThemeSlot(logo, theme);
-    if (feature && featureReady) fillThemeSlot(feature, theme);
+    for (const feature of features) {
+      if (ready.has(feature)) fillThemeSlot(feature, theme);
+    }
   };
 
-  if (feature instanceof HTMLElement) {
+  for (const feature of features) {
+    if (!(feature instanceof HTMLElement)) continue;
     const arm = () => {
-      if (featureReady || !featureIsNear(feature)) return;
-      featureReady = true;
+      if (ready.has(feature) || !featureIsNear(feature)) return;
+      ready.add(feature);
       io.disconnect();
       window.removeEventListener('scroll', arm);
       window.removeEventListener('resize', arm);

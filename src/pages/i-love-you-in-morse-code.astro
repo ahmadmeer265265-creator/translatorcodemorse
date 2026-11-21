@@ -1,8 +1,12 @@
 ---
-import { Image } from 'astro:assets';
-import featuredImage from '../assets/brand/i-love-you-in-morse-code-featured.webp';
+import featuredDark from '../assets/brand/i-love-you-in-morse-code-featured-dark.webp';
+import featuredLight from '../assets/brand/i-love-you-in-morse-code-featured.webp';
+import jewelryDark from '../assets/brand/i-love-you-in-morse-code-jewelry-dark.webp';
+import jewelryLight from '../assets/brand/i-love-you-in-morse-code-jewelry.webp';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import DemoVideo from '../components/DemoVideo.astro';
 import RelatedPages from '../components/RelatedPages.astro';
+import ThemeSwapImage from '../components/ThemeSwapImage.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { lastUpdatedIso } from '../config/pages';
 import { absoluteUrl } from '../config/site';
@@ -16,6 +20,12 @@ const pageUrl = absoluteUrl(pagePath);
 const imagePath = '/i-love-you-in-morse-code-featured.webp';
 const imageAlt =
   'Illustration of Morse code dots and dashes arranged into a heart on a warm cream background';
+const imageAltDark =
+  'Illustration of Morse code dots and dashes arranged into a heart on a dark brown background';
+const jewelryAltLight =
+  'Illustration of a Morse code beaded bracelet: copper round beads for dots and longer beads for dashes, on a warm cream background';
+const jewelryAltDark =
+  'Illustration of a Morse code beaded bracelet: copper round beads for dots and longer beads for dashes, on a dark brown background';
 const imageUrl = absoluteUrl(imagePath);
 
 const link = 'text-accent underline underline-offset-4';
@@ -114,19 +124,7 @@ if (webPage) webPage.image = imageUrl;
 >
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'I Love You in Morse Code' }]} />
-    <figure class="overflow-hidden rounded-xl border border-line bg-surface">
-      <Image
-        src={featuredImage}
-        alt={imageAlt}
-        width={1200}
-        height={630}
-        widths={[480, 768, 1200]}
-        sizes="(max-width: 640px) 100vw, 768px"
-        loading="lazy"
-        decoding="async"
-        class="block h-auto w-full"
-      />
-    </figure>
+    <ThemeSwapImage light={featuredLight} dark={featuredDark} altLight={imageAlt} altDark={imageAltDark} />
     <header class="grid gap-3">
       <h1 class="text-3xl font-semibold tracking-tight">I Love You in Morse Code</h1>
       <p>
@@ -323,6 +321,7 @@ if (webPage) webPage.image = imageUrl;
           </tbody>
         </table>
       </div>
+      <ThemeSwapImage light={jewelryLight} dark={jewelryDark} altLight={jewelryAltLight} altDark={jewelryAltDark} />
       <p>
         The formula matters, not this specific 61. If your beads stand for units of time, keep the same rule for every
         mark and every gap. A different gap rule will change the total. Shorter phrases on the same count: LOVE is 26,
@@ -404,6 +403,8 @@ if (webPage) webPage.image = imageUrl;
         }
       </div>
     </section>
+
+    <DemoVideo />
 
     <RelatedPages
       heading="Related Tools"

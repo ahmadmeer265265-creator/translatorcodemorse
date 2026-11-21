@@ -96,6 +96,18 @@ describe('I love you in Morse code page', () => {
     expect(html.toLowerCase()).not.toContain('downloadable audio');
     expect(html.toLowerCase()).not.toContain('shareable link');
     expect(html.toLowerCase()).not.toContain('shareable pre-decoded');
+    expect(html.match(/<figure[^>]*data-article-feature/g)?.length).toBe(2);
+    expect(html).toContain('data-theme-src="light"');
+    expect(html).toContain('data-theme-src="dark"');
+    expect(html).toContain(
+      'Illustration of a Morse code beaded bracelet: copper round beads for dots and longer beads for dashes, on a warm cream background',
+    );
+    expect(html).toContain(
+      'Illustration of a Morse code beaded bracelet: copper round beads for dots and longer beads for dashes, on a dark brown background',
+    );
+    expect(html).toContain('Illustration of Morse code dots and dashes arranged into a heart on a dark brown background');
+    expect(html).toContain('data-demo-video');
+    expect(html).toContain('https://www.youtube-nocookie.com/embed/Ni3vz9gQCgA?autoplay=1');
   });
 
   it('puts every FAQ into JSON-LD word for word, without WebApplication schema', async () => {
@@ -123,6 +135,20 @@ describe('I love you in Morse code page', () => {
     expect(faq?.mainEntity?.map((entry) => ({ question: entry.name, answer: entry.acceptedAnswer.text }))).toEqual(
       details,
     );
+  });
+
+  it('reuses the homepage YouTube facade and the site theme-slot swap', () => {
+    const page = readFileSync(resolve('src/pages/i-love-you-in-morse-code.astro'), 'utf8');
+    const home = readFileSync(resolve('src/components/HomeArticle.astro'), 'utf8');
+    const demo = readFileSync(resolve('src/components/DemoVideo.astro'), 'utf8');
+    const theme = readFileSync(resolve('src/lib/site-theme-assets.ts'), 'utf8');
+    expect(page).toContain("import DemoVideo from '../components/DemoVideo.astro'");
+    expect(home).toContain("import DemoVideo from './DemoVideo.astro'");
+    expect(demo).toContain("const videoId = 'Ni3vz9gQCgA'");
+    expect(theme).toContain("querySelectorAll('[data-article-feature]')");
+    expect(primaryNav.some((item) => item.href === PATH)).toBe(false);
+    expect(headerTopNav.some((item) => item.href === PATH)).toBe(false);
+    expect(headerToolsNav.some((item) => item.href === PATH)).toBe(false);
   });
 
   it('adds one reciprocal related-tools link from each of the six destinations', () => {

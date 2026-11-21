@@ -1,0 +1,51 @@
+---
+/**
+ * Light/dark illustration swap using the site theme slot (same DOM contract as
+ * the homepage featured image and the header logo: template[data-theme-src] +
+ * [data-theme-slot], filled by initSiteThemeAssets).
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  light: ImageMetadata;
+  dark: ImageMetadata;
+  altLight: string;
+  altDark: string;
+}
+
+const { light, dark, altLight, altDark } = Astro.props;
+const imgClass = 'block h-auto w-full';
+---
+
+<figure class="article-feature overflow-hidden rounded-xl border border-line bg-surface" data-article-feature>
+  <template data-theme-src="light">
+    <Image
+      src={light}
+      alt={altLight}
+      width={1200}
+      height={630}
+      widths={[480, 768, 1200]}
+      sizes="(max-width: 640px) 100vw, 768px"
+      loading="lazy"
+      decoding="async"
+      class={imgClass}
+      data-theme-src="light"
+    />
+  </template>
+  <template data-theme-src="dark">
+    <Image
+      src={dark}
+      alt={altDark}
+      width={1200}
+      height={630}
+      widths={[480, 768, 1200]}
+      sizes="(max-width: 640px) 100vw, 768px"
+      loading="lazy"
+      decoding="async"
+      class={imgClass}
+      data-theme-src="dark"
+    />
+  </template>
+  <div class="article-feature-slot" data-theme-slot></div>
+</figure>
