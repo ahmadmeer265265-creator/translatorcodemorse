@@ -114,6 +114,13 @@ describe('I love you in Morse code page', () => {
     expect(html).toContain('Illustration of Morse code dots and dashes arranged into a heart on a dark brown background');
     expect(html).toContain('data-demo-video');
     expect(html).toContain('https://www.youtube-nocookie.com/embed/Ni3vz9gQCgA?autoplay=1');
+    const afterH1 = html.slice(html.indexOf('<h1'));
+    const heartAt = afterH1.indexOf('i-love-you-in-morse-code-featured');
+    const introAt = afterH1.indexOf('one of the most searched Morse phrases');
+    expect(html).toContain('<h1');
+    expect(heartAt).toBeGreaterThan(-1);
+    expect(heartAt).toBeLessThan(introAt);
+    expect(html).toContain('overflow-hidden rounded-xl border border-line bg-surface');
   });
 
   it('puts every FAQ into JSON-LD word for word, without WebApplication schema', async () => {

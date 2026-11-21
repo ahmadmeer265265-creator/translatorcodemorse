@@ -116,9 +116,9 @@ if (webPage) webPage.image = imageUrl;
 >
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'I Love You in Morse Code' }]} />
-    <ThemeSwapImage light={featuredLight} dark={featuredDark} altLight={imageAlt} altDark={imageAltDark} />
-    <header class="grid gap-3">
-      <h1 class="text-3xl font-semibold tracking-tight">I Love You in Morse Code (The Exact Pattern, Plus How to Actually Send It)</h1>
+    <header class="grid gap-3 text-center">
+      <h1 class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">I Love You in Morse Code (The Exact Pattern, Plus How to Actually Send It)</h1>
+      <ThemeSwapImage light={featuredLight} dark={featuredDark} altLight={imageAlt} altDark={imageAltDark} />
       <p>
         “I love you” in Morse code is <span class={codeClass}>{phrase}</span>, with a forward slash marking the space
         between words. It is one of the most searched Morse phrases online, usually for a bracelet, a tattoo, or a
