@@ -31,14 +31,3 @@
 
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
-
-# Embed widgets are iframed on other sites. More specific rules replace the
-# global X-Frame-Options: DENY and frame-ancestors 'none' for these paths only.
-# ALLOWALL is not a framing token, so browsers ignore X-Frame-Options here and
-# follow frame-ancestors *. Every other path stays DENY / frame-ancestors 'none'.
-/embed/morse-code-chart/
-/embed/morse-code-chart/*
-/embed/morse-code-translator/
-/embed/morse-code-translator/*
-  X-Frame-Options: ALLOWALL
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors *; frame-src 'self' https://www.youtube-nocookie.com; form-action 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'none'; media-src 'self' blob:; upgrade-insecure-requests
