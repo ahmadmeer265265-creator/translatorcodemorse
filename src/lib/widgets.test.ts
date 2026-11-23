@@ -47,8 +47,8 @@ describe('embeddable Morse widgets', () => {
     expect(headers).not.toContain('frame-ancestors *');
     const chartFn = readFileSync(resolve('functions/embed/morse-code-chart/[[path]].js'), 'utf8');
     const translatorFn = readFileSync(resolve('functions/embed/morse-code-translator/[[path]].js'), 'utf8');
-    expect(chartFn).toContain("from '../../../_lib/embed-framing.js'");
-    expect(translatorFn).toContain("from '../../../_lib/embed-framing.js'");
+    expect(chartFn).toContain("from '../../_lib/embed-framing.js'");
+    expect(translatorFn).toContain("from '../../_lib/embed-framing.js'");
   });
 
   it('lets the embed routes be framed and leaves every other header alone', async () => {

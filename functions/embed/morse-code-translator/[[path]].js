@@ -1,1 +1,1 @@
-export { onRequest } from '../../../_lib/embed-framing.js';
+export { onRequest } from '../../_lib/embed-framing.js';
