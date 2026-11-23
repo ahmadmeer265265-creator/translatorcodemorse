@@ -8,6 +8,14 @@ import { headerToolsNav, headerTopNav, primaryNav } from '../config/nav';
 import HowPage from '../pages/how-morse-code-works.astro';
 
 const PATH = '/how-morse-code-works/';
+const TITLE = 'How Morse Code Works: Timing, Alphabet, and Gaps';
+const DESCRIPTION =
+  'How Morse code works: a short mark and a long mark, held for fixed lengths, become letters, numbers, and words you can send by sound, light, or a tap.';
+const OG_IMAGE_PATH = '/how-morse-code-works-featured.webp';
+const ALT_LIGHT =
+  'Illustration of a vintage telegraph key with a Morse code wave of dots and dashes radiating outward, on a warm cream background';
+const ALT_DARK =
+  'Illustration of a vintage telegraph key with a Morse code wave of dots and dashes radiating outward, on a dark brown background';
 
 const headings = [
   'What Morse Code Actually Is',
@@ -45,23 +53,38 @@ const reciprocal = [
 ] as const;
 
 describe('How Morse code works page', () => {
-  it('is a noindex draft, outside the sitemap allowlist and the nav', () => {
-    expect(draftPageMeta.some((page) => page.path === PATH)).toBe(true);
-    expect(pageMeta.some((page) => page.path === PATH)).toBe(false);
+  it('is live and indexable, but not in the header or footer nav', () => {
+    expect(pageMeta.some((page) => page.path === PATH)).toBe(true);
+    expect(draftPageMeta.some((page) => page.path === PATH)).toBe(false);
     expect(primaryNav.some((item) => item.href === PATH)).toBe(false);
     expect(headerTopNav.some((item) => item.href === PATH)).toBe(false);
     expect(headerToolsNav.some((item) => item.href === PATH)).toBe(false);
+    expect([...TITLE].length).toBeLessThanOrEqual(60);
+    expect([...DESCRIPTION].length).toBeGreaterThanOrEqual(140);
+    expect([...DESCRIPTION].length).toBeLessThanOrEqual(155);
   });
 
-  it('renders the twelve sections in order, with no schema and no phrase translator', async () => {
+  it('renders the twelve sections in order, with schema and no phrase translator', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(HowPage as never);
     expect(html.match(/<h1\b/g)?.length).toBe(1);
     expect(html).toContain(
       '>How Morse Code Works (Timing, the Alphabet, and Why It Still Works)</h1>',
     );
-    expect(html).toContain('name="robots" content="noindex, follow"');
-    expect(html).not.toContain('application/ld+json');
+    expect(html).toContain(`<title>${TITLE}</title>`);
+    expect(html).toContain(`name="description" content="${DESCRIPTION}"`);
+    expect(html).toContain('name="robots" content="index, follow"');
+    expect(html).not.toContain('name="keywords"');
+    expect(html).toContain('property="og:type" content="article"');
+    expect(html).toContain(OG_IMAGE_PATH);
+    expect(html).toContain(`property="og:image:alt" content="${ALT_LIGHT}"`);
+    expect(html).not.toContain('og-default.jpg');
+    expect(html).toContain(ALT_LIGHT);
+    expect(html).toContain(ALT_DARK);
+    expect(html).toContain('data-theme-src="light"');
+    expect(html).toContain('data-theme-src="dark"');
+    expect(html).toContain('data-article-feature');
+    expect(html).toContain('application/ld+json');
     expect(html).not.toContain('href="/#text=');
     expect(html).not.toContain('i-love-you-copy');
 
@@ -85,6 +108,29 @@ describe('How Morse code works page', () => {
     expect(html).toContain('What does SK mean at the end of a Morse message?');
     const faq = html.slice(html.indexOf('>FAQ</h2>'), html.indexOf('>Related Tools</h2>'));
     expect(faq.match(/<details\b/g)?.length).toBe(10);
+
+    const raw = html.match(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/)?.[1];
+    expect(raw).toBeTruthy();
+    const blocks = JSON.parse(raw!.replaceAll('\\u003c', '<')) as {
+      '@type'?: string;
+      image?: string;
+      mainEntity?: { name: string; acceptedAnswer: { text: string } }[];
+    }[];
+    expect(blocks.map((block) => block['@type']).sort()).toEqual(['BreadcrumbList', 'FAQPage', 'WebPage']);
+    expect(blocks.some((block) => block['@type'] === 'WebApplication')).toBe(false);
+    const page = blocks.find((block) => block['@type'] === 'WebPage');
+    const faqLd = blocks.find((block) => block['@type'] === 'FAQPage');
+    expect(page?.image).toContain(OG_IMAGE_PATH);
+    const details = [...faq.matchAll(/<summary[^>]*>([\s\S]*?)<\/summary>\s*<p[^>]*>([\s\S]*?)<\/p>/g)].map(
+      (match) => ({
+        question: match[1].replace(/<[^>]+>/g, '').trim(),
+        answer: match[2].replace(/<[^>]+>/g, '').trim(),
+      }),
+    );
+    expect(details).toHaveLength(10);
+    expect(faqLd?.mainEntity?.map((entry) => ({ question: entry.name, answer: entry.acceptedAnswer.text }))).toEqual(
+      details,
+    );
   });
 
   it('does not repeat the numbers page or American page sentences', () => {

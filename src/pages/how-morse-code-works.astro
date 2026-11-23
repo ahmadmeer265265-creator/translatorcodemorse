@@ -1,10 +1,24 @@
 ---
+import featuredDark from '../assets/brand/how-morse-code-works-featured-dark.webp';
+import featuredLight from '../assets/brand/how-morse-code-works-featured.webp';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import ThemeSwapImage from '../components/ThemeSwapImage.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
 
-const title = 'How Morse Code Works';
+const title = 'How Morse Code Works: Timing, Alphabet, and Gaps';
 const description =
-  'How Morse code turns a short signal and a long signal into letters, numbers, and words, and why the timing still matters.';
+  'How Morse code works: a short mark and a long mark, held for fixed lengths, become letters, numbers, and words you can send by sound, light, or a tap.';
+const pagePath = '/how-morse-code-works/';
+const pageUrl = absoluteUrl(pagePath);
+const imagePath = '/how-morse-code-works-featured.webp';
+const imageAlt =
+  'Illustration of a vintage telegraph key with a Morse code wave of dots and dashes radiating outward, on a warm cream background';
+const imageAltDark =
+  'Illustration of a vintage telegraph key with a Morse code wave of dots and dashes radiating outward, on a dark brown background';
+const imageUrl = absoluteUrl(imagePath);
 
 const link = 'text-accent underline underline-offset-4';
 const h2 = 'text-2xl font-semibold tracking-tight';
@@ -69,13 +83,38 @@ const faqs = [
       'SK is a prosign, sent as one unbroken signal rather than as two separate letters, and it means the end of a contact or operating session entirely. It’s different from AR, a related prosign that just marks the end of one message or transmission rather than the whole exchange.',
   },
 ] as const;
+
+const jsonLd = supportingJsonLd({
+  name: 'How Morse Code Works',
+  description,
+  url: pageUrl,
+  crumbs: [
+    { name: 'Home', url: absoluteUrl('/') },
+    { name: 'How Morse Code Works', url: pageUrl },
+  ],
+  faqs,
+  dateModified: lastUpdatedIso(pagePath),
+});
+const webPage = jsonLd.find((block) => block['@type'] === 'WebPage');
+if (webPage) webPage.image = imageUrl;
 ---
 
-<BaseLayout title={title} description={description} robots="noindex, follow" suffix={false}>
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  jsonLd={jsonLd}
+  suffix={false}
+  image={imagePath}
+  imageAlt={imageAlt}
+>
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'How Morse Code Works' }]} />
-    <header>
+    <header class="grid gap-3">
       <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">How Morse Code Works (Timing, the Alphabet, and Why It Still Works)</h1>
+      <div class="rounded-2xl border border-line px-4 py-6 sm:px-8 sm:py-8">
+        <ThemeSwapImage light={featuredLight} dark={featuredDark} altLight={imageAlt} altDark={imageAltDark} />
+      </div>
     </header>
 
     <section class="grid gap-3">

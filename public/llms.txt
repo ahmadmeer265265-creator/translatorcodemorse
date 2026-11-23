@@ -10,6 +10,7 @@ Free browser-based Morse code translator at translatorcodemorse.com. Convert tex
 - [Morse code numbers](https://translatorcodemorse.com/morse-code-numbers/): Digit chart and tips for sending numbers
 - [SOS in Morse code](https://translatorcodemorse.com/sos-in-morse-code/): What SOS is, how it sounds and looks, and how to practice it
 - [I love you in Morse code](https://translatorcodemorse.com/i-love-you-in-morse-code/): The exact International Morse pattern, plus ILY, 143, jewelry bead counts, and how to send it
+- [How Morse code works](https://translatorcodemorse.com/how-morse-code-works/): How a short signal and a long signal, with fixed timing, become letters, numbers, and words
 - [About](https://translatorcodemorse.com/about/): What the tool does, privacy model, and who it is for
 - [Privacy](https://translatorcodemorse.com/privacy/): How the site handles data (processing stays in your browser)
 - [Terms of Use](https://translatorcodemorse.com/terms/): Terms of use, no warranty, and why not to rely on it for emergencies
