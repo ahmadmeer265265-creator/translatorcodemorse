@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morse Code Chart — free embed by translatorcodemorse.com</title>
+<meta name="robots" content="noindex, indexifembedded">
+<meta name="description" content="Embeddable interactive Morse code chart. Click any letter, number or punctuation mark to hear its Morse code. Free widget by translatorcodemorse.com.">
+<style>
+  :root{
+    --mc-bg:#ffffff; --mc-card:#f6f7f9; --mc-border:#d9dde3; --mc-text:#16181d;
+    --mc-muted:#5b6270; --mc-accent:#b3001b; --mc-accent-soft:#fdecec;
+    --mc-btn:#ffffff; --mc-btn-hover:#eef1f5; --mc-active:#ffd9de;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --mc-bg:#14161a; --mc-card:#1c1f26; --mc-border:#333947; --mc-text:#eceef2;
+      --mc-muted:#9aa3b2; --mc-accent:#ff5c73; --mc-accent-soft:#3a2329;
+      --mc-btn:#1c1f26; --mc-btn-hover:#262b36; --mc-active:#5a2b34;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:transparent;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--mc-text)}
+  .mc-wrap{max-width:720px;margin:0 auto;background:var(--mc-bg);border:1px solid var(--mc-border);border-radius:14px;padding:18px 18px 12px}
+  .mc-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .mc-title{font-size:20px;font-weight:700;margin:0}
+  .mc-sub{color:var(--mc-muted);font-size:13px;margin:2px 0 0}
+  .mc-word{display:flex;gap:8px;margin:14px 0 6px;flex-wrap:wrap}
+  .mc-word input{flex:1 1 200px;padding:10px 12px;font-size:16px;border:1px solid var(--mc-border);border-radius:9px;background:var(--mc-btn);color:var(--mc-text);text-transform:uppercase}
+  .mc-word select{padding:10px;border:1px solid var(--mc-border);border-radius:9px;background:var(--mc-btn);color:var(--mc-text);font-size:14px}
+  .mc-play,.mc-stop{padding:10px 18px;font-size:15px;font-weight:600;border-radius:9px;border:1px solid var(--mc-accent);cursor:pointer}
+  .mc-play{background:var(--mc-accent);color:#fff}
+  .mc-stop{background:transparent;color:var(--mc-accent)}
+  .mc-play:disabled,.mc-stop:disabled{opacity:.45;cursor:default}
+  .mc-now{font-size:14px;color:var(--mc-muted);min-height:20px;margin:4px 0 8px}
+  .mc-now b{color:var(--mc-text);letter-spacing:2px}
+  .mc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px;margin-top:8px}
+  .mc-key{background:var(--mc-btn);border:1px solid var(--mc-border);border-radius:10px;padding:8px 2px 7px;cursor:pointer;text-align:center;color:var(--mc-text);transition:background .15s,border-color .15s}
+  .mc-key:hover{background:var(--mc-btn-hover)}
+  .mc-key:focus-visible{outline:2px solid var(--mc-accent);outline-offset:1px}
+  .mc-key.playing{background:var(--mc-active);border-color:var(--mc-accent)}
+  .mc-ch{display:block;font-size:19px;font-weight:700;line-height:1.1}
+  .mc-code{display:flex;justify-content:center;align-items:center;gap:3px;margin-top:5px;min-height:10px}
+  .mc-dot{width:8px;height:8px;border-radius:50%;background:var(--mc-text);display:inline-block}
+  .mc-dash{width:20px;height:8px;border-radius:4px;background:var(--mc-text);display:inline-block}
+  .mc-sec{font-size:13px;font-weight:700;color:var(--mc-muted);text-transform:uppercase;letter-spacing:.08em;margin:16px 0 2px}
+  .mc-foot{border-top:1px solid var(--mc-border);margin-top:16px;padding-top:10px;font-size:13px;color:var(--mc-muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .mc-foot a{color:var(--mc-accent);text-decoration:none;font-weight:600}
+  .mc-foot a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="mc-wrap" id="mcChart">
+  <div class="mc-head">
+    <div>
+      <p class="mc-title">Morse Code Chart</p>
+      <p class="mc-sub">Click any letter, number or symbol to hear its Morse code.</p>
+    </div>
+  </div>
+
+  <div class="mc-word">
+    <input id="mcWord" type="text" maxlength="40" placeholder="Type a word, e.g. SOS or HELLO" aria-label="Type a word to hear it in Morse code">
+    <select id="mcSpeed" aria-label="Playback speed">
+      <option value="10">Slow · 10 WPM</option>
+      <option value="15" selected>Normal · 15 WPM</option>
+      <option value="22">Fast · 22 WPM</option>
+    </select>
+    <button class="mc-play" id="mcPlayWord" type="button">▶ Play</button>
+    <button class="mc-stop" id="mcStop" type="button" disabled>■ Stop</button>
+  </div>
+  <p class="mc-now" id="mcNow" aria-live="polite"></p>
+
+  <p class="mc-sec">Letters</p>
+  <div class="mc-grid" id="mcLetters"></div>
+  <p class="mc-sec">Numbers</p>
+  <div class="mc-grid" id="mcNumbers"></div>
+  <p class="mc-sec">Punctuation</p>
+  <div class="mc-grid" id="mcPunct"></div>
+
+  <div class="mc-foot">
+    <span>Interactive Morse code chart by <a href="https://translatorcodemorse.com/morse-code-alphabet/" target="_top" rel="nofollow noopener">translatorcodemorse.com</a></span>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var MORSE = {
+    "A":".-","B":"-...","C":"-.-.","D":"-..","E":".","F":"..-.","G":"--.","H":"....",
+    "I":"..","J":".---","K":"-.-","L":".-..","M":"--","N":"-.","O":"---","P":".--.",
+    "Q":"--.-","R":".-.","S":"...","T":"-","U":"..-","V":"...-","W":".--","X":"-..-",
+    "Y":"-.--","Z":"--..",
+    "1":".----","2":"..---","3":"...--","4":"....-","5":".....","6":"-....","7":"--...",
+    "8":"---..","9":"----.","0":"-----",
+    ".":".-.-.-",",":"--..--","?":"..--..","'":".----.","!":"-.-.--","/":"-..-.",
+    "(":"-.--.",")":"-.--.-","&":".-...",":":"---...",";":"-.-.-.","=":"-...-",
+    "+":".-.-.","-":"-....-","_":"..--.-","\"":".-..-.","$":"...-..-","@":".--.-."
+  };
+  var NAMES = {".":"full stop",",":"comma","?":"question mark","'":"apostrophe","!":"exclamation mark",
+    "/":"slash","(":"left bracket",")":"right bracket","&":"ampersand",":":"colon",";":"semicolon",
+    "=":"equals sign","+":"plus sign","-":"hyphen","_":"underscore","\"":"quotation mark","$":"dollar sign","@":"at sign"};
+
+  var actx = null, playing = false, stopFlag = false, timers = [];
+  function audio(){
+    if(!actx){ actx = new (window.AudioContext || window.webkitAudioContext)(); }
+    if(actx.state === "suspended"){ actx.resume(); }
+    return actx;
+  }
+  function unitMs(){ var wpm = parseInt(document.getElementById("mcSpeed").value, 10) || 15; return 1200 / wpm; }
+  function beep(startAt, durMs){
+    var ctx = audio(), osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.type = "sine"; osc.frequency.value = 600;
+    var t0 = startAt, t1 = startAt + durMs / 1000;
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(0.5, t0 + 0.008);
+    gain.gain.setValueAtTime(0.5, Math.max(t0 + 0.008, t1 - 0.008));
+    gain.gain.exponentialRampToValueAtTime(0.0001, t1);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(t0); osc.stop(t1 + 0.02);
+  }
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+
+  // Plays one character's code; calls done() when finished. Highlights its key if present.
+  function playChar(ch, done){
+    var code = MORSE[ch]; if(!code){ done && done(); return; }
+    var key = null;
+    document.querySelectorAll(".mc-key").forEach(function(k){ if(k.getAttribute("data-ch") === ch){ key = k; } });
+    var unit = unitMs(), ctx = audio(), t = ctx.currentTime + 0.05, total = 0;
+    if(key){ key.classList.add("playing"); }
+    for(var i = 0; i < code.length; i++){
+      var dur = (code[i] === "." ? 1 : 3) * unit;
+      beep(t + total / 1000, dur);
+      total += dur + unit; // element + intra-character gap
+    }
+    later(function(){ if(key){ key.classList.remove("playing"); } done && done(); }, total);
+  }
+
+  function setControls(on){
+    document.getElementById("mcPlayWord").disabled = on;
+    document.getElementById("mcStop").disabled = !on;
+    playing = on;
+  }
+  function stopAll(){
+    stopFlag = true; clearTimers();
+    document.querySelectorAll(".mc-key.playing").forEach(function(k){ k.classList.remove("playing"); });
+    setControls(false);
+    document.getElementById("mcNow").textContent = "";
+  }
+  document.getElementById("mcStop").addEventListener("click", stopAll);
+
+  function playWord(){
+    var raw = document.getElementById("mcWord").value.toUpperCase().replace(/\s+/g, " ").trim();
+    if(!raw){ document.getElementById("mcNow").textContent = "Type a word above first, or click any letter below."; return; }
+    stopFlag = false; setControls(true);
+    var chars = raw.split(""), idx = 0, now = document.getElementById("mcNow");
+    function next(){
+      if(stopFlag || idx >= chars.length){ setControls(false); if(!stopFlag){ now.innerHTML = "Done: <b>" + raw + "</b>"; } return; }
+      var ch = chars[idx++];
+      if(ch === " "){ later(next, unitMs() * 4); return; } // rest of word gap
+      if(!MORSE[ch]){ next(); return; }
+      now.innerHTML = "Now playing: <b>" + ch + "</b> &nbsp;" + MORSE[ch].split("").join(" ");
+      playChar(ch, function(){ later(next, unitMs() * 2); }); // rest of letter gap (1 already inside)
+    }
+    next();
+  }
+  document.getElementById("mcPlayWord").addEventListener("click", playWord);
+  document.getElementById("mcWord").addEventListener("keydown", function(e){ if(e.key === "Enter"){ playWord(); } });
+
+  function codeHTML(code){
+    return code.split("").map(function(s){ return s === "." ? '<span class="mc-dot"></span>' : '<span class="mc-dash"></span>'; }).join("");
+  }
+  function spoken(code){ return code.split("").map(function(s){ return s === "." ? "dot" : "dash"; }).join(" "); }
+  function build(id, chars){
+    var host = document.getElementById(id);
+    chars.forEach(function(ch){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "mc-key"; b.setAttribute("data-ch", ch);
+      var label = NAMES[ch] || ch;
+      b.setAttribute("aria-label", label + ", " + spoken(MORSE[ch]));
+      b.innerHTML = '<span class="mc-ch">' + (ch === "&" ? "&amp;" : ch === "<" ? "&lt;" : ch) + '</span><span class="mc-code" aria-hidden="true">' + codeHTML(MORSE[ch]) + "</span>";
+      b.addEventListener("click", function(){
+        stopAll(); stopFlag = false;
+        document.getElementById("mcNow").innerHTML = "<b>" + label + "</b> &nbsp;" + MORSE[ch].split("").join(" ");
+        playChar(ch, null);
+      });
+      host.appendChild(b);
+    });
+  }
+  build("mcLetters", "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""));
+  build("mcNumbers", "1234567890".split(""));
+  build("mcPunct", [".",",","?","'","!","/","(",")","&",":",";","=","+","-","_","\"","$","@"]);
+})();
+</script>
+</body>
+</html>

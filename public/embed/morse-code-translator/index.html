@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morse Code Translator — free embed by translatorcodemorse.com</title>
+<meta name="robots" content="noindex, indexifembedded">
+<meta name="description" content="Embeddable Morse code translator widget. Convert text to Morse code and Morse code back to text, with sound playback. Free widget by translatorcodemorse.com.">
+<style>
+  :root{
+    --mt-bg:#ffffff; --mt-border:#d9dde3; --mt-text:#16181d; --mt-muted:#5b6270;
+    --mt-accent:#b3001b; --mt-field:#f6f7f9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --mt-bg:#14161a; --mt-border:#333947; --mt-text:#eceef2; --mt-muted:#9aa3b2;
+      --mt-accent:#ff5c73; --mt-field:#1c1f26;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:transparent;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--mt-text)}
+  .mt-wrap{max-width:720px;margin:0 auto;background:var(--mt-bg);border:1px solid var(--mt-border);border-radius:14px;padding:18px 18px 12px}
+  .mt-title{font-size:20px;font-weight:700;margin:0}
+  .mt-sub{color:var(--mt-muted);font-size:13px;margin:2px 0 12px}
+  .mt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:560px){ .mt-grid{grid-template-columns:1fr} }
+  .mt-lab{font-size:13px;font-weight:700;color:var(--mt-muted);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:5px}
+  textarea{width:100%;min-height:104px;resize:vertical;padding:11px 12px;font-size:16px;line-height:1.45;border:1px solid var(--mt-border);border-radius:9px;background:var(--mt-field);color:var(--mt-text);font-family:inherit}
+  #mtMorse{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:1px}
+  .mt-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+  .mt-bar button{padding:9px 16px;font-size:14px;font-weight:600;border-radius:9px;cursor:pointer;border:1px solid var(--mt-accent)}
+  .mt-play{background:var(--mt-accent);color:#fff}
+  .mt-ghost{background:transparent;color:var(--mt-accent)}
+  .mt-bar button:disabled{opacity:.45;cursor:default}
+  .mt-bar select{padding:9px;border:1px solid var(--mt-border);border-radius:9px;background:var(--mt-field);color:var(--mt-text);font-size:14px}
+  .mt-msg{font-size:13px;color:var(--mt-muted);margin-left:auto;min-height:16px}
+  .mt-foot{border-top:1px solid var(--mt-border);margin-top:14px;padding-top:10px;font-size:13px;color:var(--mt-muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .mt-foot a{color:var(--mt-accent);text-decoration:none;font-weight:600}
+  .mt-foot a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="mt-wrap">
+  <p class="mt-title">Morse Code Translator</p>
+  <p class="mt-sub">Type in either box. Text becomes Morse, Morse becomes text, as you type.</p>
+
+  <div class="mt-grid">
+    <div>
+      <label class="mt-lab" for="mtText">Text</label>
+      <textarea id="mtText" placeholder="Type a message, e.g. HELLO WORLD" aria-label="Text to translate"></textarea>
+    </div>
+    <div>
+      <label class="mt-lab" for="mtMorse">Morse code</label>
+      <textarea id="mtMorse" placeholder="... --- ... means SOS" aria-label="Morse code to translate"></textarea>
+    </div>
+  </div>
+
+  <div class="mt-bar">
+    <button class="mt-play" id="mtPlay" type="button">▶ Play sound</button>
+    <button class="mt-ghost" id="mtStop" type="button" disabled>■ Stop</button>
+    <select id="mtSpeed" aria-label="Playback speed">
+      <option value="10">Slow · 10 WPM</option>
+      <option value="15" selected>Normal · 15 WPM</option>
+      <option value="22">Fast · 22 WPM</option>
+    </select>
+    <button class="mt-ghost" id="mtCopy" type="button">Copy Morse</button>
+    <button class="mt-ghost" id="mtClear" type="button">Clear</button>
+    <span class="mt-msg" id="mtMsg" aria-live="polite"></span>
+  </div>
+
+  <div class="mt-foot">
+    <span>Morse code translator by <a href="https://translatorcodemorse.com/" target="_top" rel="nofollow noopener">translatorcodemorse.com</a></span>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var MORSE = {
+    "A":".-","B":"-...","C":"-.-.","D":"-..","E":".","F":"..-.","G":"--.","H":"....",
+    "I":"..","J":".---","K":"-.-","L":".-..","M":"--","N":"-.","O":"---","P":".--.",
+    "Q":"--.-","R":".-.","S":"...","T":"-","U":"..-","V":"...-","W":".--","X":"-..-",
+    "Y":"-.--","Z":"--..",
+    "1":".----","2":"..---","3":"...--","4":"....-","5":".....","6":"-....","7":"--...",
+    "8":"---..","9":"----.","0":"-----",
+    ".":".-.-.-",",":"--..--","?":"..--..","'":".----.","!":"-.-.--","/":"-..-.",
+    "(":"-.--.",")":"-.--.-","&":".-...",":":"---...",";":"-.-.-.","=":"-...-",
+    "+":".-.-.","-":"-....-","_":"..--.-","\"":".-..-.","$":"...-..-","@":".--.-."
+  };
+  var REV = {}; Object.keys(MORSE).forEach(function(k){ REV[MORSE[k]] = k; });
+
+  var textEl = document.getElementById("mtText"), morseEl = document.getElementById("mtMorse"),
+      msgEl = document.getElementById("mtMsg"), lock = false;
+
+  function encode(str){
+    return str.toUpperCase().split(/\s+/).filter(Boolean).map(function(word){
+      return word.split("").map(function(ch){ return MORSE[ch] || ""; }).filter(Boolean).join(" ");
+    }).filter(Boolean).join(" / ");
+  }
+  function decode(str){
+    var cleaned = str.replace(/[•·]/g, ".").replace(/[−–—]/g, "-").trim();
+    if(!cleaned){ return ""; }
+    return cleaned.split(/\s*\/\s*|\s{2,}/).map(function(word){
+      return word.split(/\s+/).filter(Boolean).map(function(code){ return REV[code] || "�"; }).join("");
+    }).join(" ");
+  }
+  textEl.addEventListener("input", function(){
+    if(lock){ return; } lock = true; morseEl.value = encode(textEl.value); lock = false;
+  });
+  morseEl.addEventListener("input", function(){
+    if(lock){ return; } lock = true; textEl.value = decode(morseEl.value); lock = false;
+  });
+
+  var actx = null, timers = [], playing = false;
+  function audio(){
+    if(!actx){ actx = new (window.AudioContext || window.webkitAudioContext)(); }
+    if(actx.state === "suspended"){ actx.resume(); }
+    return actx;
+  }
+  function unitMs(){ var wpm = parseInt(document.getElementById("mtSpeed").value, 10) || 15; return 1200 / wpm; }
+  function beep(startAt, durMs){
+    var ctx = audio(), osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.type = "sine"; osc.frequency.value = 600;
+    var t0 = startAt, t1 = startAt + durMs / 1000;
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(0.5, t0 + 0.008);
+    gain.gain.setValueAtTime(0.5, Math.max(t0 + 0.008, t1 - 0.008));
+    gain.gain.exponentialRampToValueAtTime(0.0001, t1);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(t0); osc.stop(t1 + 0.02);
+  }
+  function setPlaying(on){
+    playing = on;
+    document.getElementById("mtPlay").disabled = on;
+    document.getElementById("mtStop").disabled = !on;
+  }
+  function stop(){
+    timers.forEach(clearTimeout); timers = []; setPlaying(false);
+  }
+  document.getElementById("mtStop").addEventListener("click", stop);
+
+  document.getElementById("mtPlay").addEventListener("click", function(){
+    var code = morseEl.value.trim();
+    if(!code){ msgEl.textContent = "Nothing to play yet. Type a message first."; return; }
+    msgEl.textContent = "";
+    var unit = unitMs(), ctx = audio(), t = ctx.currentTime + 0.06, total = 0;
+    var tokens = code.replace(/\//g, " / ").split(/\s+/).filter(Boolean);
+    tokens.forEach(function(tok){
+      if(tok === "/"){ total += unit * 7; return; }
+      for(var i = 0; i < tok.length; i++){
+        if(tok[i] !== "." && tok[i] !== "-"){ continue; }
+        var dur = (tok[i] === "." ? 1 : 3) * unit;
+        beep(t + total / 1000, dur);
+        total += dur + unit;
+      }
+      total += unit * 2; // letter gap (3 total, 1 already counted)
+    });
+    setPlaying(true);
+    timers.push(setTimeout(function(){ setPlaying(false); }, total + 100));
+  });
+
+  document.getElementById("mtCopy").addEventListener("click", function(){
+    var code = morseEl.value.trim();
+    if(!code){ msgEl.textContent = "Nothing to copy yet."; return; }
+    function done(){ msgEl.textContent = "Morse code copied."; }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(code).then(done, function(){ fallback(); });
+    } else { fallback(); }
+    function fallback(){ morseEl.select(); try{ document.execCommand("copy"); done(); }catch(e){ msgEl.textContent = "Copy failed, select the Morse box and copy manually."; } }
+  });
+  document.getElementById("mtClear").addEventListener("click", function(){
+    stop(); textEl.value = ""; morseEl.value = ""; msgEl.textContent = ""; textEl.focus();
+  });
+})();
+</script>
+</body>
+</html>

@@ -4,12 +4,13 @@
  * Do not derive lastmod from file mtime (Cloudflare clones reset mtimes every build).
  */
 export const pageMeta = [
-  { path: '/', lastUpdated: '2026-10-21' },
+  { path: '/', lastUpdated: '2026-11-23' },
   { path: '/morse-code-audio-translator/', lastUpdated: '2026-10-26' },
   { path: '/morse-code-image-translator/', lastUpdated: '2026-11-08' },
   { path: '/american-morse-code-translator/', lastUpdated: '2026-11-11' },
   { path: '/morse-code-machine/', lastUpdated: '2026-11-15' },
-  { path: '/morse-code-alphabet/', lastUpdated: '2026-10-07' },
+  { path: '/morse-code-alphabet/', lastUpdated: '2026-11-23' },
+  { path: '/widgets/', lastUpdated: '2026-11-23' },
   { path: '/morse-code-numbers/', lastUpdated: '2026-10-07' },
   { path: '/sos-in-morse-code/', lastUpdated: '2026-10-07' },
   { path: '/i-love-you-in-morse-code/', lastUpdated: '2026-11-21' },

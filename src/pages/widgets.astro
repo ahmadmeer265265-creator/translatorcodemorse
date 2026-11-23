@@ -1,0 +1,145 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'Free Morse Code Widgets for Your Website';
+const description =
+  'Embed a free interactive Morse code chart or mini translator on your website. Copy the code, paste it in, and it runs in the browser. No account, no cost.';
+
+const link = 'text-accent underline underline-offset-4';
+const h2 = 'text-2xl font-semibold tracking-tight';
+const frame = 'block w-full rounded-xl border border-line bg-surface';
+
+const chartEmbed = `<iframe src="https://translatorcodemorse.com/embed/morse-code-chart/" width="100%" height="640" style="border:1px solid #d9dde3;border-radius:14px;max-width:720px" loading="lazy" title="Interactive Morse Code Chart by translatorcodemorse.com"></iframe>
+<p style="font-size:13px;color:#666">Interactive <a href="https://translatorcodemorse.com/morse-code-alphabet/" rel="nofollow">Morse code chart</a> by translatorcodemorse.com</p>`;
+
+const translatorEmbed = `<iframe src="https://translatorcodemorse.com/embed/morse-code-translator/" width="100%" height="430" style="border:1px solid #d9dde3;border-radius:14px;max-width:720px" loading="lazy" title="Morse Code Translator by translatorcodemorse.com"></iframe>
+<p style="font-size:13px;color:#666"><a href="https://translatorcodemorse.com/" rel="nofollow">Morse code translator</a> by translatorcodemorse.com</p>`;
+
+const creditNote =
+  'The line under the widget is a thank-you credit. Keep it, edit it or remove it — the widget works the same either way.';
+---
+
+<BaseLayout title={title} description={description} suffix={false}>
+  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Widgets' }]} />
+    <header class="grid gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight">Free Morse Code Widgets for Your Website</h1>
+      <p>
+        Run a class, a scout group, a museum page, a puzzle or geocaching site, or a blog about radio? You can put our
+        Morse code tools on your own page, free. Pick a widget below, copy its code, and paste it into your page where
+        you want it to appear. It works on WordPress, Wix, Blogger, Squarespace and plain HTML pages, and it runs
+        entirely in the visitor's browser.
+      </p>
+    </header>
+
+    <section class="grid gap-3">
+      <h2 class={h2}>Interactive Morse Code Chart</h2>
+      <p>
+        The full Morse alphabet as clickable tiles. Visitors click any letter, number or punctuation mark and hear its
+        Morse code, or type a word and play the whole thing. Good for teaching pages, scout activities and reference
+        posts.
+      </p>
+      <iframe
+        class={frame}
+        src="/embed/morse-code-chart/"
+        width="100%"
+        height="640"
+        loading="lazy"
+        title="Interactive Morse Code Chart by translatorcodemorse.com"></iframe>
+      <div class="grid gap-2">
+        <button
+          class="inline-flex min-h-11 w-fit items-center rounded-xl border border-line bg-surface px-3 text-sm font-semibold"
+          type="button"
+          data-embed-copy>Copy</button>
+        <pre class="overflow-x-auto rounded-xl border border-line bg-surface p-3 text-sm leading-6" data-embed-code><code>{chartEmbed}</code></pre>
+      </div>
+      <p class="text-sm text-muted">{creditNote}</p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class={h2}>Mini Morse Code Translator</h2>
+      <p>
+        A compact two-way translator. Visitors type plain text and get Morse code, or paste Morse code and get text
+        back, with a play button that sounds it out. Handy next to articles, lessons and puzzle solutions.
+      </p>
+      <iframe
+        class={frame}
+        src="/embed/morse-code-translator/"
+        width="100%"
+        height="430"
+        loading="lazy"
+        title="Morse Code Translator by translatorcodemorse.com"></iframe>
+      <div class="grid gap-2">
+        <button
+          class="inline-flex min-h-11 w-fit items-center rounded-xl border border-line bg-surface px-3 text-sm font-semibold"
+          type="button"
+          data-embed-copy>Copy</button>
+        <pre class="overflow-x-auto rounded-xl border border-line bg-surface p-3 text-sm leading-6" data-embed-code><code>{translatorEmbed}</code></pre>
+      </div>
+      <p class="text-sm text-muted">{creditNote}</p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class={h2}>Good to know</h2>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>Free forever. No account, no API key, no sign-up.</li>
+        <li>Nothing to install on your server — one paste and it runs.</li>
+        <li>Works on phones and tablets, and in light and dark mode.</li>
+        <li>You can change the width and height numbers in the code to fit your layout.</li>
+        <li>
+          Questions or a problem with a widget? Contact us:{' '}
+          <a class={link} href="https://translatorcodemorse.com/contact/">https://translatorcodemorse.com/contact/</a>
+        </li>
+      </ul>
+    </section>
+
+    <section class="cv cv-faq grid gap-3">
+      <h2 class={h2}>Questions</h2>
+      <div class="grid gap-4">
+        <details class="rounded-xl border border-line bg-surface px-3 py-2">
+          <summary class="flex min-h-11 cursor-pointer items-center font-semibold">Is it really free?</summary>
+          <p class="pb-2 text-muted">Yes. The widgets are free to use on any website, including commercial ones.</p>
+        </details>
+        <details class="rounded-xl border border-line bg-surface px-3 py-2">
+          <summary class="flex min-h-11 cursor-pointer items-center font-semibold">Do I have to keep the credit line?</summary>
+          <p class="pb-2 text-muted">
+            No. The small line under each widget is a thank-you, not a condition. Keep it, change it or delete it.
+          </p>
+        </details>
+        <details class="rounded-xl border border-line bg-surface px-3 py-2">
+          <summary class="flex min-h-11 cursor-pointer items-center font-semibold">Will it slow my page down?</summary>
+          <p class="pb-2 text-muted">
+            The widgets are single small files and the codes above load them lazily, only when a visitor scrolls near
+            them.
+          </p>
+        </details>
+        <details class="rounded-xl border border-line bg-surface px-3 py-2">
+          <summary class="flex min-h-11 cursor-pointer items-center font-semibold">Can I use it in a classroom?</summary>
+          <p class="pb-2 text-muted">
+            Please do. The chart was made for learning Morse code by ear, which is how it is meant to be taught.
+          </p>
+        </details>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<script is:inline>
+  document.querySelectorAll('[data-embed-copy]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var block = button.parentElement && button.parentElement.querySelector('[data-embed-code]');
+      var text = block ? block.innerText : '';
+      var label = button.textContent;
+      function done() {
+        button.textContent = 'Copied';
+        setTimeout(function () {
+          button.textContent = label;
+        }, 1600);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () {});
+      }
+    });
+  });
+</script>
