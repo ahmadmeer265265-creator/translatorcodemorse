@@ -96,7 +96,7 @@
   <div class="mc-grid" id="mcPunct"></div>
 
   <div class="mc-foot">
-    <span>Interactive Morse code chart by <a href="https://translatorcodemorse.com/morse-code-alphabet/" target="_top" rel="nofollow noopener">translatorcodemorse.com</a></span>
+    <span>Interactive Morse code chart by <a href="https://translatorcodemorse.com/morse-code-alphabet/" target="_blank" rel="nofollow noopener">translatorcodemorse.com</a></span>
   </div>
 </div>
 
@@ -119,6 +119,7 @@
     "=":"equals sign","+":"plus sign","-":"hyphen","_":"underscore","\"":"quotation mark","$":"dollar sign","@":"at sign"};
 
   var actx = null, playing = false, stopFlag = false, timers = [];
+  var activeOsc = [];
   function audio(){
     if(!actx){ actx = new (window.AudioContext || window.webkitAudioContext)(); }
     if(actx.state === "suspended"){ actx.resume(); }
@@ -135,6 +136,9 @@
     gain.gain.exponentialRampToValueAtTime(0.0001, t1);
     osc.connect(gain); gain.connect(ctx.destination);
     osc.start(t0); osc.stop(t1 + 0.02);
+    var rec = {osc: osc, gain: gain};
+    activeOsc.push(rec);
+    osc.onended = function(){ var i = activeOsc.indexOf(rec); if(i !== -1){ activeOsc.splice(i, 1); } };
   }
   function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
   function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
@@ -159,8 +163,19 @@
     document.getElementById("mcStop").disabled = !on;
     playing = on;
   }
+  function silence(){
+    if(!actx){ return; }
+    var now = actx.currentTime;
+    activeOsc.splice(0).forEach(function(r){
+      try{
+        r.gain.gain.cancelScheduledValues(now);
+        r.gain.gain.setTargetAtTime(0.0001, now, 0.01);
+        r.osc.stop(now + 0.06);
+      }catch(e){}
+    });
+  }
   function stopAll(){
-    stopFlag = true; clearTimers();
+    stopFlag = true; clearTimers(); silence();
     document.querySelectorAll(".mc-key.playing").forEach(function(k){ k.classList.remove("playing"); });
     setControls(false);
     document.getElementById("mcNow").textContent = "";

@@ -38,7 +38,8 @@ describe('embeddable Morse widgets', () => {
       const html = readFileSync(resolve(file), 'utf8');
       expect(html, file).toContain('<meta name="robots" content="noindex, indexifembedded">');
       expect(html, file).toContain('rel="nofollow noopener"');
-      expect(html, file).toContain('target="_top"');
+      expect(html, file).toContain('target="_blank"');
+      expect(html, file).not.toContain('target="_top"');
     }
     const headers = readFileSync(resolve('public/_headers'), 'utf8');
     expect(headers).toContain('X-Frame-Options: DENY');
