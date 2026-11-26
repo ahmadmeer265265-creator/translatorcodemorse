@@ -1,5 +1,8 @@
 ---
+import featuredDark from '../assets/brand/yes-in-morse-code-featured-dark.webp';
+import featuredLight from '../assets/brand/yes-in-morse-code-featured.webp';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import ThemeSwapImage from '../components/ThemeSwapImage.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { lastUpdatedIso } from '../config/pages';
 import { absoluteUrl } from '../config/site';
@@ -10,6 +13,12 @@ const description =
   'Learn "yes" in Morse code: -.-- . ..., the American Morse version, telegraph shortcut C, maritime flag Charlie, and why Roger isn\'t the same as yes.';
 const pagePath = '/yes-in-morse-code/';
 const pageUrl = absoluteUrl(pagePath);
+const imagePath = '/yes-in-morse-code-featured.webp';
+const imageAlt =
+  'Illustration of the Morse code for yes, dash dot dash dash, then a dot, then three dots, on a warm cream background';
+const imageAltDark =
+  'Illustration of the Morse code for yes, dash dot dash dash, then a dot, then three dots, on a dark brown background';
+const imageUrl = absoluteUrl(imagePath);
 const link = 'text-accent underline underline-offset-4';
 const h2 = 'text-2xl font-semibold tracking-tight';
 const codeClass = 'font-mono tracking-wide';
@@ -78,13 +87,26 @@ const jsonLd = supportingJsonLd({
   faqs,
   dateModified: lastUpdatedIso(pagePath),
 });
+const webPage = jsonLd.find((block) => block['@type'] === 'WebPage');
+if (webPage) webPage.image = imageUrl;
 ---
 
-<BaseLayout title={title} description={description} ogType="article" jsonLd={jsonLd} suffix={false}>
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  jsonLd={jsonLd}
+  suffix={false}
+  image={imagePath}
+  imageAlt={imageAlt}
+>
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Yes in Morse Code' }]} />
     <header class="grid gap-3">
       <h1 class="text-3xl font-semibold tracking-tight">Yes in Morse Code</h1>
+      <div class="rounded-2xl border border-line px-4 py-6 sm:px-8 sm:py-8">
+        <ThemeSwapImage light={featuredLight} dark={featuredDark} altLight={imageAlt} altDark={imageAltDark} />
+      </div>
     </header>
 
     <section class="grid gap-3">
