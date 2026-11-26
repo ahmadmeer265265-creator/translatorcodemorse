@@ -7,7 +7,6 @@ export const primaryNav = [
   { href: '/morse-code-alphabet/', label: 'Alphabet' },
   { href: '/morse-code-numbers/', label: 'Numbers' },
   { href: '/sos-in-morse-code/', label: 'SOS' },
-  { href: '/yes-in-morse-code/', label: 'Yes' },
   { href: '/morse-code-speed-statistics/', label: 'Speed' },
 ] as const;
 
@@ -17,7 +16,6 @@ export const headerTopNav = [
   { href: '/morse-code-alphabet/', label: 'Alphabet' },
   { href: '/morse-code-numbers/', label: 'Numbers' },
   { href: '/sos-in-morse-code/', label: 'SOS' },
-  { href: '/yes-in-morse-code/', label: 'Yes' },
   { href: '/morse-code-speed-statistics/', label: 'Speed' },
 ] as const;
 
