@@ -14,6 +14,7 @@ export const pageMeta = [
   { path: '/morse-code-numbers/', lastUpdated: '2026-10-07' },
   { path: '/sos-in-morse-code/', lastUpdated: '2026-10-07' },
   { path: '/i-love-you-in-morse-code/', lastUpdated: '2026-11-21' },
+  { path: '/yes-in-morse-code/', lastUpdated: '2026-11-26' },
   { path: '/how-morse-code-works/', lastUpdated: '2026-11-23' },
   { path: '/morse-code-speed-statistics/', lastUpdated: '2026-11-09' },
   { path: '/about/', lastUpdated: '2026-10-19' },
@@ -23,10 +24,8 @@ export const pageMeta = [
   { path: '/contact/', lastUpdated: '2026-10-19' },
 ] as const;
 
-/** Unpublished pages. Built, but omitted from the sitemap until they move into pageMeta. */
-export const draftPageMeta = [
-  { path: '/yes-in-morse-code/', lastUpdated: '2026-11-26' },
-] as const;
+/** Unpublished pages. Empty while every built page is in pageMeta. */
+export const draftPageMeta = [] as const;
 
 export type PagePath = (typeof pageMeta)[number]['path'] | (typeof draftPageMeta)[number]['path'];
 
