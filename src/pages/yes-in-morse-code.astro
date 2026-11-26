@@ -1,0 +1,272 @@
+---
+import Breadcrumb from '../components/Breadcrumb.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { lastUpdatedIso } from '../config/pages';
+import { absoluteUrl } from '../config/site';
+import { supportingJsonLd } from '../lib/schema';
+
+const title = 'Yes in Morse Code: Pattern, American Morse, Telegraph Shorthand & More';
+const description =
+  'Learn "yes" in Morse code: -.-- . ..., the American Morse version, telegraph shortcut C, maritime flag Charlie, and why Roger isn\'t the same as yes.';
+const pagePath = '/yes-in-morse-code/';
+const pageUrl = absoluteUrl(pagePath);
+const link = 'text-accent underline underline-offset-4';
+const h2 = 'text-2xl font-semibold tracking-tight';
+const codeClass = 'font-mono tracking-wide';
+
+const faqs = [
+  {
+    question: 'What is the Morse code for "yes"?',
+    answer:
+      '"Yes" is written as -.-- . ..., built from the three letters Y, E, and S sent in order with a short pause between each one.',
+  },
+  {
+    question: 'How do you say yes in Morse code without making a sound?',
+    answer:
+      'A flashlight, a tap on a surface, or a hand gesture all work the same way sound does. A short signal is a dot and a longer one is a dash, so Y comes across as long-short-long-long, E as one short signal, and S as three short signals in a row.',
+  },
+  {
+    question: 'Is "yes" the same in American Morse code?',
+    answer:
+      'No. International Morse gives "yes" as -.-- . ..., but American Morse, the older code used on U.S. telegraph lines, spells it as .. .. / . / ... The difference comes entirely from the letter Y, which is built differently in the two codes.',
+  },
+  {
+    question: 'What does the letter C mean in Morse code?',
+    answer:
+      'On its own, C is telegraph and ham radio shorthand for "yes, correct, affirmative." Operators use it as a fast stand-in for the full word, since it takes only four marks compared to the eight needed to spell out Y-E-S.',
+  },
+  {
+    question: 'Does "Roger" mean yes in Morse code?',
+    answer:
+      'No. Roger only confirms that a message was received and understood. It comes from the old shorthand letter R for "received," and it says nothing about agreement. The actual word for yes in radio and aviation procedure is Affirmative.',
+  },
+  {
+    question: 'What is the International Code of Signals flag for yes?',
+    answer:
+      'A single flag called Charlie, or C, means yes or affirmative at sea. It can also be flashed in Morse with a signal lamp or sounded on a ship\'s whistle, since the system is built to work across light, flag, and Morse together.',
+  },
+  {
+    question: 'Is "yes" written the same way in every language?',
+    answer:
+      'Only the letters change, not the code. Morse has no symbols beyond the Latin alphabet, numbers, and basic punctuation, so a word like the Spanish "sí" or the German "ja" is sent letter by letter using those same codes, with any accent marks dropped.',
+  },
+  {
+    question: 'Why is the letter E just one dot?',
+    answer:
+      'E is the most common letter in English, and Samuel Morse and Alfred Vail gave the most frequent letters the shortest codes so operators spent less time sending them. A single dot is also the fastest possible signal in the entire alphabet.',
+  },
+  {
+    question: 'Is there a faster way to send "yes" than spelling it out?',
+    answer:
+      'Yes. Sending the single letter C is the standard telegraph and ham radio shortcut for an affirmative answer, and it takes roughly half the time that spelling out Y-E-S does.',
+  },
+  {
+    question: 'How long does it take to send "yes" in Morse code?',
+    answer:
+      'At a typical 20 WPM practice speed, the full word Y-E-S takes about a second and a half. The shortcut C takes under a second on its own, which is exactly why operators reach for it when a quick confirmation is all that is needed.',
+  },
+] as const;
+
+const jsonLd = supportingJsonLd({
+  name: 'Yes in Morse Code',
+  description,
+  url: pageUrl,
+  crumbs: [
+    { name: 'Home', url: absoluteUrl('/') },
+    { name: 'Yes in Morse Code', url: pageUrl },
+  ],
+  faqs,
+  dateModified: lastUpdatedIso(pagePath),
+});
+---
+
+<BaseLayout title={title} description={description} robots="noindex, follow" ogType="article" jsonLd={jsonLd} suffix={false}>
+  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+    <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Yes in Morse Code' }]} />
+    <header class="grid gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight">Yes in Morse Code</h1>
+    </header>
+
+    <section class="grid gap-3">
+      <h2 class={h2}>What Is "Yes" in Morse Code?</h2>
+      <p>
+        "Yes" in Morse code comes out as <span class={codeClass}>-.-- . ...</span>, three letters sent one after another. Each one is a short burst of dits and dahs, with a brief pause marking where one letter ends and the next begins. Said out loud, the whole thing takes about a second and a half at a typical 20 WPM practice speed.
+      </p>
+      <p>
+        Each letter carries its own small rhythm. Y is a longer run (dah dit dah dah), E is the shortest letter there is (a single dit), and S closes it out with three quick dits in a row, the same three dits that open the famous SOS distress call. Put together, that gives "yes" eight marks total, more than most short English words need, which is part of why experienced operators often reach for a shortcut instead of spelling the whole word (more on that shortcut further down).
+      </p>
+      <p>
+        You do not need to take any of this on faith. Type YES into the <a class={link} href="/">Morse code translator</a> on this site and press play to hear exactly how it sounds. Slow the speed down to count every dit and dah one at a time, or leave it at a normal pace to hear "yes" the way it actually sounds in real use.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Breaking Down Y, E, S</h2>
+      <p>
+        Y is dah dit dah dah, which makes it one of the longer letters in the alphabet. Only a handful of letters run four marks long, and Y sits among them alongside letters like Q and X. That length is no accident. Samuel Morse and Alfred Vail assigned shorter codes to the letters English uses most often, so a letter that shows up less frequently in ordinary writing, like Y, ended up with a longer pattern to send.
+      </p>
+      <p>
+        E is just one dit, the shortest code in the whole alphabet. That is because E is the most common letter in English, and giving it the simplest signal meant operators spent less time sending the letters they used constantly. It is also the easiest letter to recognize by ear, since there is nothing to count. One quick sound and you are done.
+      </p>
+      <p>
+        S closes the word out with three dits in a row, dit dit dit. That same three-dit pattern opens and closes SOS, which is part of why S tends to stick in people's memory faster than most other letters. Said aloud, S has a light, tapping quality to it, almost like a quick drumroll rather than a single beat.
+      </p>
+      <p>
+        Put the three together and the full pause structure matters as much as the letters themselves. A short gap separates Y from E, another separates E from S, and those gaps are what keep the message readable instead of running into one long blur of sound. The <a class={link} href="/morse-code-alphabet/">alphabet chart</a> covers the exact timing behind every letter's gaps if you want the full breakdown.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Is "Yes" the Same in American Morse Code?</h2>
+      <p>
+        No, it is not. The International Morse most people learn today gives "yes" as <span class={codeClass}>-.-- . ...</span>, but American Morse, the older code once used on U.S. telegraph lines, spells out the same word differently: <span class={codeClass}>.. .. / . / ...</span> That difference traces back to a single letter, since the two codes only disagree on how Y is built.
+      </p>
+      <p>
+        The E and the S stay identical in both codes, a single dit for E and three dits for S. The letter that changes is Y. In International Morse, Y runs dah dit dah dah, a single unbroken burst of four marks. In American Morse, Y is two dots, a brief inside pause, then two more dots, one of only five letters in that older code that carries a gap inside the letter itself rather than between letters.
+      </p>
+      <p>
+        That inside pause is the whole reason American Morse sounds unfamiliar to anyone who already knows the modern code. Get the timing of that pause wrong and Y can blur into something else entirely. If you want to hear the difference for yourself or decode a message written in the old railroad code, the <a class={link} href="/american-morse-code-translator/">American Morse code translator</a> plays both versions side by side.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>How to Send "Yes" Without Sound</h2>
+      <p>
+        Morse code was never only a sound. A dot is just a short signal and a dash is a long one, so anything capable of holding two different durations can carry the message, whether that is a beam of light, a tap on a surface, or a hand gesture held a beat longer than the last one. None of this needs special equipment, which is exactly why it has stayed useful in situations where sound alone will not reach someone.
+      </p>
+      <p>
+        A flashlight turns "yes" into the same Y-E-S pattern, just read with your eyes instead of your ears. Y comes across as long-short-long-long, E as a single blink, and S as three quick blinks in a row. It's a backup worth knowing for any situation where a voice can't carry and a screen is no help either.
+      </p>
+      <p>
+        Tapping follows the identical rule, just swapped for touch instead of light. A short tap on a table, a wall, or any surface reads as a dot, and a tap held down a beat longer reads as a dash. Hand signals work the same way too, with a quick motion for a dot and a slower, drawn-out motion for a dash, which makes Morse one of the few codes that still works when you cannot make a sound and cannot be seen either.
+      </p>
+      <p>
+        If you want to practice sending "yes" by touch rather than just reading it off a chart, the <a class={link} href="/morse-code-machine/">Morse code machine</a> lets you tap it out yourself, with a mouse click, a tap on your screen, or the spacebar on your keyboard. A few tries in, the line between a quick tap and a held one starts to feel automatic instead of something you have to count. The same tool will also play "yes" back to you in Listen and Guess mode, so you can check whether what you sent actually matches what you meant to send.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>The Telegraph Shorthand for "Yes": the Letter C</h2>
+      <p>
+        Spelling out Y-E-S takes eight marks, and telegraph operators were paid to move messages quickly, not to spell things out in full. A shorthand grew up around the busiest telegraph lines as a result, and for a plain "yes," the shortcut that stuck was a single letter: C. It survived the jump from landline telegraphy into radio and ham operating, and it is still the one most operators reach for today.
+      </p>
+      <p>
+        C by itself meant "yes, correct, affirmative" in standard telegraph and Morse operating shorthand, a convention old enough that it shows up in a 1929 account of the radio operators aboard the Titanic, sent alongside other shortcuts like R for "understood" and N for "no." The same abbreviation is still listed today in ham radio reference guides as one of the handful of single letters every operator is expected to know. At four marks, dah dit dah dit, C takes roughly half the time the full word does, which mattered enormously back when every second on a shared telegraph line cost money.
+      </p>
+      <p>
+        It is worth keeping the two separate in your head. Spelling out Y-E-S is how you would write "yes" into an ordinary sentence or a practice message. Sending a bare C is closer to a nod, a fast acknowledgment used between operators who both already know the shorthand. You will not find C used this way in everyday text, but if you ever see a lone C in an old telegraph transcript or a ham radio log, now you know what it was doing there.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>"Yes" at Sea: the International Code of Signals Flag C</h2>
+      <p>
+        Sailors have their own version of the same shortcut, and it uses the same letter. In the International Code of Signals, a system ships have used since the 1800s to communicate across language barriers, a single flag known as Charlie means exactly one thing: yes, or affirmative. A sailor who wants a fast confirmation does not spell anything out. They just raise the C flag, and any ship nearby, whatever language its crew speaks, reads the same answer.
+      </p>
+      <p>
+        The flag itself is red, white, and blue, and it works whether it is flown from a halyard, flashed with a signal lamp using the C in Morse, or sounded on a ship's whistle. That last option matters more than it sounds. A ship without working radio or a clear line of sight can still answer yes or no using nothing but sound, because the International Code of Signals was built to work across light, flag, and Morse all at once.
+      </p>
+      <p>
+        There is one pairing worth knowing on its own. Fly the N flag directly above the C flag and the meaning changes completely, from a simple yes to the maritime distress signal, the strongest call for help a vessel can send. The same two letters that mean "no" and "yes" on their own become something else entirely once they are stacked, which is a good reminder that in signaling systems, order and combination carry as much meaning as the individual signals do.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Is "Roger" the Same as "Yes" in Morse Code?</h2>
+      <p>
+        A lot of people assume "Roger" means yes, mostly because of how often it turns up in movies right after someone asks a question. It does not. In both aviation and military radio procedure, Roger only confirms that a message was received and understood. It says nothing about whether the person receiving it agrees, will comply, or is answering yes to anything at all.
+      </p>
+      <p>
+        The word traces back to the same Morse-era shorthand this article has already covered. Long before "Roger" existed, telegraph and radio operators used the single letter R to mean "received," and R carried the old phonetic alphabet name Roger before that alphabet was replaced with the one pilots use today. Officials still warn pilots and air traffic controllers not to treat Roger as an answer to a yes-or-no question, which is exactly why the FAA's own radio phraseology guidance spells out the difference in plain terms.
+      </p>
+      <p>
+        The actual word for yes in that same voice procedure is Affirmative, shortened in some aviation contexts to Affirm. Say "Affirmative" and you are answering a question. Say "Roger" and you are only confirming you heard one, which is a meaningful difference when a controller or another operator is waiting on a real yes or no. Mixing the two up is common enough that training materials for pilots call it out directly as a habit worth unlearning early.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>"Yes" in Other Languages, in Morse Code</h2>
+      <p>
+        Morse code itself does not care which language a message is in. It only has codes for the 26 letters of the Latin alphabet, plus digits and a handful of punctuation marks, so any word built from those same letters can be sent exactly the way English words are, letter by letter. The catch is accented characters. Standard international Morse was built for plain English letters, so a word like the French "oui" or the Spanish "sí" gets sent using the base letters only, with any accent simply dropped.
+      </p>
+      <p>That makes translating "yes" into Morse across languages a matter of knowing the word, not learning a new code. Here is how a handful of them break down:</p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>Spanish, "si": <span class={codeClass}>... ..</span></li>
+        <li>French, "oui": <span class={codeClass}>--- ..- ..</span></li>
+        <li>German, "ja": <span class={codeClass}>.--- .-</span></li>
+        <li>Portuguese, "sim": <span class={codeClass}>... .. --</span></li>
+        <li>Italian, "si": <span class={codeClass}>... ..</span></li>
+        <li>Turkish, "evet": <span class={codeClass}>. ...- . -</span></li>
+        <li>Polish, "tak": <span class={codeClass}>- .- -.-</span></li>
+        <li>Czech, "ano": <span class={codeClass}>.- -. ---</span></li>
+        <li>Russian, "da" (да): <span class={codeClass}>-.. .-</span></li>
+      </ul>
+      <p>
+        A few of these overlap by coincidence rather than design. Spanish and Italian both use "si," so they share the identical pattern, and that is simply two languages landing on the same short word rather than anything built into Morse itself. If you want to check any of these yourself, or try a language that is not on this list, typing the word into the translator shows the pattern instantly and plays it back as sound.
+      </p>
+    </section>
+
+    <section class="cv grid gap-3">
+      <h2 class={h2}>Try "Yes" Yourself</h2>
+      <p>
+        Reading about Morse code and actually using it are two different skills, and the gap between them closes fast once you start pressing buttons instead of just looking at a chart. Every method covered in this article, spelling the word out, sending it as C, flashing it, tapping it, is available right now without installing anything or owning a single piece of equipment. None of it needs a radio, a telegraph key, or any hardware at all, just whatever device you are already reading this on.
+      </p>
+      <p>
+        Start with the basics. Type YES into the Morse code translator and watch the pattern appear instantly, then press play to hear it at whatever speed suits you. Switch the direction and paste <span class={codeClass}>-.-- . ...</span> back in to confirm it decodes to the same word, which is a quick way to prove to yourself that the process works both ways.
+      </p>
+      <p>
+        If you would rather test your ear than your eyes, record yourself sending "yes" somehow, out loud, tapped on a table, or hummed in rhythm, and feed it into the <a class={link} href="/morse-code-audio-translator/">audio translator</a> to see whether it decodes correctly. It is a fast way to find out whether your own timing is actually readable, not just readable to you. A microphone and a browser are all it needs, since the decoding happens on your own device rather than anywhere else.
+      </p>
+      <p>
+        For the hands-on side, the Morse code machine has a Listen and Guess mode built for exactly this kind of practice. It plays a short word at whatever speed you choose and asks you to identify it before the answer appears, which is a far better test of whether you have actually learned "yes" than simply recognizing it on a page. Get it wrong a few times and the tool simply plays it again, so there is no pressure attached to missing it on the first try.
+      </p>
+    </section>
+
+    <section class="cv cv-faq grid gap-3">
+      <h2 class={h2}>Frequently Asked Questions</h2>
+      <div class="grid gap-4">
+        {
+          faqs.map((item) => (
+            <details class="rounded-xl border border-line bg-surface px-3 py-2">
+              <summary class="flex min-h-11 cursor-pointer items-center font-semibold">{item.question}</summary>
+              <p class="pb-2 text-muted">{item.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class={h2}>Related Tools</h2>
+      <p>
+        If "yes" has caught your interest, a few other tools and pages on this site build on what you've practiced here:
+      </p>
+      <ul class="grid list-disc gap-2 pl-5">
+        <li>
+          <a class={link} href="/">Morse Code Translator</a>: convert "yes," or any other word, to Morse code and back, with full audio playback
+        </li>
+        <li>
+          <a class={link} href="/morse-code-audio-translator/">Morse Code Audio Translator</a>: decode Morse from a microphone or an uploaded audio file
+        </li>
+        <li>
+          <a class={link} href="/american-morse-code-translator/">American Morse Code Translator</a>: the older railroad-era code, where "yes" is spelled differently from the modern standard
+        </li>
+        <li>
+          <a class={link} href="/morse-code-machine/">Morse Code Machine</a>: practice sending "yes" yourself with a key, paddle, or keyboard, or test your ear in Listen and Guess mode
+        </li>
+        <li>
+          <a class={link} href="/morse-code-alphabet/">Morse Code Alphabet Chart</a>: the complete reference for every letter, number, and symbol
+        </li>
+        <li>
+          <a class={link} href="/sos-in-morse-code/">SOS in Morse Code</a>: the most famous distress signal, and how it compares to everyday words like "yes"
+        </li>
+        <li>
+          <a class={link} href="/i-love-you-in-morse-code/">I Love You in Morse Code</a>: another short, popular phrase broken down letter by letter
+        </li>
+        <li>
+          <a class={link} href="/how-morse-code-works/">How Morse Code Works</a>: timing, the alphabet, and the full rules behind every pattern in this article
+        </li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>

@@ -23,8 +23,10 @@ export const pageMeta = [
   { path: '/contact/', lastUpdated: '2026-10-19' },
 ] as const;
 
-/** Unpublished pages. Empty while every built page is in pageMeta. */
-export const draftPageMeta = [] as const;
+/** Unpublished pages. Built, but omitted from the sitemap until they move into pageMeta. */
+export const draftPageMeta = [
+  { path: '/yes-in-morse-code/', lastUpdated: '2026-11-26' },
+] as const;
 
 export type PagePath = (typeof pageMeta)[number]['path'] | (typeof draftPageMeta)[number]['path'];
 

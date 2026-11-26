@@ -11,6 +11,7 @@ Free browser-based Morse code translator at translatorcodemorse.com. Convert tex
 - [SOS in Morse code](https://translatorcodemorse.com/sos-in-morse-code/): What SOS is, how it sounds and looks, and how to practice it
 - [I love you in Morse code](https://translatorcodemorse.com/i-love-you-in-morse-code/): The exact International Morse pattern, plus ILY, 143, jewelry bead counts, and how to send it
 - [How Morse code works](https://translatorcodemorse.com/how-morse-code-works/): How a short signal and a long signal, with fixed timing, become letters, numbers, and words
+- [Yes in Morse Code](https://translatorcodemorse.com/yes-in-morse-code/): the pattern for "yes," the American Morse version, the telegraph shortcut C, the maritime flag C, and why Roger isn't the same as yes.
 - [About](https://translatorcodemorse.com/about/): What the tool does, privacy model, and who it is for
 - [Privacy](https://translatorcodemorse.com/privacy/): How the site handles data (processing stays in your browser)
 - [Terms of Use](https://translatorcodemorse.com/terms/): Terms of use, no warranty, and why not to rely on it for emergencies
