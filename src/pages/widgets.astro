@@ -32,7 +32,14 @@ const jsonLd = [
 ];
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={jsonLd}
+  suffix={false}
+  image="/og/widgets.webp"
+  imageAlt="Free Morse Code Widgets for Your Website"
+>
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Widgets' }]} />
     <header class="grid gap-3">

@@ -43,7 +43,14 @@ const jsonLd = [
 ];
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={jsonLd}
+  suffix={false}
+  image="/og/morse-code-image-translator.webp"
+  imageAlt="Morse Code Image Translator"
+>
   <h1 class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">Morse Code Image Translator</h1>
   <p class="mx-auto mt-1 max-w-2xl text-center text-sm text-muted sm:text-base">
     Drop a photo of one line of Morse code. It is read on this device, then the marks and the text show up below.

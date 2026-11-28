@@ -112,7 +112,8 @@ describe('American Morse page', () => {
     expect(html).toContain('"@type":"WebApplication"');
     expect(html).not.toContain('"@type":"BreadcrumbList"');
     expect(html).toContain('"@type":"WebPage"');
-    expect(html).toContain('og-default.jpg');
+    expect(html).toContain('/og/american-morse-code-translator.webp');
+    expect(html).toContain('property="og:image:alt" content="American Morse Code Translator"');
     expect(html).toContain('href="/"');
     expect(html).toContain('.......-..');
     expect(html).toContain('. ...');

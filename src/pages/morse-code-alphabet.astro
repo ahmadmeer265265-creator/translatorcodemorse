@@ -48,7 +48,14 @@ const jsonLd = supportingJsonLd({
 });
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
+<BaseLayout
+  title={title}
+  description={description}
+  jsonLd={jsonLd}
+  suffix={false}
+  image="/og/morse-code-alphabet.webp"
+  imageAlt="Morse Code Alphabet"
+>
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Morse Code Alphabet' }]} />
     <header class="grid gap-3">
