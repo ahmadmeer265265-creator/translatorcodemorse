@@ -839,9 +839,7 @@ const caption = 'border-t border-line bg-canvas px-3 py-2 text-sm text-muted';
         homeFaqs.map((item) => (
           <div class="grid gap-2">
             <h3 class={h3}>{item.question}</h3>
-            {'answerHtml' in item && item.answerHtml ? (
-              <p class="text-muted" set:html={item.answerHtml} />
-            ) : item.question === 'How can I say HELLO in the Morse code?' ? (
+            {item.question === 'How can I say HELLO in the Morse code?' ? (
               <p class="text-muted">
                 <code class={codeClass}>{item.answer}</code>
               </p>

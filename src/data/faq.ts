@@ -1,7 +1,8 @@
 export const homeFaqs = [
   {
     question: 'What is Morse code?',
-    answer: 'Morse code is where you can convert your letters and numbers into dots and dashes.',
+    answer:
+      'Morse code writes letters and numbers as short and long signals. A short signal is a dot and a long signal is a dash. Type in the text panel and this page turns it into that pattern. Type dots and dashes and it turns them back into text. The alphabet chart uses those same patterns.',
   },
   {
     question: 'How can I translate Morse code?',
@@ -26,8 +27,6 @@ export const homeFaqs = [
     question: 'How can I learn Morse code?',
     answer:
       'The best way is to learn it by sound. Listen to short messages with the Play button, start with a few letters, and use a chart only to look a character up.',
-    answerHtml:
-      'The best way is to learn it by sound. Listen to short messages with the Play button, start with a few letters, and use a <a class="text-accent underline underline-offset-4" href="/morse-code-alphabet/">chart</a> only to look a character up.',
   },
   {
     question: 'Is there any tool to convert Morse code?',
@@ -43,8 +42,8 @@ export const homeFaqs = [
       'Yes, you can download it by tapping Download WAV, and you can share your Morse code link by tapping Copy share link.',
   },
   {
-    question: 'Is Morse code safe to use?',
+    question: 'Is this Morse code translator free to use?',
     answer:
-      "Yes, it's completely safe, without any login. Your translation will happen locally inside the browser.",
+      'Yes. You do not pay, create an account, or sign in. Encoding, decoding, playback, and the WAV download all run in your browser, so the text you type stays on your device. Nothing you type is uploaded. You can use the translator as often as you like.',
   },
 ] as const;
