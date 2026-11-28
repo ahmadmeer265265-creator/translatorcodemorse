@@ -99,7 +99,7 @@ describe('American Morse translator markup', () => {
 describe('American Morse page', () => {
   it('is a titled page with schema, one heading, and a nav link', async () => {
     const html = await render(AmericanPage);
-    expect(html).toContain('<title>American Morse Code Translator</title>');
+    expect(html).toContain('<title>American Morse Code Translator: Free Railroad Morse</title>');
     expect(html).toContain('content="index, follow"');
     expect(html).not.toContain('name="keywords"');
     expect(html.match(/<h1\b/g)?.length).toBe(1);

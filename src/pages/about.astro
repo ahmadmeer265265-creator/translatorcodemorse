@@ -5,7 +5,7 @@ import { lastUpdatedIso } from '../config/pages';
 import { absoluteUrl } from '../config/site';
 import { supportingJsonLd } from '../lib/schema';
 
-const title = 'About';
+const title = 'About the Morse Code Translator: Who Builds It and Why';
 const description =
   'What this free Morse code translator is, what it does in your browser today, and who it is for. Text stays on your device; nothing you type is uploaded.';
 const pageUrl = absoluteUrl('/about/');
@@ -22,7 +22,7 @@ const jsonLd = supportingJsonLd({
 });
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'About' }]} />
     <header class="grid gap-3">

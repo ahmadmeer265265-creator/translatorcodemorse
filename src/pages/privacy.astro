@@ -5,7 +5,7 @@ import { lastUpdatedFor, lastUpdatedIso } from '../config/pages';
 import { absoluteUrl, CONTACT_EMAIL } from '../config/site';
 import { supportingJsonLd } from '../lib/schema';
 
-const title = 'Privacy';
+const title = 'Privacy on the Morse Code Translator: Data Stays in Browser';
 const description =
   'Privacy notes for this Morse code translator: your text stays in the browser, no cookies or analytics today, and how share links and hosting logs work.';
 const pageUrl = absoluteUrl('/privacy/');
@@ -23,7 +23,7 @@ const jsonLd = supportingJsonLd({
 });
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Privacy' }]} />
     <header class="grid gap-3">

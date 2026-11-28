@@ -5,7 +5,7 @@ import { lastUpdatedFor, lastUpdatedIso } from '../config/pages';
 import { absoluteUrl, CONTACT_EMAIL } from '../config/site';
 import { supportingJsonLd } from '../lib/schema';
 
-const title = 'Terms of Use';
+const title = 'Terms of Use for the Morse Code Translator: No Warranty';
 const description =
   'Terms of use for this free Morse code translator: no accounts, no warranty, and why you should not rely on it for emergencies or critical signals.';
 const pageUrl = absoluteUrl('/terms/');
@@ -23,7 +23,7 @@ const jsonLd = supportingJsonLd({
 });
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Terms of Use' }]} />
     <header class="grid gap-3">

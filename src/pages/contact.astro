@@ -5,7 +5,7 @@ import { lastUpdatedIso } from '../config/pages';
 import { absoluteUrl, CONTACT_EMAIL } from '../config/site';
 import { supportingJsonLd } from '../lib/schema';
 
-const title = 'Contact';
+const title = 'Contact the Morse Code Translator: Email Bugs and Fixes';
 const description =
   'Email chart corrections, bug reports, and suggestions for this free Morse code translator. Use the address on this page; there is no contact form.';
 const pageUrl = absoluteUrl('/contact/');
@@ -22,7 +22,7 @@ const jsonLd = supportingJsonLd({
 });
 ---
 
-<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd} suffix={false}>
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Contact' }]} />
     <header class="grid gap-3">
