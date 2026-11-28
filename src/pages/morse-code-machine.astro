@@ -24,10 +24,6 @@ const jsonLd = [
     name: title,
     description,
     url: pageUrl,
-    crumbs: [
-      { name: 'Home', url: absoluteUrl('/') },
-      { name: title, url: pageUrl },
-    ],
     faqs: machineFaqs,
     dateModified: lastUpdatedIso(MACHINE_PAGE_PATH),
   }),

@@ -9,15 +9,10 @@ const title = 'How Fast Does the World Actually Send Morse Code?';
 const description =
   'We analysed 16.7 million Morse transmissions from the Reverse Beacon Network. The typical station sends at 24 WPM in every season. Data, charts and method.';
 const pageUrl = absoluteUrl('/morse-code-speed-statistics/');
-const crumbs = [
-  { name: 'Home', url: absoluteUrl('/') },
-  { name: 'Morse Code Speed Statistics', url: pageUrl },
-];
 const jsonLd = supportingJsonLd({
   name: 'How Fast Does the World Actually Send Morse Code?',
   description,
   url: pageUrl,
-  crumbs,
   dateModified: lastUpdatedIso('/morse-code-speed-statistics/'),
 });
 

@@ -79,7 +79,9 @@ describe('embeddable Morse widgets', () => {
     expect(html).toContain(`>${TITLE}</h1>`);
     expect(html).toContain(`<title>${TITLE}</title>`);
     expect(html).toContain(`name="description" content="${DESCRIPTION}"`);
-    expect(html).not.toContain('application/ld+json');
+    expect(html).toContain('"@type":"BreadcrumbList"');
+    expect(html).toContain('"name":"Widgets"');
+    expect(html).not.toContain('"@type":"FAQPage"');
     expect(html).toContain('src="/embed/morse-code-chart/"');
     expect(html).toContain('src="/embed/morse-code-translator/"');
     const escaped = (value: string) =>

@@ -110,7 +110,7 @@ describe('American Morse page', () => {
     expect(html).toContain('application/ld+json');
     expect(html).toContain('"@type":"FAQPage"');
     expect(html).toContain('"@type":"WebApplication"');
-    expect(html).toContain('"@type":"BreadcrumbList"');
+    expect(html).not.toContain('"@type":"BreadcrumbList"');
     expect(html).toContain('"@type":"WebPage"');
     expect(html).toContain('og-default.jpg');
     expect(html).toContain('href="/"');

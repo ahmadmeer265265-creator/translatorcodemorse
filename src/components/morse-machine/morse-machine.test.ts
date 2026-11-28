@@ -93,7 +93,7 @@ describe('Morse Code Machine page', () => {
     expect(html).toContain('morse-machine-featured');
     expect(html).toContain('application/ld+json');
     expect(html).toContain('"@type":"WebApplication"');
-    expect(html).toContain('"@type":"BreadcrumbList"');
+    expect(html).not.toContain('"@type":"BreadcrumbList"');
     expect(html).toContain('"@type":"WebPage"');
     expect(html).toContain('"@type":"FAQPage"');
     for (const item of machineFaqs) expect(html).toContain(item.question);

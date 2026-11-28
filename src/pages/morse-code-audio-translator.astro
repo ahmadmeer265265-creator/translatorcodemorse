@@ -59,17 +59,11 @@ const faqs = [
   },
 ] as const;
 
-const crumbs = [
-  { name: 'Home', url: absoluteUrl('/') },
-  { name: 'Morse Code Audio Translator', url: pageUrl },
-];
-
 const jsonLd = [
   ...supportingJsonLd({
     name: 'Morse Code Audio Translator',
     description,
     url: pageUrl,
-    crumbs,
     faqs,
     dateModified: lastUpdatedIso('/morse-code-audio-translator/'),
   }),
