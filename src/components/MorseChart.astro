@@ -9,6 +9,10 @@ const { groups = ['letter', 'digit', 'mark'] } = Astro.props;
 const letters = groups.includes('letter') ? MORSE_ALPHABET.filter((entry) => entry.group === 'letter') : [];
 const digits = groups.includes('digit') ? MORSE_ALPHABET.filter((entry) => entry.group === 'digit') : [];
 const marks = groups.includes('mark') ? MORSE_ALPHABET.filter((entry) => entry.group === 'mark') : [];
+
+function anchorId(char: string): string | undefined {
+  return /^[A-Z0-9]$/.test(char) ? char.toLowerCase() : undefined;
+}
 ---
 
 <div class:list={['morse-chart grid gap-6', letters.length > 0 && 'lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)]']}>
@@ -24,7 +28,7 @@ const marks = groups.includes('mark') ? MORSE_ALPHABET.filter((entry) => entry.g
         </thead>
         <tbody>
           {letters.map((entry) => (
-            <tr class="border-b border-line">
+            <tr class="border-b border-line" id={anchorId(entry.char)}>
               <th class="py-1 pr-3 text-left font-semibold" scope="row">
                 {entry.char}
               </th>
@@ -49,7 +53,7 @@ const marks = groups.includes('mark') ? MORSE_ALPHABET.filter((entry) => entry.g
             </thead>
             <tbody>
               {digits.map((entry) => (
-                <tr class="border-b border-line">
+                <tr class="border-b border-line" id={anchorId(entry.char)}>
                   <th class="py-1 pr-3 text-left font-semibold" scope="row">
                     {entry.char}
                   </th>

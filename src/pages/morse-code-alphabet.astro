@@ -38,6 +38,8 @@ const faqs = [
   },
 ] as const;
 
+const jumps = [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ', ...'0123456789'];
+
 const jsonLd = supportingJsonLd({
   name: 'Morse Code Alphabet',
   description,
@@ -56,7 +58,7 @@ const jsonLd = supportingJsonLd({
   image="/og/morse-code-alphabet.jpg"
   imageAlt="Morse Code Alphabet"
 >
-  <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
+  <article class="alphabet-page grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Morse Code Alphabet' }]} />
     <header class="grid gap-3">
       <h1 class="text-3xl font-semibold tracking-tight">Morse Code Alphabet</h1>
@@ -65,7 +67,15 @@ const jsonLd = supportingJsonLd({
       </p>
     </header>
 
-    <section class="grid gap-3">
+    <section class="alphabet-chart-block grid gap-3">
+      <p class="alphabet-print-title">Morse Code Alphabet</p>
+      <nav class="alphabet-jump" aria-label="Jump to a character">
+        {
+          jumps.map((char) => (
+            <a href={`#${char.toLowerCase()}`}>{char}</a>
+          ))
+        }
+      </nav>
       <h2 class="text-2xl font-semibold tracking-tight">Letters, numbers, and punctuation</h2>
       <p>
         Letters A to Z and digits 0 to 9 follow Recommendation ITU-R M.1677-1. The punctuation marks named in that recommendation are included as well. Four signs are not given codes there. They are the exclamation mark, the semicolon, the underscore, and the dollar sign. They are listed because most written Morse charts use these patterns: exclamation mark <span class="font-mono">-.-.--</span>, semicolon <span class="font-mono">-.-.-.</span>, underscore <span class="font-mono">..--.-</span>, and dollar sign <span class="font-mono">...-..-</span>. The ampersand uses <span class="font-mono">.-...</span>, which the recommendation lists as the Wait signal rather than as a punctuation mark.
@@ -154,3 +164,14 @@ const jsonLd = supportingJsonLd({
     />
   </article>
 </BaseLayout>
+
+<style is:global>
+  .alphabet-jump{display:flex;flex-wrap:wrap;gap:.25rem}
+  .alphabet-jump a{display:inline-flex;min-width:2.75rem;min-height:2.75rem;align-items:center;justify-content:center;border-radius:.5rem;font-weight:650;text-decoration:none}
+  .alphabet-print-title{display:none}
+  .morse-chart tr[id]{scroll-margin-top:.75rem}
+  @media print{
+    .alphabet-page>:not(.alphabet-chart-block),.alphabet-jump,.alphabet-chart-block>h2,.alphabet-chart-block>p:not(.alphabet-print-title){display:none!important}
+    .alphabet-print-title{display:block;margin:0 0 .3rem;font-size:14pt;line-height:1.2}
+  }
+</style>
