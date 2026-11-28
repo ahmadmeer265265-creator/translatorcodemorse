@@ -4,8 +4,8 @@ import { americanTranslatorFaqs } from '../components/american-translator/americ
 import AmericanTranslator from '../components/american-translator/AmericanTranslator.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { lastUpdatedIso } from '../config/pages';
-import { absoluteUrl } from '../config/site';
-import { supportingJsonLd } from '../lib/schema';
+import { absoluteUrl, PUBLISHER_NAME } from '../config/site';
+import { organizationId, supportingJsonLd } from '../lib/schema';
 
 const pageName = 'American Morse Code Translator';
 const title = 'American Morse Code Translator: Free Railroad Morse';
@@ -33,7 +33,7 @@ What you can do with it:
 • Copy, share a link, or send a friend a Morse puzzle link
 • Decode Morse from your microphone or an audio file
 • Look up any character in the full American Morse chart
-Made by Mir Labs. We build fast, free and private online tools, and show how they work.
+Made by ${PUBLISHER_NAME}. We build fast, free and private online tools, and show how they work.
 #MorseCode #AmericanMorseCode #LearnMorse`;
 
 const jsonLd = [
@@ -75,9 +75,7 @@ const jsonLd = [
     embedUrl: 'https://www.youtube-nocookie.com/embed/9QkAjYD8Lq8',
     contentUrl: 'https://www.youtube.com/watch?v=9QkAjYD8Lq8',
     publisher: {
-      '@type': 'Organization',
-      name: 'Mir Labs',
-      url: 'https://www.youtube.com/@mir_labs',
+      '@id': organizationId(),
     },
   },
 ];

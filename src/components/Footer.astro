@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import SocialLinks from './SocialLinks.astro';
 import { primaryNav } from '../config/nav';
-import { CONTACT_EMAIL, SITE_NAME } from '../config/site';
+import { CONTACT_EMAIL, PUBLISHER_NAME, SITE_NAME } from '../config/site';
 
 const posts = await getCollection('blog', ({ data }) => !data.draft);
 const toolLinks = [
@@ -23,9 +23,12 @@ const item = 'block min-h-11 min-w-0 py-2 text-sm leading-6 text-ink';
 
 <footer class="site-footer">
   <div class="mx-auto w-full max-w-5xl px-4 py-8 sm:py-10">
-    <p class="pb-6 text-sm leading-6 text-muted sm:pb-8">
+    <p class="text-sm leading-6 text-muted">
       <span class="font-semibold text-ink">{SITE_NAME}</span> turns text into Morse code in your browser. Nothing you type
       is uploaded.
+    </p>
+    <p class="pb-6 text-sm leading-6 text-muted sm:pb-8">
+      <a class="text-accent underline underline-offset-4" href="/about/">Made by {PUBLISHER_NAME}</a>
     </p>
     <div class="grid grid-cols-2 border-t border-line pt-6 sm:grid-cols-3 sm:pt-8">
       <nav class="min-w-0 pr-3 sm:pr-5" aria-labelledby="footer-tools-heading">

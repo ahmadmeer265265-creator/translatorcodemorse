@@ -2,8 +2,15 @@
 import Breadcrumb from '../components/Breadcrumb.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { lastUpdatedIso } from '../config/pages';
-import { absoluteUrl } from '../config/site';
-import { supportingJsonLd } from '../lib/schema';
+import {
+  absoluteUrl,
+  AUTHOR_JOB_TITLE,
+  AUTHOR_NAME,
+  CONTACT_EMAIL,
+  PERSON_SAME_AS,
+  PUBLISHER_NAME,
+} from '../config/site';
+import { organizationId, supportingJsonLd } from '../lib/schema';
 
 const title = 'About the Morse Code Translator: Who Builds It and Why';
 const description =
@@ -13,13 +20,25 @@ const crumbs = [
   { name: 'Home', url: absoluteUrl('/') },
   { name: 'About', url: pageUrl },
 ];
-const jsonLd = supportingJsonLd({
-  name: 'About',
-  description,
-  url: pageUrl,
-  crumbs,
-  dateModified: lastUpdatedIso('/about/'),
-});
+const jsonLd = [
+  ...supportingJsonLd({
+    name: 'About',
+    description,
+    url: pageUrl,
+    crumbs,
+    dateModified: lastUpdatedIso('/about/'),
+  }),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: AUTHOR_NAME,
+    jobTitle: AUTHOR_JOB_TITLE,
+    worksFor: { '@id': organizationId() },
+    sameAs: [...PERSON_SAME_AS],
+  },
+];
+
+const link = 'text-accent underline underline-offset-4';
 ---
 
 <BaseLayout
@@ -33,49 +52,84 @@ const jsonLd = supportingJsonLd({
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'About' }]} />
     <header class="grid gap-3">
-      <h1 class="text-3xl font-semibold tracking-tight">About this Morse code translator</h1>
+      <h1 class="text-3xl font-semibold tracking-tight">About Morse Code Translator</h1>
       <p>
-        This site is a free Morse code translator that runs in your browser. It turns ordinary text into dots and dashes, and it turns Morse code back into text. You do not create an account, and the work happens on the device in front of you.
+        Morse Code Translator is a free online tool that turns text into Morse code and Morse code back into text. It can
+        play the Morse as sound, let you tap it out by hand, and read Morse from audio files and photos. The site is
+        published by {PUBLISHER_NAME}.
       </p>
     </header>
 
     <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Who makes this site</h2>
+      <p>
+        {PUBLISHER_NAME} is the studio behind this site. It builds free web tools, and Morse Code Translator is one of
+        them. The founder is {AUTHOR_NAME}, who runs the site.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">What you can do here</h2>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>
+          Convert <a class={link} href="/">text to Morse code and Morse code to text</a> with the main translator.
+        </li>
+        <li>Play the result as sound, flash it, tap it by hand and download it as a WAV file.</li>
+        <li>
+          Decode Morse from an audio file with the <a class={link} href="/morse-code-audio-translator/">audio translator</a>.
+        </li>
+        <li>
+          Decode Morse from a photo with the <a class={link} href="/morse-code-image-translator/">image translator</a>.
+        </li>
+        <li>
+          Try the <a class={link} href="/american-morse-code-translator/">American Morse code translator</a>, which differs
+          from international Morse in a few letters.
+        </li>
+        <li>
+          Practice sending and receiving on the <a class={link} href="/morse-code-machine/">Morse Code Machine</a>.
+        </li>
+        <li>
+          Look up the <a class={link} href="/morse-code-alphabet/">alphabet</a>, the
+          <a class={link} href="/morse-code-numbers/">numbers</a> and
+          <a class={link} href="/sos-in-morse-code/">SOS</a> on their own pages.
+        </li>
+      </ul>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">How the site treats your data</h2>
       <p>
-        On the home page, two linked panels keep text and Morse code in sync as you type. You can copy either panel, clear both, load a short sample, or copy a share link that keeps your message after the hash in the address. An audio row plays the Morse panel as a tone and can download the same timing as a WAV file. Speed, Farnsworth spacing, tone, and volume are controls on that row.
-      </p>
-      <p>
-        A Listen (mic) mode lets the translator listen through your microphone and decode Morse code in real time, with all analysis running on your device.
-      </p>
-      <p>
-        Separate pages cover the full alphabet chart, the digits 0 to 9, and the SOS distress signal. Those pages explain the same codes the translator uses, with timing notes and links back to the tool so you can hear a short example. The alphabet chart can also be pasted onto a class or club page with the <a class="text-accent underline underline-offset-4" href="/widgets/">free Morse code widgets</a>.
+        The translator works in your browser. The text you type and the audio or images you choose are processed on your
+        device and are not uploaded to this site. The <a class={link} href="/privacy/">privacy page</a> explains what is
+        stored on your device and what the hosting provider logs.
       </p>
     </section>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Where the work runs</h2>
+      <h2 class="text-2xl font-semibold tracking-tight">The Morse speed study</h2>
       <p>
-        Encoding, decoding, playback, and WAV building run in the browser. The text you type is not uploaded to this site for translation. A share link puts the message in the page hash, which browsers do not send to the server when they request the page.
+        {PUBLISHER_NAME} also published a study of how fast people send Morse code on the air. It uses public Reverse
+        Beacon Network data. The aggregate dataset is on Zenodo with the DOI 10.5281/zenodo.24540914 under the CC BY 4.0
+        license. You can read the results on the
+        <a class={link} href="/morse-code-speed-statistics/">Morse code speed statistics</a> page.
       </p>
     </section>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Who it is for</h2>
+      <h2 class="text-2xl font-semibold tracking-tight">Corrections and feedback</h2>
       <p>
-        The tool is for anyone who needs a quick, readable conversion between text and International Morse, or who wants to hear a short message at a chosen speed. Learners can use Farnsworth spacing and the alphabet pages. Operators and writers can copy Morse without installing software. It is not a radio station or an emergency service.
+        If you find a wrong letter in a chart, a bug in a tool or a sentence that is unclear, please email
+        <a class={link} href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Please tell us the page, your browser and
+        your device. Replies depend on available time.
       </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Contact</h2>
       <p>
-        If something on a chart looks wrong, or a control misbehaves, the
-        <a class="text-accent underline underline-offset-4" href="/contact/">Contact</a>
-        page explains how to write in.
-        <a class="text-accent underline underline-offset-4" href="/privacy/">Privacy</a>
-        states what the site does and does not collect.
-        <a class="text-accent underline underline-offset-4" href="/terms/">Terms of Use</a>
-        cover acceptable use and limits.
-        <a class="text-accent underline underline-offset-4" href="/accessibility/">Accessibility</a>
-        describes keyboard and assistive-technology support.
+        {PUBLISHER_NAME}. Founder: {AUTHOR_NAME}. Email:
+        <a class={link} href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
       </p>
     </section>
   </article>
 </BaseLayout>
-

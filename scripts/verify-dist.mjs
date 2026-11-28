@@ -8,6 +8,8 @@ const dist = path.join(root, 'dist');
 const astroDir = path.join(dist, '_astro');
 const homepage = path.join(dist, 'index.html');
 const FORBIDDEN = ['example.com', 'TODO', 'lorem'];
+const DIST_FORBIDDEN = ['OWNER TO CONFIRM', '(Cursor:'];
+const TEXT_LIKE = /\.(html|xml|txt|js|mjs|css|json|svg|webmanifest|map|csv|md)$/i;
 const REQUIRED_ASSETS = [
   'favicon.ico',
   'favicon-16x16.png',
@@ -189,6 +191,15 @@ if (!translatorScript) {
         fail(`Homepage HTML references a lazy chunk in a ${ref.kind} tag: ${ref.href}`);
       }
     }
+  }
+}
+
+for (const file of walk(dist)) {
+  if (!TEXT_LIKE.test(file) && path.basename(file) !== 'llms.txt') continue;
+  const text = fs.readFileSync(file, 'utf8');
+  const relative = path.relative(root, file);
+  for (const token of DIST_FORBIDDEN) {
+    if (text.includes(token)) fail(`${relative} contains forbidden text "${token}"`);
   }
 }
 

@@ -41,6 +41,7 @@ scripts/verify-legal-artifacts.mjs
 scripts/verify-seo-artifacts.mjs
 scripts/verify-social-urls.mjs
 scripts/verify-theme-favicon.mjs
+round-2-baseline/
 .lighthouse/
 .DS_Store
 .env

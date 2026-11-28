@@ -2,7 +2,7 @@
 import RelatedPages from '../components/RelatedPages.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { lastUpdatedIso } from '../config/pages';
-import { absoluteUrl } from '../config/site';
+import { absoluteUrl, PUBLISHER_NAME } from '../config/site';
 import { supportingJsonLd } from '../lib/schema';
 
 const title = 'How Fast Does the World Actually Send Morse Code?';
@@ -381,15 +381,15 @@ const speedRows = [
     <section class="speed-section speed-reveal">
       <h3 class="speed-h3">Data and citation</h3>
       <p>
-        The aggregate data behind this study is published as an open dataset: Mir, Ahmad (Mir Labs) (2026). Morse Code Sending Speeds from Reverse Beacon Network Spots: Aggregate Statistics for Five Sampled Weeks, 2025 to 2026 (Version 1.0) [Data set]. Zenodo. <a class={link} href="https://doi.org/10.5281/zenodo.24540914">https://doi.org/10.5281/zenodo.24540914</a>
+        The aggregate data behind this study is published as an open dataset: Mir, Ahmad ({PUBLISHER_NAME}) (2026). Morse Code Sending Speeds from Reverse Beacon Network Spots: Aggregate Statistics for Five Sampled Weeks, 2025 to 2026 (Version 1.0) [Data set]. Zenodo. <a class={link} href="https://doi.org/10.5281/zenodo.24540914">https://doi.org/10.5281/zenodo.24540914</a>
       </p>
     </section>
 
     <section class="speed-section speed-reveal">
       <h2 class={h2}>Cite this study</h2>
-      <p>Cite this study: Mir Labs / translatorcodemorse.com</p>
+      <p>Cite this study: {PUBLISHER_NAME} / translatorcodemorse.com</p>
       <p class="speed-cite">
-        Mir Labs, “How fast does the world actually send Morse code?”, translatorcodemorse.com, November 2026. Based on
+        {PUBLISHER_NAME}, “How fast does the world actually send Morse code?”, translatorcodemorse.com, November 2026. Based on
         16,703,487 Reverse Beacon Network spots across 110,003 stations in five sampled weeks between December 2025 and
         November 2026.
       </p>
@@ -399,7 +399,7 @@ const speedRows = [
         shared back with the community; this page is that sharing, with thanks.
       </p>
       <p class="speed-note">
-        Study by Mir Labs, makers of the free <a class={link} href="/">Morse code translator</a> at
+        Study by {PUBLISHER_NAME}, makers of the free <a class={link} href="/">Morse code translator</a> at
         translatorcodemorse.com.
       </p>
     </section>

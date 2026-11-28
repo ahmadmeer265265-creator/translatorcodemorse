@@ -1,4 +1,16 @@
-import { absoluteUrl, LOGO_PATH, SITE_NAME } from '../config/site';
+import {
+  absoluteUrl,
+  PUBLISHER_LOGO,
+  PUBLISHER_NAME,
+  PUBLISHER_SAME_AS,
+  PUBLISHER_URL,
+  SITE_NAME,
+  SITE_URL,
+} from '../config/site';
+
+export function organizationId(): string {
+  return `${SITE_URL}/#organization`;
+}
 
 export type FaqItem = {
   question: string;
@@ -12,19 +24,23 @@ export type Crumb = {
 
 export function siteJsonLd() {
   const url = absoluteUrl('/');
+  const orgId = organizationId();
   return [
     {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: SITE_NAME,
-      url,
-      logo: absoluteUrl(LOGO_PATH),
+      '@id': orgId,
+      name: PUBLISHER_NAME,
+      url: PUBLISHER_URL,
+      logo: absoluteUrl(PUBLISHER_LOGO),
+      sameAs: [...PUBLISHER_SAME_AS],
     },
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: SITE_NAME,
       url,
+      publisher: { '@id': orgId },
     },
   ];
 }

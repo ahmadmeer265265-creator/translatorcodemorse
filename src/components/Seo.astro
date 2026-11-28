@@ -5,6 +5,7 @@ import {
   OG_IMAGE_HEIGHT,
   OG_IMAGE_PATH,
   OG_IMAGE_WIDTH,
+  PUBLISHER_NAME,
   SITE_NAME,
 } from '../config/site';
 
@@ -50,6 +51,7 @@ const jsonLdMarkup = jsonLd
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
+<meta name="author" content={PUBLISHER_NAME} />
 {canonical && <link rel="canonical" href={canonicalUrl} />}
 <meta name="robots" content={robots} />
 <meta property="og:title" content={fullTitle} />

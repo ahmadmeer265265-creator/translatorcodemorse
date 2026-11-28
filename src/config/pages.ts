@@ -17,7 +17,7 @@ export const pageMeta = [
   { path: '/yes-in-morse-code/', lastUpdated: '2026-11-26' },
   { path: '/how-morse-code-works/', lastUpdated: '2026-11-23' },
   { path: '/morse-code-speed-statistics/', lastUpdated: '2026-11-09' },
-  { path: '/about/', lastUpdated: '2026-10-19' },
+  { path: '/about/', lastUpdated: '2026-11-28' },
   { path: '/privacy/', lastUpdated: '2026-10-26' },
   { path: '/terms/', lastUpdated: '2026-10-19' },
   { path: '/accessibility/', lastUpdated: '2026-10-19' },

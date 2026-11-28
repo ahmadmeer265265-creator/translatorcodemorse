@@ -1,5 +1,7 @@
 # Morse Code Translator
 
+Publisher: Mir Labs
+
 Free browser-based Morse code translator at translatorcodemorse.com. Convert text to Morse and Morse to text in linked panels, with audio playback (Play/Pause/Stop/Repeat, WPM and Farnsworth speed, CW or telegraph sound), tap input, on-device microphone decoding (Listen mode), a contained dock flash indicator, optional vibration, WAV download, share/puzzle links, and a built-in alphabet reference. Everything runs locally in the browser — no account and no upload of what you type or record.
 
 ## Pages
