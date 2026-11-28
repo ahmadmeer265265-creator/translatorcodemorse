@@ -2,7 +2,7 @@
 import Breadcrumb from '../components/Breadcrumb.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { lastUpdatedIso } from '../config/pages';
-import { absoluteUrl, CONTACT_EMAIL } from '../config/site';
+import { absoluteUrl, AUTHOR_NAME, CONTACT_EMAIL, PUBLISHER_NAME } from '../config/site';
 import { supportingJsonLd } from '../lib/schema';
 
 const title = 'Contact the Morse Code Translator: Email Bugs and Fixes';
@@ -20,6 +20,8 @@ const jsonLd = supportingJsonLd({
   crumbs,
   dateModified: lastUpdatedIso('/contact/'),
 });
+
+const link = 'text-accent underline underline-offset-4';
 ---
 
 <BaseLayout
@@ -35,43 +37,31 @@ const jsonLd = supportingJsonLd({
     <header class="grid gap-3">
       <h1 class="text-3xl font-semibold tracking-tight">Contact</h1>
       <p>
-        Write when you find a chart error, a bug in the translator, or a clear suggestion that would help other visitors. There is no form on this page and no chat widget. Use email.
+        You can reach {PUBLISHER_NAME}, the publisher of this site, by email at
+        <a class={link} href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. There is no contact form and no chat widget
+        on this site, so email is the only way to reach us. Replies depend on available time.
       </p>
     </header>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Email</h2>
-      <p>
-        <a class="text-accent underline underline-offset-4" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-      </p>
-      <p>
-        In the message, say which page you were on, what you typed or clicked, and what you expected to see. For a chart correction, name the character and the code you think is wrong. For sound or download issues, include the browser and device if you know them. Short, specific notes are easier to act on than long general feedback.
-      </p>
+      <h2 class="text-2xl font-semibold tracking-tight">What to write to us about</h2>
+      <ul class="list-disc space-y-2 pl-5">
+        <li>A bug or a wrong result in a tool. Please tell us the page, your browser, your device and what you typed or did.</li>
+        <li>A mistake in a chart or an explanation. Please tell us the page and the line.</li>
+        <li>Ideas for new features.</li>
+        <li>Questions about the Morse speed study or its dataset.</li>
+        <li>Press or partnership questions.</li>
+      </ul>
     </section>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">What this address is for</h2>
-      <p>
-        Use it for the site itself: alphabet and number charts, the SOS page, translation mistakes, playback or WAV problems, accessibility barriers, and privacy questions about how the site works. It is not an emergency line, a radio club desk, or a place to request custom software.
-      </p>
-      <p>
-        Replies depend on time available. If you reported a clear error in a public chart, a correction on the page is the usual response when the report checks out.
-      </p>
-      <p>
-        Please do not send passwords, private keys, or sensitive personal records. The translator does not need an account, and support does not need those details to fix a chart or a button. If your message is about a share link, paste the public page address only, or describe the text without including private content you would not post elsewhere.
-      </p>
-      <p>
-        Feature ideas are welcome when they fit a free, browser-based translator. A short note that points to a real gap in the current pages is more useful than a long wishlist.
-      </p>
-      <p>
-        Also see
-        <a class="text-accent underline underline-offset-4" href="/about/">About</a>,
-        <a class="text-accent underline underline-offset-4" href="/privacy/">Privacy</a>,
-        <a class="text-accent underline underline-offset-4" href="/terms/">Terms of Use</a>, and
-        <a class="text-accent underline underline-offset-4" href="/accessibility/">Accessibility</a>.
-      </p>
+      <h2 class="text-2xl font-semibold tracking-tight">Please do not send</h2>
+      <p>Please do not send passwords, personal documents or sensitive records. The tools do not need them.</p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Who runs this site</h2>
+      <p>This site is published by {PUBLISHER_NAME}. The founder is {AUTHOR_NAME}.</p>
     </section>
   </article>
 </BaseLayout>
-
-

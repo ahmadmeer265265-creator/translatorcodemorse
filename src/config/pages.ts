@@ -18,10 +18,10 @@ export const pageMeta = [
   { path: '/how-morse-code-works/', lastUpdated: '2026-11-23' },
   { path: '/morse-code-speed-statistics/', lastUpdated: '2026-11-09' },
   { path: '/about/', lastUpdated: '2026-11-28' },
-  { path: '/privacy/', lastUpdated: '2026-10-26' },
-  { path: '/terms/', lastUpdated: '2026-10-19' },
-  { path: '/accessibility/', lastUpdated: '2026-10-19' },
-  { path: '/contact/', lastUpdated: '2026-10-19' },
+  { path: '/privacy/', lastUpdated: '2026-11-28' },
+  { path: '/terms/', lastUpdated: '2026-11-28' },
+  { path: '/accessibility/', lastUpdated: '2026-11-28' },
+  { path: '/contact/', lastUpdated: '2026-11-28' },
 ] as const;
 
 /** Unpublished pages. Empty while every built page is in pageMeta. */

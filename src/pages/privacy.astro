@@ -1,15 +1,21 @@
 ---
 import Breadcrumb from '../components/Breadcrumb.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { lastUpdatedFor, lastUpdatedIso } from '../config/pages';
-import { absoluteUrl, CONTACT_EMAIL } from '../config/site';
+import { lastUpdatedIso } from '../config/pages';
+import {
+  absoluteUrl,
+  AUTHOR_NAME,
+  CONTACT_EMAIL,
+  PUBLISHER_NAME,
+  SITE_NAME,
+} from '../config/site';
 import { supportingJsonLd } from '../lib/schema';
 
 const title = 'Privacy on the Morse Code Translator: Data Stays in Browser';
 const description =
   'Privacy notes for this Morse code translator: your text stays in the browser, no cookies or analytics today, and how share links and hosting logs work.';
 const pageUrl = absoluteUrl('/privacy/');
-const lastUpdated = lastUpdatedFor('/privacy/')!;
+const lastUpdated = '28 November 2026';
 const crumbs = [
   { name: 'Home', url: absoluteUrl('/') },
   { name: 'Privacy', url: pageUrl },
@@ -21,6 +27,8 @@ const jsonLd = supportingJsonLd({
   crumbs,
   dateModified: lastUpdatedIso('/privacy/'),
 });
+
+const link = 'text-accent underline underline-offset-4';
 ---
 
 <BaseLayout
@@ -34,73 +42,84 @@ const jsonLd = supportingJsonLd({
   <article class="grid max-w-3xl gap-8 text-[1.0625rem] leading-7">
     <Breadcrumb items={[{ href: '/', label: 'Home' }, { label: 'Privacy' }]} />
     <header class="grid gap-3">
-      <h1 class="text-3xl font-semibold tracking-tight">Privacy</h1>
+      <h1 class="text-3xl font-semibold tracking-tight">Privacy Policy</h1>
       <p class="text-sm text-muted">Last updated: {lastUpdated}</p>
-      <p>
-        This page explains, in plain English, what happens to information when you use the Morse code translator on this site. It is not a contract and it does not name specific privacy laws. Related pages:
-        <a class="text-accent underline underline-offset-4" href="/terms/">Terms of Use</a>,
-        <a class="text-accent underline underline-offset-4" href="/accessibility/">Accessibility</a>, and
-        <a class="text-accent underline underline-offset-4" href="/contact/">Contact</a>.
-      </p>
     </header>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">No account required</h2>
+      <h2 class="text-2xl font-semibold tracking-tight">Who runs this site</h2>
       <p>
-        You do not sign up, log in, or create a profile. The translator does not need an email address or password to convert text, play Morse, tap a pad, or listen with a microphone.
+        This site, {SITE_NAME}, is published by {PUBLISHER_NAME}. The founder is {AUTHOR_NAME}. You can contact us at
+        <a class={link} href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
       </p>
     </section>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Text, Morse, and tap input</h2>
+      <h2 class="text-2xl font-semibold tracking-tight">What stays in your browser</h2>
       <p>
-        Encoding, decoding, playback, and WAV building run in your browser. The text and Morse code you enter stay on your device for that work. Tap input records short and long presses on the pad in the same way: timing stays in the browser so letters can be decoded. This site does not upload that content to translate it, play it, or build a WAV file.
+        The translator, the tap input, the Morse Code Machine and the audio and image decoders run in your browser. The
+        text you type, the sounds you play or upload and the images you choose are processed on your device and are not
+        uploaded to this site. When the microphone is used, its audio is not recorded, stored or sent. A file you upload
+        is not stored, and closing or refreshing the page discards it.
       </p>
     </section>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Microphone</h2>
+      <h2 class="text-2xl font-semibold tracking-tight">What the site stores on your device</h2>
       <p>
-        The Listen (mic) mode asks for microphone access only when you press Start listening. The audio is analyzed entirely in your browser to decode Morse code; it is never recorded, stored, or sent to this site or to anyone else. You can deny the permission, or revoke it at any time, in your browser’s site settings. Pressing Stop listening, or leaving the mode, stops access to the microphone immediately.
-      </p>
-    </section>
-
-    <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Audio file uploads</h2>
-      <p>
-        The audio translator page handles uploaded files exactly like the microphone feature. When you choose an audio file to decode, it is opened and processed entirely in your browser with the Web Audio API. The file is never uploaded to this site or to any server, and no copy of it is stored. Closing or refreshing the page discards it.
-      </p>
-    </section>
-
-    <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Cookies, trackers, and local storage</h2>
-      <p>
-        The site sets no cookies of its own. It does not load analytics scripts, advertising networks, social pixels, or other third-party trackers. There is no account cookie and no marketing cookie. A theme preference (light or dark) may be stored in your browser’s local storage so the choice can stick between visits. That single value stays on your device and is not sent to this site as a tracker. The homepage demo video is a local thumbnail until you press play; only then does the page load YouTube’s privacy-enhanced player (youtube-nocookie.com) for that video. YouTube is not requested on page load.
-      </p>
-    </section>
-
-    <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Hosting logs</h2>
-      <p>
-        The site is hosted on Cloudflare. Like most hosts, Cloudflare may keep standard server logs for requests to the site, such as the address of the page requested, the time, and technical details about the connection. Those logs are part of running the host, not part of the translator reading your message.
+        The site sets no cookies of its own. It may store your light or dark theme choice in your browser's local
+        storage. That value stays on your device.
       </p>
     </section>
 
     <section class="grid gap-3">
       <h2 class="text-2xl font-semibold tracking-tight">Share links</h2>
       <p>
-        Copy share link builds an address with your text after the <span class="font-mono">#</span> symbol. Browsers do not send the hash to the server when they load the page. Anyone you give that link to can see the text in the address, so treat it like anything else you would paste into a message.
+        A share link puts your text in the part of the address after the # sign. Browsers do not send that part to the
+        server, but anyone who has the link can read the text. Only share links that contain text you are happy to share.
       </p>
     </section>
 
     <section class="grid gap-3">
-      <h2 class="text-2xl font-semibold tracking-tight">Questions</h2>
+      <h2 class="text-2xl font-semibold tracking-tight">Hosting and server logs</h2>
       <p>
-        If you have a question about this page, email
-        <a class="text-accent underline underline-offset-4" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-        or use the
-        <a class="text-accent underline underline-offset-4" href="/contact/">Contact</a>
-        page. If any of the practices above change, this page will be updated and the last-updated date will change.
+        The site is hosted behind Cloudflare. Like most hosts, Cloudflare may keep standard server logs, such as the page
+        requested, the time and technical connection details. Those logs do not contain what you type into the tools. See
+        <a class={link} href="https://www.cloudflare.com/privacypolicy/" rel="noopener noreferrer">Cloudflare's own privacy policy</a>
+        for how long logs are kept.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Video</h2>
+      <p>
+        The demo video on the home page uses the YouTube privacy-enhanced player. Nothing is requested from YouTube until
+        you press play. The American Morse page uses the same privacy-enhanced player as a lazy-loaded iframe, so YouTube
+        may be requested when that part of the page is shown, not only after a play click.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Emails you send us</h2>
+      <p>
+        If you email {CONTACT_EMAIL}, we receive your email address and what you write. We use it only to reply to you.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Analytics and advertising</h2>
+      <p>
+        At the time of this update, this site does not load analytics, advertising or social media tracking scripts. This
+        section will be replaced on the day analytics or ads are switched on. It will then name the services, say what
+        data they collect and link to their own policies.
+      </p>
+    </section>
+
+    <section class="grid gap-3">
+      <h2 class="text-2xl font-semibold tracking-tight">Changes to this policy</h2>
+      <p>
+        We update the date at the top of this page when this policy changes. The date at the top shows when this page was
+        last updated.
       </p>
     </section>
   </article>

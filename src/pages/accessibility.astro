@@ -2,7 +2,7 @@
 import Breadcrumb from '../components/Breadcrumb.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { lastUpdatedFor, lastUpdatedIso } from '../config/pages';
-import { absoluteUrl, CONTACT_EMAIL } from '../config/site';
+import { absoluteUrl, CONTACT_EMAIL, PUBLISHER_NAME } from '../config/site';
 import { supportingJsonLd } from '../lib/schema';
 
 const title = 'Accessibility for the Morse Code Translator: Keyboard Use';
@@ -36,6 +36,11 @@ const jsonLd = supportingJsonLd({
     <header class="grid gap-3">
       <h1 class="text-3xl font-semibold tracking-tight">Accessibility</h1>
       <p class="text-sm text-muted">Last updated: {lastUpdated}</p>
+      <p>
+        This accessibility statement applies to translatorcodemorse.com, published by {PUBLISHER_NAME}. If you have trouble using any part of the site, email
+        <a class="text-accent underline underline-offset-4" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        and tell us the page, your device and the assistive technology you use.
+      </p>
       <p>
         This page describes accessibility work built into the Morse code translator and how to report barriers. It is a practical summary of what the site aims to support, not a formal conformance claim against a named standard.
       </p>
