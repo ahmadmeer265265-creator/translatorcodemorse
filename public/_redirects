@@ -1,0 +1,2 @@
+# Conventional sitemap path. robots.txt still points at /sitemap-index.xml.
+/sitemap.xml /sitemap-index.xml 200

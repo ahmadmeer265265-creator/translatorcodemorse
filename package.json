@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/verify-dist.mjs",
+    "build": "astro build && node scripts/verify-dist.mjs && node scripts/copy-404-body.mjs",
     "preview": "astro preview",
     "lighthouse": "node scripts/lighthouse.mjs",
     "images": "node scripts/generate-article-images.mjs",
