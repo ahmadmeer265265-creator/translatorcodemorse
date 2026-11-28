@@ -117,7 +117,7 @@
   position: relative;
   z-index: 1;
   display: inline-flex;
-  min-height: 2.55rem;
+  min-height: 2.75rem;
   min-width: 0;
   cursor: pointer;
   align-items: center;
