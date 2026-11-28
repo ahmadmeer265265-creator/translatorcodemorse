@@ -1,2 +1,6 @@
 # Conventional sitemap path. robots.txt still points at /sitemap-index.xml.
 /sitemap.xml /sitemap-index.xml 200
+
+# Old combined chart URL. Both variants already 404; they are not indexed.
+/morse-code-alphabet-and-numbers/ /morse-code-alphabet/ 301
+/morse-code-alphabet-and-numbers /morse-code-alphabet/ 301
