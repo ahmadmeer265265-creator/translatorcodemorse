@@ -130,6 +130,7 @@ describe('file + mic error handling', () => {
     expect(micErrorKind('NotReadableError')).toBe('busy');
     expect(micErrorKind('WeirdError')).toBe('unknown');
     expect(micErrorMessage('denied')).toContain('denied');
+    expect(micErrorMessage('denied')).toContain('Start listening');
     expect(micErrorMessage('insecure')).toContain('https');
     expect(micErrorMessage('unsupported')).toContain('does not support');
     expect(micErrorMessage('no-device')).toContain('No microphone');

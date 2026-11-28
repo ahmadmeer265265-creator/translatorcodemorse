@@ -274,13 +274,6 @@ const D = DECODER_CONFIG_DEFAULTS;
     // —— Microphone mode ——
     async function startMic() {
       showError(micError, '');
-      const [{ createMicDecoder }, { gapModelFor }] = await Promise.all([
-        // ?at: cloned module instances (Stage 2.5) — the cascade plugin in
-        // astro.config.ts keeps the whole downstream graph cloned, so the
-        // homepage's originals stay inlined in the homepage's chunks.
-        import('../../lib/mic-decode?at'),
-        import('../../lib/audio-decode-file?at'),
-      ]);
       if (!navigator.mediaDevices?.getUserMedia) {
         showError(micError, micErrorMessage('unsupported'));
         setState('error');
@@ -302,84 +295,110 @@ const D = DECODER_CONFIG_DEFAULTS;
         setState('error');
         return;
       }
-
-      const cfg = config();
-      const decoder = createMicDecoder({
-        lockUnitMs: cfg.wpmRate && cfg.wpmRate > 0 ? 1200 / cfg.wpmRate : undefined,
-        gapModel: cfg.wpmRate && cfg.wpmRate > 0 ? gapModelFor(cfg.wpmRate, cfg.farnsworthWpm) : undefined,
-      });
-      const ctx = new AudioContext();
-      const analyser = ctx.createAnalyser();
-      analyser.fftSize = 2048;
-      const src = ctx.createMediaStreamSource(stream);
-      src.connect(analyser);
-      const timeBuf = new Float32Array(analyser.fftSize);
-      const freqBuf = new Float32Array(analyser.frequencyBinCount);
-      const spec = await spectrogram();
-
-      let raf = 0;
-      let running = true;
-      let markStart: number | null = null;
-      let spaceStart: number | null = null;
-      const threshold = 0.02;
-
-      const applyState = () => {
-        const snap = decoder.snapshot();
-        marksEl.textContent = snap.marks || ' ';
-        output.value = snap.text;
-        if (snap.text.length > 0 && uiState === 'listening') setState('decoding');
-      };
-
-      const tick = (now: number) => {
-        if (!running) return;
-        analyser.getFloatTimeDomainData(timeBuf);
-        analyser.getFloatFrequencyData(freqBuf);
-        spec.pushLive(Float32Array.from(freqBuf, (db) => Math.max(0, (db + 100) / 70)));
-        let sum = 0;
-        for (let i = 0; i < timeBuf.length; i += 1) sum += timeBuf[i]! * timeBuf[i]!;
-        const level = Math.sqrt(sum / timeBuf.length);
-        const pct = Math.min(100, Math.round((level / 0.25) * 100));
-        micBar.style.width = `${pct}%`;
-        micMeter.setAttribute('aria-valuenow', String(pct));
-        if (level >= threshold) {
-          if (spaceStart !== null) {
-            decoder.push({ type: 'space', durationMs: now - spaceStart });
-            spaceStart = null;
-          }
-          if (markStart === null) markStart = now;
-        } else {
-          if (markStart !== null) {
-            decoder.push({ type: 'mark', durationMs: now - markStart });
-            markStart = null;
-          }
-          if (spaceStart === null) spaceStart = now;
-          else decoder.silence(now - spaceStart);
-        }
-        applyState();
-        raf = requestAnimationFrame(tick);
-      };
-      raf = requestAnimationFrame(tick);
-
-      micToggle.textContent = 'Stop listening';
-      micToggle.setAttribute('aria-pressed', 'true');
-      setState('listening');
-
-      stopMic = () => {
-        running = false;
-        cancelAnimationFrame(raf);
-        decoder.flush();
-        applyState();
-        src.disconnect();
-        analyser.disconnect();
+      const stopTracks = () => {
         for (const track of stream.getTracks()) track.stop();
-        void ctx.close().catch(() => {});
-        micToggle.textContent = 'Start listening';
-        micToggle.setAttribute('aria-pressed', 'false');
-        micBar.style.width = '0%';
-        micMeter.setAttribute('aria-valuenow', '0');
-        setState(output.value.length > 0 ? 'result' : 'idle');
-        stopMic = null;
       };
+      try {
+        const [{ createMicDecoder }, { gapModelFor }] = await Promise.all([
+          // ?at: cloned module instances (Stage 2.5) — the cascade plugin in
+          // astro.config.ts keeps the whole downstream graph cloned, so the
+          // homepage's originals stay inlined in the homepage's chunks.
+          import('../../lib/mic-decode?at'),
+          import('../../lib/audio-decode-file?at'),
+        ]);
+        const AudioCtx =
+          window.AudioContext ??
+          (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (!AudioCtx) {
+          showError(micError, micErrorMessage('unsupported'));
+          setState('error');
+          stopTracks();
+          return;
+        }
+
+        const cfg = config();
+        const decoder = createMicDecoder({
+          lockUnitMs: cfg.wpmRate && cfg.wpmRate > 0 ? 1200 / cfg.wpmRate : undefined,
+          gapModel: cfg.wpmRate && cfg.wpmRate > 0 ? gapModelFor(cfg.wpmRate, cfg.farnsworthWpm) : undefined,
+        });
+        const ctx = new AudioCtx();
+        await ctx.resume().catch(() => {});
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 2048;
+        const src = ctx.createMediaStreamSource(stream);
+        src.connect(analyser);
+        const timeBuf = new Float32Array(analyser.fftSize);
+        const freqBuf = new Float32Array(analyser.frequencyBinCount);
+        const spec = await spectrogram();
+
+        let raf = 0;
+        let running = true;
+        let markStart: number | null = null;
+        let spaceStart: number | null = null;
+        const threshold = 0.02;
+
+        const applyState = () => {
+          const snap = decoder.snapshot();
+          marksEl.textContent = snap.marks || ' ';
+          output.value = snap.text;
+          if (snap.text.length > 0 && uiState === 'listening') setState('decoding');
+        };
+
+        const tick = (now: number) => {
+          if (!running) return;
+          analyser.getFloatTimeDomainData(timeBuf);
+          analyser.getFloatFrequencyData(freqBuf);
+          spec.pushLive(Float32Array.from(freqBuf, (db) => Math.max(0, (db + 100) / 70)));
+          let sum = 0;
+          for (let i = 0; i < timeBuf.length; i += 1) sum += timeBuf[i]! * timeBuf[i]!;
+          const level = Math.sqrt(sum / timeBuf.length);
+          const pct = Math.min(100, Math.round((level / 0.25) * 100));
+          micBar.style.width = `${pct}%`;
+          micMeter.setAttribute('aria-valuenow', String(pct));
+          if (level >= threshold) {
+            if (spaceStart !== null) {
+              decoder.push({ type: 'space', durationMs: now - spaceStart });
+              spaceStart = null;
+            }
+            if (markStart === null) markStart = now;
+          } else {
+            if (markStart !== null) {
+              decoder.push({ type: 'mark', durationMs: now - markStart });
+              markStart = null;
+            }
+            if (spaceStart === null) spaceStart = now;
+            else decoder.silence(now - spaceStart);
+          }
+          applyState();
+          raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+
+        micToggle.textContent = 'Stop listening';
+        micToggle.setAttribute('aria-pressed', 'true');
+        setState('listening');
+
+        stopMic = () => {
+          running = false;
+          cancelAnimationFrame(raf);
+          decoder.flush();
+          applyState();
+          src.disconnect();
+          analyser.disconnect();
+          stopTracks();
+          void ctx.close().catch(() => {});
+          micToggle.textContent = 'Start listening';
+          micToggle.setAttribute('aria-pressed', 'false');
+          micBar.style.width = '0%';
+          micMeter.setAttribute('aria-valuenow', '0');
+          setState(output.value.length > 0 ? 'result' : 'idle');
+          stopMic = null;
+        };
+      } catch {
+        stopTracks();
+        showError(micError, micErrorMessage('unknown'));
+        setState('error');
+      }
     }
 
     // —— File mode ——

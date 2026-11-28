@@ -124,7 +124,7 @@ export type MicErrorKind = 'denied' | 'insecure' | 'unsupported' | 'no-device' |
 export function micErrorMessage(kind: MicErrorKind): string {
   switch (kind) {
     case 'denied':
-      return 'Microphone access was denied. Allow microphone access for this site in your browser’s site settings, then press Listen again.';
+      return 'Microphone access was denied. Allow microphone access for this site in your browser’s site settings, then press Start listening again.';
     case 'insecure':
       return 'The microphone needs a secure connection (https). Open the https version of this page and try again.';
     case 'unsupported':
