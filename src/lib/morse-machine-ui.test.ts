@@ -37,7 +37,7 @@ describe('Morse Code Machine page copy', () => {
     expect([...MACHINE_DESCRIPTION].length).toBeGreaterThanOrEqual(140);
     expect([...MACHINE_DESCRIPTION].length).toBeLessThanOrEqual(155);
     expect(MACHINE_DESCRIPTION).toMatch(/Boy Scouts/);
-    expect(MACHINE_OG_IMAGE_PATH).toBe('/morse-machine-featured.webp');
+    expect(MACHINE_OG_IMAGE_PATH).toBe('/morse-machine-featured.jpg');
     expect(machineThemeToggleLabel('light')).toBe('Switch to dark theme');
     expect(machineThemeToggleLabel('dark')).toBe('Switch to light theme');
     expect(MACHINE_THEME_PALETTE.light).toEqual({ canvas: '#f3efe8', accent: '#9a3f06' });

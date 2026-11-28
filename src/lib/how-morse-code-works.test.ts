@@ -11,7 +11,7 @@ const PATH = '/how-morse-code-works/';
 const TITLE = 'How Morse Code Works: Timing, Alphabet, and Gaps';
 const DESCRIPTION =
   'How Morse code works: a short mark and a long mark, held for fixed lengths, become letters, numbers, and words you can send by sound, light, or a tap.';
-const OG_IMAGE_PATH = '/how-morse-code-works-featured.webp';
+const OG_IMAGE_PATH = '/how-morse-code-works-featured.jpg';
 const ALT_LIGHT =
   'Illustration of a vintage telegraph key with a Morse code wave of dots and dashes radiating outward, on a warm cream background';
 const ALT_DARK =

@@ -20,7 +20,7 @@ const reciprocal = [
   { file: 'src/components/morse-machine/MorseArticle.astro', text: 'I Love You in Morse Code' },
 ] as const;
 
-const OG_IMAGE_PATH = '/i-love-you-in-morse-code-featured.webp';
+const OG_IMAGE_PATH = '/i-love-you-in-morse-code-featured.jpg';
 const OG_IMAGE_ALT =
   'Illustration of Morse code dots and dashes arranged into a heart on a warm cream background';
 const TITLE = 'I Love You in Morse Code: ILY, 143, and How to Send It';
