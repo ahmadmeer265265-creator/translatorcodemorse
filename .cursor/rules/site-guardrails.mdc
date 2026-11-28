@@ -1,0 +1,80 @@
+You work on translatorcodemorse.com: a static Astro site on Cloudflare Pages,
+styled with Tailwind, with one small translator script. It is already fast and
+healthy. Improve it without damaging what works; treat every number below as a
+number you must not make worse.
+
+## Measured baseline (27 Nov 2026: live site + this repo)
+- Page HTML, brotli on the wire: homepage 33.6 KB, /morse-code-alphabet/ 14.6 KB.
+  LCP 108-228 ms, CLS 0, TTFB 94-196 ms (headless Chromium, phone and desktop).
+- One <style> block of 42,775 bytes is inlined into every page and no cacheable
+  /_astro/*.css exists. Cause: inlineStylesheets: 'always' in the build block of
+  astro.config.ts.
+- Exactly two scripts load: the Translator island and Cloudflare's email-decode.
+  There is no analytics of any kind.
+- 18 URLs in sitemap-0.xml plus sitemap-video.xml; robots.txt points at
+  /sitemap-index.xml.
+- Status codes today: /404 and /contact/ answer 200 (/404 must answer 404).
+  /sitemap.xml, /favicon.svg, /site.webmanifest and /.well-known/security.txt
+  answer 404, and public/.well-known/ does not exist. An unknown path answers 404.
+- All 157 <th> cells in source already carry scope; do not "fix" them.
+- Every page has a unique title, a unique description and a self-referencing
+  canonical (18/18 checked).
+- The homepage's eager-loaded translator script, byte-for-byte: raw 19,690
+  bytes, gzip-9 6,083 bytes, 1 request, hash BFwF2DBv (file pattern
+  Translator.astro_astro_type_script_index_0_lang.<hash>.js).
+
+## Hard rules
+1. STACK FREEZE. Astro static on Cloudflare Pages, existing Tailwind setup kept
+   exactly as it is. No second styling system, CSS framework, component library,
+   React/Vue/Svelte, new fonts, icon library, client router or animation library.
+   Do not change the Tailwind config or version, do not bump a dependency to a
+   new major, and never rewrite the dependency tree.
+2. ZERO-BUNDLE RULE. No new client JavaScript unless a phase names it (max 3 KB,
+   deferred). If a fix seems to need a library, stop and tell me.
+3. PAYLOAD BUDGET. Homepage under 40 KB transfer, every other page under 22 KB,
+   no page gains more than 5 KB, requests per page at or below 6, CLS stays 0,
+   LCP under 250 ms. Phase 10 may add exactly one cached CSS request if the page
+   total still goes down.
+4. PRESERVE EXACTLY: converter output (ITU table, unsupported-character flagging,
+   word gaps); one H1 per page; unique title/description/self-canonical per page;
+   existing JSON-LD except where a phase names it; /_astro/ assets at immutable
+   max-age=31536000; dark mode; contrast (about 15:1, #14110e on #f5efe6); every
+   existing paragraph of body copy; the rendered appearance of every page; AND
+   the homepage's eager-loaded translator script, byte-for-byte: raw 19,690
+   bytes, gzip-9 6,083 bytes, 1 request, hash BFwF2DBv. Re-verify this exact
+   hash and both byte counts after every phase that touches astro.config.ts,
+   the build pipeline, or any shared/global file - not only Phase 10. If the
+   hash changes for any reason, stop and report before continuing, even if the
+   byte counts look unchanged.
+5. NEVER: rename a URL slug, delete a section, change robots.txt or the sitemap
+   index, change the build output directory, reformat whole files, or rewrite
+   copy nobody asked for.
+6. EDIT STYLE. Surgical, additive edits only. If you must touch a file the phase
+   did not name, stop and explain why.
+7. CSP STAYS STRICT. public/_headers sends connect-src 'self' and
+   script-src 'self' 'unsafe-inline'. Add only hostnames you watched succeed in
+   the browser Network tab. Never wildcards, never 'unsafe-eval'.
+8. ACCESSIBILITY FLOOR. No removed focus outlines, no tap targets under 44 px,
+   no lost alt text or aria labels.
+9. STATUS AND SCHEMA FREEZE. No route's status changes except the one Phase 3
+   names. No JSON-LD added or removed except where a phase names it - FAQPage
+   stays exactly where it is.
+10. FIND, DO NOT GUESS. When a phase names a setting, a line of copy or an email
+    address, locate it with grep in the current repo before editing and quote the
+    path and line you found. If you cannot find it, say so - do not invent it.
+11. TRUST THE MEASUREMENT, NOT THE OLD AUDIT. Four findings from the earlier audit
+    do not reproduce and are closed: <th> scope (all present), orphan pages
+    (none: 14 pages have 17 inbound links), the speed page's keyword (present),
+    and the claim that the yes-page title is truncated (it is deliberate; the
+    description says "telegraph shortcut C"). If a phase item contradicts what
+    you measure, stop and report.
+
+## How you work, every phase
+- One branch and one commit per phase: "phase N: <what changed>".
+- Before editing: show the files and lines you will change.
+- After editing, YOU run the build, paste the real output, then run the payload
+  check you wrote in Phase 1 and paste before/after numbers, INCLUDING the
+  translator script's byte counts and hash from rule 4. A failed build is
+  fixed before you report anything.
+- Then STOP, end your message with "Phase N done - say continue", and wait.
+- Never bundle two phases into one commit. Never push, never deploy, never merge.

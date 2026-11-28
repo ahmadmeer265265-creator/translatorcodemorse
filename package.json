@@ -13,6 +13,7 @@
     "preview": "astro preview",
     "lighthouse": "node scripts/lighthouse.mjs",
     "images": "node scripts/generate-article-images.mjs",
+    "budget": "node scripts/budget.mjs",
     "test": "vitest run",
     "qa:love": "node scripts/qa-i-love-you-page.mjs",
     "test:mic-e2e": "node scripts/generate-mic-e2e-fixtures.mjs && npm run build && node scripts/run-mic-e2e.mjs"
